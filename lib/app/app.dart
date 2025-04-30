@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../features/auth/presentation/bloc/auth_bloc.dart';
-import '../features/auth/presentation/bloc/auth_event.dart';
+import 'package:focusflow/core/utils/themes/theme.dart';
 
 import 'router.dart';
 
@@ -10,15 +8,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<AuthBloc>(create: (_) => AuthBloc()..add(AppStarted())),
-      ],
-      child: MaterialApp.router(
-        routerConfig: router,
-        title: 'FocusFlow App',
-        theme: ThemeData.dark(),
-      ),
+    return MaterialApp.router(
+      title: 'FocusFlow',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.darkThemeMode,
+      routerConfig: router,
     );
   }
 }
