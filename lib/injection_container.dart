@@ -4,6 +4,7 @@ import 'package:focusflow/features/auth/data/repositories/auth_repository.dart';
 import 'package:focusflow/features/auth/data/sources/auth_remote_data_source.dart';
 import 'package:focusflow/features/auth/domain/repositories/auth_repository.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_up.dart';
+import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
@@ -25,5 +26,10 @@ Future<void> init() async {
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl());
 
   // Use cases as lazy singletons (created only when needed)
-  sl.registerLazySingleton<SignUpUseCase>(() => SignUpUseCase());
+  sl.registerLazySingleton<SignUpUseCase>(
+    () => SignUpUseCase(sl<AuthRepository>()),
+  );
+
+  // Register AuthBloc
+  sl.registerFactory<AuthBloc>(() => AuthBloc(signUp: sl<SignUpUseCase>()));
 }

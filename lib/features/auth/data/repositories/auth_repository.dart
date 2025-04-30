@@ -2,34 +2,31 @@ import 'package:dartz/dartz.dart';
 import 'package:focusflow/core/errors/failure.dart';
 import 'package:focusflow/features/auth/data/models/user_model.dart';
 import 'package:focusflow/features/auth/data/sources/auth_remote_data_source.dart';
-import 'package:focusflow/features/auth/domain/entities/user_entity.dart';
 import 'package:focusflow/features/auth/domain/repositories/auth_repository.dart';
 import 'package:focusflow/injection_container.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   @override
-  Future<Either<Failure, AppUser>> signUp(UserModel userModel) async {
+  Future<Either<Failure, UserModel>> signUp(UserModel userModel) async {
     try {
-      final userModelResult = await sl<AuthRemoteDataSource>().signUp(
-        userModel,
-      );
-      return userModelResult.fold(
-        (failure) {
-          return Left(
-            failure,
-          ); // Return failure if data source returns an error
-        },
-        (userModel) {
-          // Map the data source UserModel to AppUser (Entity)
-          final appUser = AppUser(
-            uid: userModel.uid, // Mapping to AppUser
-            email: userModel.email,
-            name: userModel.name,
-            password: userModel.password,
-          );
-          return Right(appUser); // Return the mapped AppUser (Entity)
-        },
-      );
+      return sl<AuthRemoteDataSource>().signUp(userModel);
+      // return userModelResult.fold(
+      //   (failure) {
+      //     return Left(
+      //       failure,
+      //     ); // Return failure if data source returns an error
+      //   },
+      //   (userModel) {
+      //     // Map the data source UserModel to AppUser (Entity)
+      //     final appUser = AppUser(
+      //       uid: userModel.uid, // Mapping to AppUser
+      //       email: userModel.email,
+      //       name: userModel.name,
+      //       password: userModel.password,
+      //     );
+      //     return Right(appUser); // Return the mapped AppUser (Entity)
+      //   },
+      // );
     } catch (e) {
       return Left(Failure(e.toString())); // Handle any other errors
     }

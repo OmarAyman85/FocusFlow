@@ -1,4 +1,4 @@
-import '../../domain/entities/user_entity.dart';
+import 'package:focusflow/features/auth/data/models/user_model.dart';
 
 abstract class AuthState {}
 
@@ -7,7 +7,7 @@ class AuthInitial extends AuthState {}
 class AuthLoading extends AuthState {}
 
 class AuthAuthenticated extends AuthState {
-  final AppUser user;
+  final UserModel user;
   AuthAuthenticated(this.user);
 }
 
