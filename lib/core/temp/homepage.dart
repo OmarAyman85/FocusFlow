@@ -5,6 +5,7 @@ import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/auth/presentation/widgets/sign_out_button.dart';
+import 'package:focusflow/features/workspace/presentation/pages/workspace_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -14,6 +15,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('FocusFlow'),
+        centerTitle: true,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -63,6 +65,7 @@ class HomePage extends StatelessWidget {
                 }
               },
             ),
+            WorkspacePage(),
           ],
         ),
       ),

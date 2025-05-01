@@ -3,7 +3,6 @@ import 'package:focusflow/core/utils/constants/loading_spinner.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_button.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_field.dart';
 import 'package:focusflow/features/auth/presentation/widgets/gesture_text.dart';
-import 'package:focusflow/injection_container.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
@@ -11,7 +10,6 @@ import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 
 class SignInPage extends StatefulWidget {
-  static route() => MaterialPageRoute(builder: (context) => SignInPage());
   const SignInPage({super.key});
 
   @override
@@ -32,74 +30,68 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<AuthBloc>(),
-      child: Scaffold(
-        appBar: AppBar(title: Text('FocusFlow')),
-        body: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Form(
-            key: _formKey,
-            child: BlocConsumer<AuthBloc, AuthState>(
-              listener: (context, state) {
-                if (state is AuthAuthenticated) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Sign In Successful!')),
-                  );
-                  // Navigate to the workspace screen with userId
-                  context.pushReplacement('/home');
-                } else if (state is AuthError) {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(state.message)));
-                }
-              },
-              builder: (context, state) {
-                if (state is AuthLoading) {
-                  return LoadingSpinnerWidget();
-                }
-
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Sign In',
-                      style: TextStyle(
-                        fontSize: 60,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 30),
-                    AuthField(hintText: 'Email', controller: _emailController),
-                    SizedBox(height: 15),
-                    AuthField(
-                      hintText: 'Password',
-                      isObsecureText: true,
-                      controller: _passwordController,
-                    ),
-                    SizedBox(height: 20),
-                    AuthButton(
-                      buttonText: "Sign In",
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          context.read<AuthBloc>().add(
-                            SignInRequested(
-                              email: _emailController.text,
-                              password: _passwordController.text,
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    GestureText(
-                      route: '/signup',
-                      text: 'Don\'t have an account? ',
-                      actionText: 'Sign Up',
-                    ),
-                  ],
+    return Scaffold(
+      appBar: AppBar(title: const Text('FocusFlow')),
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Form(
+          key: _formKey,
+          child: BlocConsumer<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (state is AuthAuthenticated) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Sign In Successful!')),
                 );
-              },
-            ),
+                context.read<AuthBloc>().add(AppStarted()); // Refresh user
+                context.go('/home'); // Navigate to workspace/home
+              } else if (state is AuthError) {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(state.message)));
+              }
+            },
+            builder: (context, state) {
+              if (state is AuthLoading) {
+                return const LoadingSpinnerWidget();
+              }
+
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Sign In',
+                    style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 30),
+                  AuthField(hintText: 'Email', controller: _emailController),
+                  const SizedBox(height: 15),
+                  AuthField(
+                    hintText: 'Password',
+                    isObsecureText: true,
+                    controller: _passwordController,
+                  ),
+                  const SizedBox(height: 20),
+                  AuthButton(
+                    buttonText: "Sign In",
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        context.read<AuthBloc>().add(
+                          SignInRequested(
+                            email: _emailController.text,
+                            password: _passwordController.text,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  GestureText(
+                    route: '/signup',
+                    text: 'Don\'t have an account? ',
+                    actionText: 'Sign Up',
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),

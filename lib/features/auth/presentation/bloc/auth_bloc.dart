@@ -83,5 +83,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthError(e.toString()));
       }
     });
+
+    // Add this block to handle AppStart event
+    on<AppStarted>((event, emit) async {
+      final result = await getCurrentUser.call();
+      result.fold(
+        (failure) => emit(AuthUnauthenticated()),
+        (user) => emit(AuthAuthenticated(user)),
+      );
+    });
   }
 }
