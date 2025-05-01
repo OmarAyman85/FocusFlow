@@ -48,8 +48,8 @@ class WorkspaceScreen extends StatelessWidget {
           // Navigate to the Create Workspace screen
           context.push('/create-workspace?uid=$userId');
         },
-        child: const Icon(Icons.add),
         tooltip: 'Create Workspace',
+        child: const Icon(Icons.add),
       ),
     );
   }

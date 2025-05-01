@@ -17,6 +17,7 @@ class WorkspaceModel extends Workspace {
     );
   }
 
+  @override
   Map<String, dynamic> toMap() {
     return {'name': name, 'createdBy': createdBy, 'members': members};
   }
