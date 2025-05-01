@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/core/utils/constants/loading_spinner.dart';
-import 'package:focusflow/core/utils/themes/app_pallete.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_button.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_field.dart';
+import 'package:focusflow/features/auth/presentation/widgets/gesture_text.dart';
 import 'package:focusflow/injection_container.dart';
 import 'package:go_router/go_router.dart';
 
@@ -96,27 +96,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       },
                     ),
                     SizedBox(height: 15),
-                    GestureDetector(
-                      onTap: () {
-                        GoRouter.of(context).go('/signin');
-                      },
-                      child: RichText(
-                        text: TextSpan(
-                          text: 'Already have an account? ',
-                          style: Theme.of(context).textTheme.titleMedium,
-                          children: [
-                            TextSpan(
-                              text: ' Sign In',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.titleMedium?.copyWith(
-                                color: AppPallete.gradient1,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    GestureText(
+                      route: '/signin',
+                      text: 'Already have an account? ',
+                      actionText: 'Sign In',
                     ),
                   ],
                 );

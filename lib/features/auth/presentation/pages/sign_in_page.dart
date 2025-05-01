@@ -3,6 +3,7 @@ import 'package:focusflow/core/utils/constants/loading_spinner.dart';
 import 'package:focusflow/core/utils/themes/app_pallete.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_button.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_field.dart';
+import 'package:focusflow/features/auth/presentation/widgets/gesture_text.dart';
 import 'package:focusflow/injection_container.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -90,27 +91,10 @@ class _SignInPageState extends State<SignInPage> {
                         }
                       },
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        GoRouter.of(context).go('/signup');
-                      },
-                      child: RichText(
-                        text: TextSpan(
-                          text: 'Don\'t have an account? ',
-                          style: Theme.of(context).textTheme.titleMedium,
-                          children: [
-                            TextSpan(
-                              text: ' Sign Up',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.titleMedium?.copyWith(
-                                color: AppPallete.gradient1,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    GestureText(
+                      route: '/signup',
+                      text: 'Don\'t have an account? ',
+                      actionText: 'Sign Up',
                     ),
                   ],
                 );
