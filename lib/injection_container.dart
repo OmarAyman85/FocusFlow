@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:focusflow/features/auth/data/repositories/auth_repository.dart';
 import 'package:focusflow/features/auth/data/sources/auth_remote_data_source.dart';
 import 'package:focusflow/features/auth/domain/repositories/auth_repository.dart';
+import 'package:focusflow/features/auth/domain/usecases/get_current_user.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_in.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_out.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_up.dart';
@@ -37,6 +38,9 @@ Future<void> init() async {
   sl.registerLazySingleton<SignOutUseCase>(
     () => SignOutUseCase(sl<AuthRepository>()),
   );
+  sl.registerLazySingleton<GetCurrentUserUseCase>(
+    () => GetCurrentUserUseCase(sl<AuthRepository>()),
+  );
 
   // Register AuthBloc
   sl.registerFactory<AuthBloc>(
@@ -44,6 +48,7 @@ Future<void> init() async {
       signUp: sl<SignUpUseCase>(),
       signIn: sl<SignInUseCase>(), // Pass SignInUseCase
       signOut: sl<SignOutUseCase>(),
+      getCurrentUser: sl<GetCurrentUserUseCase>(),
     ),
   );
 }

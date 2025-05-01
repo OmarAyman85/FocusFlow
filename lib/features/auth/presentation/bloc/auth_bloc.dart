@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/features/auth/data/models/user_model.dart';
+import 'package:focusflow/features/auth/domain/usecases/get_current_user.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_up.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_out.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_in.dart';
@@ -10,9 +11,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignUpUseCase signUp;
   final SignInUseCase signIn;
   final SignOutUseCase signOut;
+  final GetCurrentUserUseCase getCurrentUser;
 
-  AuthBloc({required this.signUp, required this.signIn, required this.signOut})
-    : super(AuthInitial()) {
+  AuthBloc({
+    required this.signUp,
+    required this.signIn,
+    required this.signOut,
+    required this.getCurrentUser,
+  }) : super(AuthInitial()) {
     on<SignUpRequested>((event, emit) async {
       emit(AuthLoading());
       try {
@@ -60,6 +66,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         await signOut.call();
         emit(AuthUnauthenticated());
+      } catch (e) {
+        emit(AuthError(e.toString()));
+      }
+    });
+
+    on<GetCurrentUserRequested>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final result = await getCurrentUser.call();
+        result.fold(
+          (failure) => emit(AuthError(failure.toString())),
+          (user) => emit(AuthAuthenticated(user)),
+        );
       } catch (e) {
         emit(AuthError(e.toString()));
       }

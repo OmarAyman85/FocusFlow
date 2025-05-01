@@ -9,7 +9,7 @@ abstract class AuthRemoteDataSource {
   Future<Either<Failure, UserModel>> signUp(UserModel userModel);
   Future<Either<Failure, UserModel>> signIn(UserModel userModel);
   Future<void> signOut();
-  // Future<UserModel?> getCurrentUser();
+  Future<Either<Failure, UserModel>> getCurrentUser();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -93,10 +93,25 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-  // Future<UserModel?> getCurrentUser() async {
-  //   final user = auth.currentUser;
-  //   if (user == null) return null;
-  //   final doc = await firestore.collection('users').doc(user.uid).get();
-  //   return UserModel.fromMap(doc.data()!);
-  // }
+  @override
+  Future<Either<Failure, UserModel>> getCurrentUser() async {
+    try {
+      final user = auth.currentUser;
+      if (user == null) {
+        return Left(Failure('No user is currently signed in'));
+      }
+      final doc = await firestore.collection('users').doc(user.uid).get();
+      if (!doc.exists) {
+        return Left(Failure('User not found in Firestore'));
+      }
+      final userModel = UserModel.fromMap(doc.data()!);
+      return Right(userModel);
+    } on FirebaseAuthException catch (e) {
+      return Left(Failure('Failed to get current user: ${e.message}'));
+    } on FirebaseException catch (e) {
+      return Left(Failure('Failed to get current user: ${e.message}'));
+    } catch (e) {
+      return Left(Failure('Failed to get current user: $e'));
+    }
+  }
 }

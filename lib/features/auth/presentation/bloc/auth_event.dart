@@ -16,4 +16,6 @@ class SignUpRequested extends AuthEvent {
 
 class SignOutRequested extends AuthEvent {}
 
+class GetCurrentUserRequested extends AuthEvent {}
+
 class AppStarted extends AuthEvent {}

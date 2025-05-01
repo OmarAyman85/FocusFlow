@@ -16,10 +16,10 @@ class SignOutButton extends StatelessWidget {
       listener: (context, state) {
         if (state is AuthLoading) {
           LoadingSpinnerWidget();
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('Signing out...')));
         } else if (state is AuthUnauthenticated) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Signing out successful!')),
+          );
           GoRouter.of(context).go('/signin');
         } else if (state is AuthError) {
           ScaffoldMessenger.of(

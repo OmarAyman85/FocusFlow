@@ -25,20 +25,16 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> signOut() {
+  Future<void> signOut() async {
     return sl<AuthRemoteDataSource>().signOut();
   }
 
-  // @override
-  // Future<AppUser?> getCurrentUser() async {
-  //   final user = _firebaseAuth.currentUser;
-  //   if (user != null) {
-  //     final doc = await _firestore.collection('users').doc(user.uid).get();
-  //     final data = doc.data();
-  //     if (data != null) {
-  //       return AppUser(uid: user.uid, email: data['email'], name: data['name']);
-  //     }
-  //   }
-  //   return null;
-  // }
+  @override
+  Future<Either<Failure, UserModel>> getCurrentUser() async {
+    try {
+      return sl<AuthRemoteDataSource>().getCurrentUser();
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
 }
