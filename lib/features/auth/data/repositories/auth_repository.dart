@@ -32,6 +32,11 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  @override
+  Future<void> signOut() {
+    return sl<AuthRemoteDataSource>().signOut();
+  }
+
   // @override
   // Future<AppUser?> signIn(String email, String password) async {
   //   final credential = await _firebaseAuth.signInWithEmailAndPassword(

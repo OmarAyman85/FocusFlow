@@ -8,7 +8,7 @@ import '../models/user_model.dart';
 abstract class AuthRemoteDataSource {
   Future<Either<Failure, UserModel>> signUp(UserModel userModel);
   // Future<UserModel?> signIn(String email, String password);
-  // Future<void> signOut();
+  Future<void> signOut();
   // Future<UserModel?> getCurrentUser();
 }
 
@@ -69,7 +69,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   //   return null;
   // }
 
-  // Future<void> signOut() => auth.signOut();
+  @override
+  Future<void> signOut() async {
+    auth.signOut();
+  }
 
   // Future<UserModel?> getCurrentUser() async {
   //   final user = auth.currentUser;
