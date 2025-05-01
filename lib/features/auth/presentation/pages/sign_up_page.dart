@@ -48,7 +48,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Sign Up Successful!')),
                   );
-                  GoRouter.of(context).go('/home');
+                  context.pushReplacement('/home');
                 } else if (state is AuthError) {
                   ScaffoldMessenger.of(
                     context,

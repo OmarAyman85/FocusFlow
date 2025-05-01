@@ -47,7 +47,7 @@ class _SignInPageState extends State<SignInPage> {
                     SnackBar(content: Text('Sign In Successful!')),
                   );
                   // Navigate to the workspace screen with userId
-                  context.pushReplacement('/workspace?uid=${state.user.uid}');
+                  context.pushReplacement('/home');
                 } else if (state is AuthError) {
                   ScaffoldMessenger.of(
                     context,
