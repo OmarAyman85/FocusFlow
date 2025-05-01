@@ -7,6 +7,12 @@ import 'package:focusflow/features/auth/domain/usecases/sign_in.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_out.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_up.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:focusflow/features/workspace/data/repositories/workspace_repository.dart';
+import 'package:focusflow/features/workspace/data/sources/workspace_remote_data_source.dart';
+import 'package:focusflow/features/workspace/domain/repositories/workspace_repository.dart';
+import 'package:focusflow/features/workspace/domain/usecases/create_workspace.dart';
+import 'package:focusflow/features/workspace/domain/usecases/get_user_workspaces.dart';
+import 'package:focusflow/features/workspace/presentation/bloc/workspace_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
@@ -45,5 +51,26 @@ Future<void> init() async {
       signIn: sl<SignInUseCase>(), // Pass SignInUseCase
       signOut: sl<SignOutUseCase>(),
     ),
+  );
+
+  // Register Workspace feature dependencies
+  sl.registerLazySingleton<WorkspaceRemoteDataSource>(
+    () => WorkspaceRemoteDataSource(sl<FirebaseFirestore>()),
+  );
+
+  sl.registerLazySingleton<WorkspaceRepository>(
+    () => WorkspaceRepositoryImpl(sl<WorkspaceRemoteDataSource>()),
+  );
+
+  sl.registerLazySingleton<GetUserWorkspaces>(
+    () => GetUserWorkspaces(sl<WorkspaceRepository>()),
+  );
+
+  sl.registerLazySingleton<CreateWorkspace>(
+    () => CreateWorkspace(sl<WorkspaceRepository>()),
+  );
+
+  sl.registerFactory<WorkspaceBloc>(
+    () => WorkspaceBloc(sl<GetUserWorkspaces>(), sl<CreateWorkspace>()),
   );
 }

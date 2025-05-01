@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:focusflow/core/utils/constants/loading_spinner.dart';
-import 'package:focusflow/core/utils/themes/app_pallete.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_button.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_field.dart';
 import 'package:focusflow/features/auth/presentation/widgets/gesture_text.dart';
@@ -47,7 +46,8 @@ class _SignInPageState extends State<SignInPage> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Sign In Successful!')),
                   );
-                  GoRouter.of(context).go('/home');
+                  // Navigate to the workspace screen with userId
+                  context.pushReplacement('/workspace?uid=${state.user.uid}');
                 } else if (state is AuthError) {
                   ScaffoldMessenger.of(
                     context,
