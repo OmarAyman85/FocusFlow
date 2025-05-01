@@ -1,7 +1,3 @@
-Here’s a polished and professional version of your `README.md` with improved structure, clarity, and formatting:
-
----
-
 # 🧠 FocusFlow
 
 **FocusFlow** is a collaborative workspace and task management app built with **Flutter** and **Firebase**, designed to help teams stay productive and aligned. It features workspaces, projects, Kanban-style task boards, real-time collaboration, and clean architecture for scalable development.
