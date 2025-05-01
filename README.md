@@ -14,3 +14,36 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+# Folder Structure
+
+lib/
+│
+├── core/                        # Shared utilities, constants, themes, etc.
+│   ├── errors/
+│   ├── usecases/
+│   └── utils/
+│
+├── features/
+│   ├── auth/                    # Authentication feature
+│   │   ├── data/                # FirebaseAuth implementation
+│   │   ├── domain/              # Repositories and usecases
+│   │   └── presentation/        # UI: login/signup screens
+│   │
+│   ├── workspace/               # Workspaces & Projects
+│   │   ├── data/                # Firebase workspace/project providers
+│   │   ├── domain/              # Entities & usecases
+│   │   └── presentation/        # UI widgets, screens
+│   │
+│   ├── taskboard/              # Task Board (Kanban) logic
+│   │   ├── data/
+│   │   ├── domain/
+│   │   └── presentation/
+│
+├── app/                        # Main app setup
+│   ├── router/                 # GoRouter or Navigator setup
+│   ├── theme/
+│   └── app.dart                # App widget
+│
+└── main.dart
+
