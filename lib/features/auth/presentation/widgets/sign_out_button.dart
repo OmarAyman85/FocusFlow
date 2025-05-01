@@ -4,8 +4,8 @@ import 'package:focusflow/core/utils/themes/app_pallete.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
-import 'package:focusflow/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_button.dart';
+import 'package:go_router/go_router.dart';
 
 class SignOutButton extends StatelessWidget {
   const SignOutButton({super.key});
@@ -20,10 +20,7 @@ class SignOutButton extends StatelessWidget {
             context,
           ).showSnackBar(const SnackBar(content: Text('Signing out...')));
         } else if (state is AuthUnauthenticated) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const SignUpPage()),
-          );
+          GoRouter.of(context).go('/signin');
         } else if (state is AuthError) {
           ScaffoldMessenger.of(
             context,

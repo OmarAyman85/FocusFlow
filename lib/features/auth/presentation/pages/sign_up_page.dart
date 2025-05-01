@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:focusflow/core/temporary/home_page.dart';
 import 'package:focusflow/core/utils/themes/app_pallete.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
@@ -8,6 +7,7 @@ import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_button.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_field.dart';
 import 'package:focusflow/injection_container.dart';
+import 'package:go_router/go_router.dart';
 
 class SignUpPage extends StatefulWidget {
   static route() => MaterialPageRoute(builder: (context) => SignUpPage());
@@ -47,11 +47,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Sign Up Successful!')),
                   );
-                  // Navigate to another page if needed
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
-                  );
+                  GoRouter.of(context).go('/home');
                 } else if (state is AuthError) {
                   ScaffoldMessenger.of(
                     context,
@@ -101,6 +97,29 @@ class _SignUpPageState extends State<SignUpPage> {
                           );
                         }
                       },
+                    ),
+                    SizedBox(height: 15),
+                    GestureDetector(
+                      onTap: () {
+                        GoRouter.of(context).go('/signin');
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Already have an account? ',
+                          style: Theme.of(context).textTheme.titleMedium,
+                          children: [
+                            TextSpan(
+                              text: ' Sign In',
+                              style: Theme.of(
+                                context,
+                              ).textTheme.titleMedium?.copyWith(
+                                color: AppPallete.gradient1,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 );

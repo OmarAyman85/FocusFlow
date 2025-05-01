@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:focusflow/core/utils/themes/app_pallete.dart';
-import 'package:focusflow/features/auth/presentation/pages/sign_up_page.dart';
+import 'package:focusflow/features/auth/data/models/user_model.dart';
+import 'package:focusflow/features/auth/domain/usecases/sign_in.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_button.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_field.dart';
+import 'package:focusflow/injection_container.dart';
+import 'package:go_router/go_router.dart';
 
 class SignInPage extends StatefulWidget {
   static route() => MaterialPageRoute(builder: (context) => SignInPage());
@@ -48,11 +51,34 @@ class _SignInPageState extends State<SignInPage> {
                 controller: _passwordController,
               ),
               SizedBox(height: 20),
-              AuthButton(buttonText: "Sign In", onPressed: () {}),
-              SizedBox(height: 15),
+              AuthButton(
+                buttonText: "Sign In",
+                onPressed: () {
+                  sl<SignInUseCase>()
+                      .call(
+                        params: UserModel(
+                          name: '',
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                        ),
+                      )
+                      .then((result) {
+                        if (result.isRight()) {
+                          GoRouter.of(context).go('/home');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Sign In Successful!')),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Sign In Failed')),
+                          );
+                        }
+                      });
+                },
+              ),
               GestureDetector(
                 onTap: () {
-                  Navigator.of(context).push(SignUpPage.route());
+                  GoRouter.of(context).go('/signup');
                 },
                 child: RichText(
                   text: TextSpan(
