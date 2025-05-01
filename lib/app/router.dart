@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:focusflow/core/temporary/home_page.dart';
 import 'package:focusflow/features/workspace/presentation/bloc/workspace_bloc.dart';
 import 'package:focusflow/features/workspace/presentation/bloc/workspace_event.dart';
 import 'package:focusflow/features/workspace/presentation/pages/workspace_screen.dart';
@@ -17,7 +16,6 @@ final router = GoRouter(
     GoRoute(path: '/signin', builder: (context, state) => SignInPage()),
     GoRoute(path: '/signup', builder: (context, state) => SignUpPage()),
 
-    GoRoute(path: '/home', builder: (context, state) => HomePage()),
 
     GoRoute(
       path: '/workspace',

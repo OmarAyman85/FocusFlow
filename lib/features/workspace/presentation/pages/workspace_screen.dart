@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/utils/constants/loading_spinner.dart';
 import 'package:focusflow/features/auth/presentation/widgets/sign_out_button.dart';
-import 'package:go_router/go_router.dart'; // Import for navigation
+import 'package:go_router/go_router.dart';
 import '../bloc/workspace_bloc.dart';
 import '../bloc/workspace_state.dart';
 
@@ -25,7 +26,7 @@ class WorkspaceScreen extends StatelessWidget {
       body: BlocBuilder<WorkspaceBloc, WorkspaceState>(
         builder: (context, state) {
           if (state is WorkspaceLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const LoadingSpinnerWidget();
           } else if (state is WorkspaceLoaded) {
             return ListView.builder(
               itemCount: state.workspaces.length,
