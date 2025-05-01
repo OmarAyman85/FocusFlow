@@ -35,5 +35,7 @@ Future<void> init() async {
   );
 
   // Register AuthBloc
-  sl.registerFactory<AuthBloc>(() => AuthBloc(signUp: sl<SignUpUseCase>()));
+  sl.registerFactory<AuthBloc>(
+    () => AuthBloc(signUp: sl<SignUpUseCase>(), signOut: sl<SignOutUseCase>()),
+  );
 }

@@ -1,13 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/features/auth/data/models/user_model.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_up.dart';
+import 'package:focusflow/features/auth/domain/usecases/sign_out.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignUpUseCase signUp;
+  final SignOutUseCase signOut;
 
-  AuthBloc({required this.signUp}) : super(AuthInitial()) {
+  AuthBloc({required this.signUp, required this.signOut})
+    : super(AuthInitial()) {
     on<SignUpRequested>((event, emit) async {
       emit(AuthLoading());
       try {
@@ -24,6 +27,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           (failure) => emit(AuthError(failure.toString())),
           (user) => emit(AuthAuthenticated(user)),
         );
+      } catch (e) {
+        emit(AuthError(e.toString()));
+      }
+    });
+
+    on<SignOutRequested>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        await signOut.call();
+        emit(AuthUnauthenticated());
       } catch (e) {
         emit(AuthError(e.toString()));
       }
