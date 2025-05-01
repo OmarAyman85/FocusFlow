@@ -8,14 +8,11 @@ import 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignUpUseCase signUp;
-  final SignInUseCase signIn; // Add SignInUseCase
+  final SignInUseCase signIn;
   final SignOutUseCase signOut;
 
-  AuthBloc({
-    required this.signUp,
-    required this.signIn, // Initialize SignInUseCase
-    required this.signOut,
-  }) : super(AuthInitial()) {
+  AuthBloc({required this.signUp, required this.signIn, required this.signOut})
+    : super(AuthInitial()) {
     on<SignUpRequested>((event, emit) async {
       emit(AuthLoading());
       try {

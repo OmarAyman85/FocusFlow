@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:focusflow/core/utils/themes/app_pallete.dart';
+import 'package:focusflow/core/utils/constants/loading_spinner.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
@@ -15,7 +15,7 @@ class SignOutButton extends StatelessWidget {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthLoading) {
-          Center(child: CircularProgressIndicator(color: AppPallete.gradient1));
+          LoadingSpinnerWidget();
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(const SnackBar(content: Text('Signing out...')));

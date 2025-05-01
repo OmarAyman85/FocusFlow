@@ -31,18 +31,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           uid: user.uid,
           email: userModel.email,
           name: userModel.name,
-          password: '', // We don't store the password
+          password: '',
         );
         try {
           await firestore.collection('users').doc(user.uid).set(model.toMap());
         } catch (e) {
           return Left(Failure('Failed to save user to Firestore'));
         }
-        return Right(model); // Return UserModel to Repository
+        return Right(model);
       }
       return Left(Failure("User Already Exists"));
     } on FirebaseAuthException catch (e) {
-      // Check for specific Firebase errors like email already in use
       if (e.code == 'email-already-in-use') {
         return Left(Failure('Email already in use'));
       } else if (e.code == 'invalid-email') {
@@ -52,7 +51,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
       return Left(Failure('${e.code} - ${e.message}'));
     } catch (e) {
-      return Left(Failure(e.toString())); // Handle other generic exceptions
+      return Left(Failure(e.toString()));
     }
   }
 

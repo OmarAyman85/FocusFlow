@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:focusflow/core/utils/constants/loading_spinner.dart';
 import 'package:focusflow/core/utils/themes/app_pallete.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_button.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_field.dart';
@@ -54,11 +55,7 @@ class _SignInPageState extends State<SignInPage> {
               },
               builder: (context, state) {
                 if (state is AuthLoading) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      color: AppPallete.gradient1,
-                    ),
-                  );
+                  return LoadingSpinnerWidget();
                 }
 
                 return Column(
