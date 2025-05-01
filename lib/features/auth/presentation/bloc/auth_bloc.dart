@@ -28,5 +28,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthError(e.toString()));
       }
     });
+
+    // on<SignInRequested>((event, emit) async {
+    //   emit(AuthLoading());
+    //   try {
+    //     // Implement sign-in logic here
+    //     // For example, call a sign-in use case and emit the appropriate state
+    //   } catch (e) {
+    //     emit(AuthError(e.toString()));
+    //   }
+    // });
   }
 }

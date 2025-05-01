@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/temporary/home_page.dart';
+import 'package:focusflow/core/utils/themes/app_pallete.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
@@ -46,6 +48,10 @@ class _SignUpPageState extends State<SignUpPage> {
                     SnackBar(content: Text('Sign Up Successful!')),
                   );
                   // Navigate to another page if needed
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomePage()),
+                  );
                 } else if (state is AuthError) {
                   ScaffoldMessenger.of(
                     context,
@@ -54,7 +60,11 @@ class _SignUpPageState extends State<SignUpPage> {
               },
               builder: (context, state) {
                 if (state is AuthLoading) {
-                  return Center(child: CircularProgressIndicator());
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: AppPallete.gradient1,
+                    ),
+                  );
                 }
 
                 return Column(
@@ -84,9 +94,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         if (_formKey.currentState!.validate()) {
                           context.read<AuthBloc>().add(
                             SignUpRequested(
-                              _nameController.text,
-                              _emailController.text,
-                              _passwordController.text,
+                              name: _nameController.text,
+                              email: _emailController.text,
+                              password: _passwordController.text,
                             ),
                           );
                         }
