@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/utils/constants/loading_spinner.dart';
+import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
+import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
+import 'package:go_router/go_router.dart';
 
 class WorkspaceForm extends StatefulWidget {
   final String userId;
@@ -28,39 +33,107 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Create Workspace')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Workspace Name'),
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty ? 'Enter a name' : null,
-                onSaved: (value) => _workspaceName = value!,
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Workspace Description',
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthUnauthenticated) {
+          GoRouter.of(context).go('/signin');
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('FocusFlow'),
+          centerTitle: true,
+          actions: [
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                if (state is AuthLoading) {
+                  return const Padding(
+                    padding: EdgeInsets.only(right: 16.0),
+                    child: LoadingSpinnerWidget(),
+                  );
+                } else if (state is AuthAuthenticated) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: PopupMenuButton<String>(
+                      onSelected: (value) {
+                        if (value == 'logout') {
+                          context.read<AuthBloc>().add(SignOutRequested());
+                        }
+                      },
+                      itemBuilder: (BuildContext context) {
+                        return [
+                          PopupMenuItem<String>(
+                            value: 'user_name',
+                            child: Text('Name: ${state.user.name}'),
+                          ),
+                          const PopupMenuItem<String>(
+                            value: 'logout',
+                            child: Text('Logout'),
+                          ),
+                        ];
+                      },
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.white,
+                        child: Text(
+                          state.user.name[0],
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                } else if (state is AuthError) {
+                  return const Padding(
+                    padding: EdgeInsets.only(right: 16.0),
+                    child: Icon(Icons.error),
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              },
+            ),
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Workspace Name',
+                  ),
+                  validator:
+                      (value) =>
+                          value == null || value.isEmpty
+                              ? 'Enter a name'
+                              : null,
+                  onSaved: (value) => _workspaceName = value!,
                 ),
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty
-                            ? 'Enter a description'
-                            : null,
-                onSaved: (value) => _workspaceDescription = value!,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: const Text('Create Workspace'),
-              ),
-            ],
+                const SizedBox(height: 20),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Workspace Description',
+                  ),
+                  validator:
+                      (value) =>
+                          value == null || value.isEmpty
+                              ? 'Enter a description'
+                              : null,
+                  onSaved: (value) => _workspaceDescription = value!,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _submitForm,
+                  child: const Text('Create Workspace'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
