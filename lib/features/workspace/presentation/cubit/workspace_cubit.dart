@@ -6,9 +6,20 @@ import '../../domain/entities/workspace.dart';
 class WorkspaceCubit extends Cubit<WorkspaceState> {
   WorkspaceCubit() : super(WorkspaceState.initial());
 
-  void addWorkspace(String name, String description) {
-    final updatedList = List<Workspace>.from(state.workspaces)
-      ..add(Workspace(name: name, description: description));
+  void addWorkspace(
+    String name,
+    String description,
+    int numberOfMembers,
+    int numberOfProjects,
+  ) {
+    final updatedList = List<Workspace>.from(state.workspaces)..add(
+      Workspace(
+        name: name,
+        description: description,
+        numberOfMembers: numberOfMembers,
+        numberOfProjects: numberOfProjects,
+      ),
+    );
     emit(state.copyWith(workspaces: updatedList));
   }
 }

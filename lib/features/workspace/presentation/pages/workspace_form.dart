@@ -19,6 +19,8 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
   final _formKey = GlobalKey<FormState>();
   String _workspaceName = '';
   String _workspaceDescription = '';
+  int _workspaceNumberOfMembers = 0;
+  int _workspaceNumberOfProjects = 0;
 
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
@@ -26,6 +28,8 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
       context.read<WorkspaceCubit>().addWorkspace(
         _workspaceName,
         _workspaceDescription,
+        _workspaceNumberOfMembers,
+        _workspaceNumberOfProjects,
       );
       Navigator.of(context).pop(); // Return to previous screen
     }
@@ -126,6 +130,32 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
                               ? 'Enter a description'
                               : null,
                   onSaved: (value) => _workspaceDescription = value!,
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Workspace Number of Members',
+                  ),
+                  validator:
+                      (value) =>
+                          value == null || value.isEmpty
+                              ? 'Enter a number'
+                              : null,
+                  onSaved:
+                      (value) => _workspaceNumberOfMembers = int.parse(value!),
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Workspace Number of Projects',
+                  ),
+                  validator:
+                      (value) =>
+                          value == null || value.isEmpty
+                              ? 'Enter a number'
+                              : null,
+                  onSaved:
+                      (value) => _workspaceNumberOfProjects = int.parse(value!),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(

@@ -129,6 +129,14 @@ class WorkspacePage extends StatelessWidget {
                               workspace.description,
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
+                            Text(
+                              'Number of Members: ${workspace.numberOfMembers.toString()}',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            Text(
+                              'Number of Projects: ${workspace.numberOfProjects.toString()}',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
                           ],
                         ),
                       ],
