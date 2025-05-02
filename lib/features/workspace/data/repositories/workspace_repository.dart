@@ -33,4 +33,9 @@ class WorkspaceRepositoryImpl implements WorkspaceRepository {
       return Future.error(e.toString());
     }
   }
+
+  @override
+  Future<List<Member>> getUsers() async {
+    return remoteDataSource.getUsers();
+  }
 }

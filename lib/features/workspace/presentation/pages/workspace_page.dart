@@ -14,11 +14,10 @@ import 'package:go_router/go_router.dart';
 class WorkspacePage extends StatelessWidget {
   const WorkspacePage({super.key});
 
-  void _openAddMemberDialog(BuildContext context, Workspace workspace) {
-    final memberIdController = TextEditingController();
-    final memberNameController = TextEditingController();
-
-    showDialog(
+  void _openAddMemberDialog(BuildContext context, Workspace workspace) async {
+    final users =
+        await context.read<WorkspaceCubit>().getUsers(); // Fetch users
+    final selectedUser = await showDialog<Member>(
       context: context,
       builder:
           (ctx) => AlertDialog(
@@ -26,38 +25,29 @@ class WorkspacePage extends StatelessWidget {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextField(
-                  controller: memberIdController,
-                  decoration: const InputDecoration(labelText: "Member ID"),
-                ),
-                TextField(
-                  controller: memberNameController,
-                  decoration: const InputDecoration(labelText: "Member Name"),
+                DropdownButton<Member>(
+                  hint: const Text("Select a User"),
+                  onChanged: (Member? user) {
+                    Navigator.of(
+                      ctx,
+                    ).pop(user); // Close the dialog with the selected user
+                  },
+                  items:
+                      users.map((user) {
+                        return DropdownMenuItem<Member>(
+                          value: user,
+                          child: Text(user.name),
+                        );
+                      }).toList(),
                 ),
               ],
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(ctx).pop(),
-                child: const Text("Cancel"),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  final id = memberIdController.text.trim();
-                  final name = memberNameController.text.trim();
-                  if (id.isNotEmpty && name.isNotEmpty) {
-                    context.read<WorkspaceCubit>().addMember(
-                      workspace.id,
-                      Member(id: id, name: name),
-                    );
-                    Navigator.of(ctx).pop();
-                  }
-                },
-                child: const Text("Add"),
-              ),
-            ],
           ),
     );
+
+    if (selectedUser != null) {
+      context.read<WorkspaceCubit>().addMember(workspace.id, selectedUser);
+    }
   }
 
   void _navigateToCreateWorkspace(BuildContext context, String userId) {
