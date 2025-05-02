@@ -7,6 +7,7 @@ import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/workspace/domain/entities/member.dart';
 import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
+import 'package:focusflow/features/workspace/presentation/widgets/workspace_field.dart';
 import 'package:uuid/uuid.dart';
 
 class WorkspaceForm extends StatefulWidget {
@@ -27,11 +28,8 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState!.save();
 
-      // Generate a unique ID for the new workspace
-      String workspaceId = Uuid().v4(); // Using UUID to generate unique ID
-
       final newWorkspace = Workspace(
-        id: workspaceId, // Assign the generated ID
+        id: const Uuid().v4(),
         name: _workspaceName,
         description: _workspaceDescription,
         numberOfMembers: 1,
@@ -42,7 +40,7 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
       );
 
       context.read<WorkspaceCubit>().addWorkspace(newWorkspace);
-      Navigator.of(context).pop(); // Ensure correct navigation
+      Navigator.of(context).pop();
     }
   }
 
@@ -75,18 +73,17 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
                               context.read<AuthBloc>().add(SignOutRequested());
                             }
                           },
-                          itemBuilder: (BuildContext context) {
-                            return [
-                              PopupMenuItem<String>(
-                                value: 'user_name',
-                                child: Text('Name: ${state.user.name}'),
-                              ),
-                              const PopupMenuItem<String>(
-                                value: 'logout',
-                                child: Text('Logout'),
-                              ),
-                            ];
-                          },
+                          itemBuilder:
+                              (_) => [
+                                PopupMenuItem(
+                                  value: 'user_name',
+                                  child: Text('Name: ${state.user.name}'),
+                                ),
+                                const PopupMenuItem(
+                                  value: 'logout',
+                                  child: Text('Logout'),
+                                ),
+                              ],
                           child: CircleAvatar(
                             radius: 20,
                             backgroundColor: Colors.white,
@@ -114,30 +111,29 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    TextFormField(
-                      decoration: const InputDecoration(labelText: 'Name'),
+                    LabeledTextFormField(
+                      label: 'Name',
                       validator:
                           (value) =>
                               value == null || value.isEmpty
                                   ? 'Required'
                                   : null,
-                      onSaved: (value) => _workspaceName = value!,
+                      onSaved: (value) => _workspaceName = value ?? '',
                     ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Description',
-                      ),
+                    const SizedBox(height: 20),
+                    LabeledTextFormField(
+                      label: 'Description',
                       validator:
                           (value) =>
                               value == null || value.isEmpty
                                   ? 'Required'
                                   : null,
-                      onSaved: (value) => _workspaceDescription = value!,
+                      onSaved: (value) => _workspaceDescription = value ?? '',
                     ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Number of Projects',
-                      ),
+                    const SizedBox(height: 20),
+                    LabeledTextFormField(
+                      label: 'Number of Projects',
+                      keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Required';
@@ -148,7 +144,8 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
                         return null;
                       },
                       onSaved: (value) {
-                        _workspaceNumberOfProjects = int.tryParse(value!) ?? 0;
+                        _workspaceNumberOfProjects =
+                            int.tryParse(value ?? '') ?? 0;
                       },
                     ),
                     const SizedBox(height: 20),

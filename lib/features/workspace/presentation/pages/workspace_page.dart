@@ -80,85 +80,84 @@ class WorkspacePage extends StatelessWidget {
         ),
         body: BlocBuilder<WorkspaceCubit, WorkspaceState>(
           builder: (context, state) {
-            return GridView.builder(
+            return ListView.builder(
               padding: const EdgeInsets.all(16.0),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 20.0,
-                mainAxisSpacing: 20.0,
-              ),
               itemCount: state.workspaces.length,
               itemBuilder: (context, index) {
                 final workspace = state.workspaces[index];
                 return Card(
-                  elevation: 4,
+                  margin: const EdgeInsets.only(bottom: 16.0),
+                  elevation: 3,
                   color: AppPallete.gradient2,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Stack(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            child: const Text(
-                              'Enter',
-                              style: TextStyle(color: AppPallete.gradient1),
+                        // Workspace name
+                        Text(
+                          workspace.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: AppPallete.gradient1,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        // Description
+                        Text(
+                          workspace.description,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        // Info row
+                        Row(
+                          children: [
+                            Text(
+                              'Projects: ${workspace.numberOfProjects}',
+                              style: const TextStyle(fontSize: 13),
                             ),
-                          ),
+                            const SizedBox(width: 16),
+                            Text(
+                              'Members: ${workspace.numberOfMembers}',
+                              style: const TextStyle(fontSize: 13),
+                            ),
+                          ],
                         ),
-                        Positioned(
-                          bottom: 0,
-                          left: 0,
-                          child: IconButton(
-                            icon: const Icon(Icons.person_add),
-                            onPressed:
-                                () => AddMemberDialog.openAddMemberDialog(
-                                  context,
-                                  workspace,
-                                ),
-                          ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Created by: ${workspace.createdByName}',
+                          style: const TextStyle(fontSize: 12),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 50),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                workspace.name,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppPallete.gradient1,
-                                ),
+                        const SizedBox(height: 12),
+                        // Action buttons
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.person_add),
+                              onPressed:
+                                  () => AddMemberDialog.openAddMemberDialog(
+                                    context,
+                                    workspace,
+                                  ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Implement navigation to workspace detail
+                              },
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: AppPallete.gradient1,
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                workspace.description,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Projects: ${workspace.numberOfProjects}',
-                                style: const TextStyle(fontSize: 13),
-                              ),
-                              Text(
-                                'Members: ${workspace.numberOfMembers}',
-                                style: const TextStyle(fontSize: 13),
-                              ),
-                              Text(
-                                'Created by: ${workspace.createdByName}',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
+                              child: const Text('Enter'),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -168,6 +167,7 @@ class WorkspacePage extends StatelessWidget {
             );
           },
         ),
+
         floatingActionButton: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             if (state is AuthAuthenticated) {
