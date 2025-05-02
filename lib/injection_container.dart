@@ -9,6 +9,12 @@ import 'package:focusflow/features/auth/domain/usecases/sign_in_use_case.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_out_use_case.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_up_use_case.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:focusflow/features/project/data/repositories/project_repository.dart';
+import 'package:focusflow/features/project/data/sources/project_remote_data_source.dart';
+import 'package:focusflow/features/project/domain/repositories/project_repository.dart';
+import 'package:focusflow/features/project/domain/usecases/create_page_use_case.dart';
+import 'package:focusflow/features/project/domain/usecases/get_projects_use_case.dart';
+import 'package:focusflow/features/project/presentation/cubit/project_cubit.dart';
 import 'package:focusflow/features/workspace/data/repositories/workspace_repository.dart';
 import 'package:focusflow/features/workspace/data/sources/remote_workspace_data_source.dart';
 
@@ -87,4 +93,20 @@ Future<void> init() async {
       getUsersUseCase: sl<GetUsersUseCase>(),
     ),
   );
+
+  // Project Feature
+  // Remote Data Source
+  sl.registerLazySingleton<ProjectRemoteDataSource>(
+    () => ProjectRemoteDataSourceImpl(firestore: sl<FirebaseFirestore>()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<ProjectRepository>(() => ProjectRepositoryImpl());
+
+  // Use Cases
+  sl.registerLazySingleton<CreateProjectUseCase>(() => CreateProjectUseCase());
+  sl.registerLazySingleton<GetProjectsUseCase>(() => GetProjectsUseCase());
+
+  // Cubit
+  sl.registerFactory<ProjectCubit>(() => ProjectCubit());
 }

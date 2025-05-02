@@ -150,11 +150,10 @@ class WorkspacePage extends StatelessWidget {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                // Implement navigation to workspace detail
+                                context.push(
+                                  '/workspace/${workspace.id}/projects',
+                                );
                               },
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: AppPallete.gradient1,
-                              ),
                               child: const Text('Enter'),
                             ),
                           ],
