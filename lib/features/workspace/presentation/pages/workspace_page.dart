@@ -150,8 +150,9 @@ class WorkspacePage extends StatelessWidget {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                context.push(
-                                  '/workspace/${workspace.id}/projects',
+                                context.pushNamed(
+                                  'projectPage',
+                                  pathParameters: {'id': workspace.id},
                                 );
                               },
                               child: const Text('Enter'),
