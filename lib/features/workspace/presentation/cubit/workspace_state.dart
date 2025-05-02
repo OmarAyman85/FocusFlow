@@ -1,4 +1,3 @@
-// lib/features/workspace/application/workspace_state.dart
 import '../../domain/entities/workspace.dart';
 
 class WorkspaceState {
