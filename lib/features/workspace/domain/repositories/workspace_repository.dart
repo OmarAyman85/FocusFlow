@@ -1,6 +1,6 @@
-import '../entities/workspace.dart';
+import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 
 abstract class WorkspaceRepository {
   Future<void> createWorkspace(Workspace workspace);
-  List<Workspace> getWorkspaces(); // or Stream if using Firebase
+  Stream<List<Workspace>> getWorkspaces();
 }

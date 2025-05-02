@@ -8,27 +8,32 @@ import 'package:focusflow/features/auth/domain/usecases/sign_in.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_out.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_up.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:focusflow/features/workspace/data/repositories/workspace_repository.dart';
+import 'package:focusflow/features/workspace/data/sources/remote_workspace_data_source.dart';
+
+import 'package:focusflow/features/workspace/domain/repositories/workspace_repository.dart';
+import 'package:focusflow/features/workspace/domain/usecases/create_workspace.dart';
+import 'package:focusflow/features/workspace/domain/usecases/get_workspace_use_case.dart';
+import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
+
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  // Firebase services as singletons (they will be needed throughout the app's lifetime)
+  // Firebase services
   sl.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
   sl.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
 
-  // AuthRemoteDataSource as a lazy singleton (created only when needed)
+  // Auth Feature
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(
       auth: sl<FirebaseAuth>(),
       firestore: sl<FirebaseFirestore>(),
     ),
   );
-
-  // AuthRepository as a lazy singleton (created only when needed)
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl());
 
-  // Use cases as lazy singletons (created only when needed)
   sl.registerLazySingleton<SignUpUseCase>(
     () => SignUpUseCase(sl<AuthRepository>()),
   );
@@ -42,13 +47,42 @@ Future<void> init() async {
     () => GetCurrentUserUseCase(sl<AuthRepository>()),
   );
 
-  // Register AuthBloc
   sl.registerFactory<AuthBloc>(
     () => AuthBloc(
       signUp: sl<SignUpUseCase>(),
-      signIn: sl<SignInUseCase>(), // Pass SignInUseCase
+      signIn: sl<SignInUseCase>(),
       signOut: sl<SignOutUseCase>(),
       getCurrentUser: sl<GetCurrentUserUseCase>(),
+    ),
+  );
+
+  // Workspace Feature
+
+  // Remote Data Source
+  sl.registerLazySingleton<WorkspaceRemoteDataSource>(
+    () => WorkspaceRemoteDataSourceImpl(firestore: sl<FirebaseFirestore>()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<WorkspaceRepository>(
+    () => WorkspaceRepositoryImpl(
+      remoteDataSource: sl<WorkspaceRemoteDataSource>(),
+    ),
+  );
+
+  // Use Cases
+  sl.registerLazySingleton<CreateWorkspaceUseCase>(
+    () => CreateWorkspaceUseCase(repository: sl<WorkspaceRepository>()),
+  );
+  sl.registerLazySingleton<GetWorkspacesUseCase>(
+    () => GetWorkspacesUseCase(sl<WorkspaceRepository>()),
+  );
+
+  // Cubit
+  sl.registerFactory<WorkspaceCubit>(
+    () => WorkspaceCubit(
+      createWorkspaceUseCase: sl<CreateWorkspaceUseCase>(),
+      getWorkspacesUseCase: sl<GetWorkspacesUseCase>(),
     ),
   );
 }

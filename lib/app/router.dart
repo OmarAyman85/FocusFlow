@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/pages/workspace_form.dart';
 import 'package:focusflow/features/workspace/presentation/pages/workspace_page.dart';
+import 'package:focusflow/injection_container.dart';
 import 'package:go_router/go_router.dart';
 import '../features/auth/presentation/pages/sign_in_page.dart';
 import '../features/auth/presentation/pages/sign_up_page.dart';
@@ -14,7 +15,7 @@ final router = GoRouter(
 
     ShellRoute(
       builder: (context, state, child) {
-        return BlocProvider(create: (_) => WorkspaceCubit(), child: child);
+        return BlocProvider(create: (_) => sl<WorkspaceCubit>(), child: child);
       },
       routes: [
         GoRoute(

@@ -4,9 +4,9 @@ import '../repositories/workspace_repository.dart';
 class CreateWorkspaceUseCase {
   final WorkspaceRepository repository;
 
-  CreateWorkspaceUseCase(this.repository);
+  CreateWorkspaceUseCase({required this.repository});
 
-  Future<void> call(Workspace workspace) {
+  Future<void> call(Workspace workspace) async {
     return repository.createWorkspace(workspace);
   }
 }
