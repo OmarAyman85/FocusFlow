@@ -43,7 +43,7 @@ class _SignInPageState extends State<SignInPage> {
                   const SnackBar(content: Text('Sign In Successful!')),
                 );
                 context.read<AuthBloc>().add(AppStarted()); // Refresh user
-                context.go('/home'); // Navigate to workspace/home
+                context.go('/workspace'); // Navigate to workspace/home
               } else if (state is AuthError) {
                 ScaffoldMessenger.of(
                   context,

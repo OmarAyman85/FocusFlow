@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/features/project/presentation/cubit/project_cubit.dart';
+import 'package:focusflow/features/project/presentation/pages/project_form.dart';
 import 'package:focusflow/features/project/presentation/pages/project_page.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/pages/workspace_form.dart';
@@ -15,15 +16,26 @@ final router = GoRouter(
     GoRoute(path: '/signin', builder: (context, state) => SignInPage()),
     GoRoute(path: '/signup', builder: (context, state) => SignUpPage()),
 
-    GoRoute(
-      path: '/workspace/:id/projects',
-      builder: (context, state) {
-        final workspaceId = state.pathParameters['id']!;
-        return BlocProvider(
-          create: (_) => sl<ProjectCubit>(),
-          child: ProjectPage(workspaceId: workspaceId),
-        );
+    ShellRoute(
+      builder: (context, state, child) {
+        return BlocProvider(create: (_) => sl<ProjectCubit>(), child: child);
       },
+      routes: [
+        GoRoute(
+          path: '/workspace/:id/projects',
+          builder: (context, state) {
+            final workspaceId = state.pathParameters['id']!;
+            return ProjectPage(workspaceId: workspaceId);
+          },
+        ),
+        GoRoute(
+          path: '/workspace/:workspaceId/project-form',
+          builder: (context, state) {
+            final workspaceId = state.pathParameters['workspaceId']!;
+            return ProjectForm(workspaceId: workspaceId);
+          },
+        ),
+      ],
     ),
 
     ShellRoute(
@@ -32,7 +44,7 @@ final router = GoRouter(
       },
       routes: [
         GoRoute(
-          path: '/home',
+          path: '/workspace',
           builder: (context, state) => const WorkspacePage(),
         ),
         GoRoute(

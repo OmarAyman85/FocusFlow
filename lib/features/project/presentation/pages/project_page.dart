@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/features/project/presentation/pages/project_form.dart';
 import '../cubit/project_cubit.dart';
 import '../cubit/project_state.dart';
 
@@ -25,19 +26,51 @@ class _ProjectPageState extends State<ProjectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Projects:')),
+      appBar: AppBar(title: const Text('Projects')),
       body: BlocBuilder<ProjectCubit, ProjectState>(
         builder: (context, state) {
           if (state is ProjectLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is ProjectLoaded) {
             return ListView.builder(
+              padding: const EdgeInsets.all(16.0),
               itemCount: state.projects.length,
               itemBuilder: (context, index) {
                 final project = state.projects[index];
-                return ListTile(
-                  title: Text(project.name),
-                  subtitle: Text(project.description),
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 16.0),
+                  elevation: 3,
+                  color:
+                      Colors
+                          .blueGrey
+                          .shade50, // You can adjust the color to match
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          project.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          project.description,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                    ),
+                  ),
                 );
               },
             );
@@ -49,7 +82,11 @@ class _ProjectPageState extends State<ProjectPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Implement adding a new project
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => ProjectForm(workspaceId: widget.workspaceId),
+            ),
+          );
         },
         child: const Icon(Icons.add),
       ),
