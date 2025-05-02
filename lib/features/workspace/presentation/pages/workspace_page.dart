@@ -8,8 +8,8 @@ import 'package:focusflow/features/workspace/domain/entities/member.dart';
 import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_state.dart';
+import 'package:focusflow/features/workspace/presentation/pages/workspace_form.dart'; // Ensure this import exists
 import 'package:go_router/go_router.dart';
-import 'workspace_form.dart';
 
 class WorkspacePage extends StatelessWidget {
   const WorkspacePage({super.key});
@@ -47,7 +47,7 @@ class WorkspacePage extends StatelessWidget {
                   final name = memberNameController.text.trim();
                   if (id.isNotEmpty && name.isNotEmpty) {
                     context.read<WorkspaceCubit>().addMember(
-                      workspace.name, // Use workspaceId here if available
+                      workspace.id,
                       Member(id: id, name: name),
                     );
                     Navigator.of(ctx).pop();
@@ -58,6 +58,12 @@ class WorkspacePage extends StatelessWidget {
             ],
           ),
     );
+  }
+
+  void _navigateToCreateWorkspace(BuildContext context, String userId) {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => WorkspaceForm(userId: userId)));
   }
 
   @override
@@ -162,28 +168,41 @@ class WorkspacePage extends StatelessWidget {
                                 () => _openAddMemberDialog(context, workspace),
                           ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 35),
-                            Text(
-                              workspace.name,
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              workspace.description,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            Text(
-                              'Members: ${workspace.numberOfMembers}',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            Text(
-                              'Projects: ${workspace.numberOfProjects}',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 50),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                workspace.name,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                workspace.description,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Projects: ${workspace.numberOfProjects}',
+                                style: const TextStyle(fontSize: 13),
+                              ),
+                              Text(
+                                'Members: ${workspace.numberOfMembers}',
+                                style: const TextStyle(fontSize: 13),
+                              ),
+                              Text(
+                                'Created by: ${workspace.createdByName}',
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -196,19 +215,13 @@ class WorkspacePage extends StatelessWidget {
         floatingActionButton: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             if (state is AuthAuthenticated) {
-              final userId = state.user.uid;
               return FloatingActionButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => WorkspaceForm(userId: userId),
-                    ),
-                  );
-                },
+                onPressed:
+                    () => _navigateToCreateWorkspace(context, state.user.uid),
                 child: const Icon(Icons.add),
               );
             } else {
-              return const SizedBox();
+              return const SizedBox.shrink();
             }
           },
         ),

@@ -23,7 +23,7 @@ class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
       return snapshot.docs
           .map((doc) {
             final data = doc.data();
-            return Workspace.fromMap(data);
+            return Workspace.fromMap(data, doc.id); // include doc.id
           })
           .where((workspace) {
             final isCreator = workspace.createdById == userId;

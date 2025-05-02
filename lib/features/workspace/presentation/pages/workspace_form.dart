@@ -5,6 +5,7 @@ import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/workspace/domain/entities/member.dart';
 import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
+import 'package:uuid/uuid.dart'; // Import for generating UUIDs
 
 class WorkspaceForm extends StatefulWidget {
   final String userId;
@@ -18,14 +19,17 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
   final _formKey = GlobalKey<FormState>();
   String _workspaceName = '';
   String _workspaceDescription = '';
-  // int _workspaceNumberOfMembers = 0;
   int _workspaceNumberOfProjects = 0;
 
   void _submitForm(String userId, String userName) {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState!.save();
 
+      // Generate a unique ID for the new workspace
+      String workspaceId = Uuid().v4(); // Using UUID to generate unique ID
+
       final newWorkspace = Workspace(
+        id: workspaceId, // Assign the generated ID
         name: _workspaceName,
         description: _workspaceDescription,
         numberOfMembers: 1,
@@ -36,7 +40,7 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
       );
 
       context.read<WorkspaceCubit>().addWorkspace(newWorkspace);
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(); // Ensure correct navigation
     }
   }
 
@@ -80,14 +84,18 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
                       decoration: const InputDecoration(
                         labelText: 'Number of Projects',
                       ),
-                      validator:
-                          (value) =>
-                              value == null || value.isEmpty
-                                  ? 'Required'
-                                  : null,
-                      onSaved:
-                          (value) =>
-                              _workspaceNumberOfProjects = int.parse(value!),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Required';
+                        }
+                        if (int.tryParse(value) == null) {
+                          return 'Please enter a valid number';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _workspaceNumberOfProjects = int.tryParse(value!) ?? 0;
+                      },
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(

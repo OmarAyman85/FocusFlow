@@ -1,6 +1,7 @@
 import 'package:focusflow/features/workspace/domain/entities/member.dart';
 
 class Workspace {
+  final String id;
   final String name;
   final String description;
   final int numberOfMembers;
@@ -10,6 +11,7 @@ class Workspace {
   final List<Member> members;
 
   Workspace({
+    required this.id,
     required this.name,
     required this.description,
     required this.numberOfMembers,
@@ -30,8 +32,9 @@ class Workspace {
     };
   }
 
-  factory Workspace.fromMap(Map<String, dynamic> map) {
+  factory Workspace.fromMap(Map<String, dynamic> map, String id) {
     return Workspace(
+      id: id,
       name: map['name'],
       description: map['description'],
       numberOfMembers: map['numberOfMembers'],
