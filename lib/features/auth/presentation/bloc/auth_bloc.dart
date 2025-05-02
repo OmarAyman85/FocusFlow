@@ -87,7 +87,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
 
-    // Add this block to handle AppStart event
     on<AppStarted>((event, emit) async {
       final result = await getCurrentUser.call();
       result.fold(
