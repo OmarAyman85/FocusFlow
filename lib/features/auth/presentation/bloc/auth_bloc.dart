@@ -1,9 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/features/auth/data/models/user_model.dart';
+import 'package:focusflow/features/auth/domain/usecases/get_all_users_use_case.dart';
 import 'package:focusflow/features/auth/domain/usecases/get_current_user.dart';
-import 'package:focusflow/features/auth/domain/usecases/sign_up.dart';
-import 'package:focusflow/features/auth/domain/usecases/sign_out.dart';
-import 'package:focusflow/features/auth/domain/usecases/sign_in.dart';
+import 'package:focusflow/features/auth/domain/usecases/sign_up_use_case.dart';
+import 'package:focusflow/features/auth/domain/usecases/sign_out_use_case.dart';
+import 'package:focusflow/features/auth/domain/usecases/sign_in_use_case.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
@@ -12,12 +13,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInUseCase signIn;
   final SignOutUseCase signOut;
   final GetCurrentUserUseCase getCurrentUser;
+  final GetAllUsersUseCase getAllUsers;
 
   AuthBloc({
     required this.signUp,
     required this.signIn,
     required this.signOut,
     required this.getCurrentUser,
+    required this.getAllUsers,
   }) : super(AuthInitial()) {
     on<SignUpRequested>((event, emit) async {
       emit(AuthLoading());
@@ -90,6 +93,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       result.fold(
         (failure) => emit(AuthUnauthenticated()),
         (user) => emit(AuthAuthenticated(user)),
+      );
+    });
+
+    on<GetAllUsersRequested>((event, emit) async {
+      emit(AuthLoading());
+      final result = await getAllUsers.call();
+      result.fold(
+        (failure) => emit(AuthError(failure.toString())),
+        (users) => emit(AuthUsersFetched(users)),
       );
     });
   }

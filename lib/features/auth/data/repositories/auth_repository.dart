@@ -37,4 +37,13 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(Failure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, List<UserModel>>> getAllUsers() async {
+    try {
+      return sl<AuthRemoteDataSource>().getAllUsers();
+    } catch (e) {
+      return Left(Failure('Failed to fetch users: $e'));
+    }
+  }
 }

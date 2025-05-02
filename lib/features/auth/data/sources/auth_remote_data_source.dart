@@ -10,6 +10,7 @@ abstract class AuthRemoteDataSource {
   Future<Either<Failure, UserModel>> signIn(UserModel userModel);
   Future<void> signOut();
   Future<Either<Failure, UserModel>> getCurrentUser();
+  Future<Either<Failure, List<UserModel>>> getAllUsers();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -112,6 +113,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return Left(Failure('Failed to get current user: ${e.message}'));
     } catch (e) {
       return Left(Failure('Failed to get current user: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<UserModel>>> getAllUsers() async {
+    try {
+      final querySnapshot = await firestore.collection('users').get();
+      final users =
+          querySnapshot.docs
+              .map((doc) => UserModel.fromMap(doc.data()))
+              .toList();
+      return Right(users);
+    } catch (e) {
+      return Left(Failure('Failed to fetch users: $e'));
     }
   }
 }

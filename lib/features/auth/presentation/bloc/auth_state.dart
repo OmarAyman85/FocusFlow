@@ -13,6 +13,11 @@ class AuthAuthenticated extends AuthState {
 
 class AuthUnauthenticated extends AuthState {}
 
+class AuthUsersFetched extends AuthState {
+  final List<UserModel> users;
+  AuthUsersFetched(this.users);
+}
+
 class AuthError extends AuthState {
   final String message;
   AuthError(this.message);
