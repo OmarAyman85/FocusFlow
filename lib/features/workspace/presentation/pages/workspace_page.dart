@@ -1,60 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/core/utils/constants/loading_spinner.dart';
+import 'package:focusflow/core/utils/themes/app_pallete.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
-import 'package:focusflow/features/workspace/domain/entities/member.dart';
-import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_state.dart';
-import 'package:focusflow/features/workspace/presentation/pages/workspace_form.dart'; // Ensure this import exists
+import 'package:focusflow/features/workspace/presentation/pages/workspace_form.dart';
+import 'package:focusflow/features/workspace/presentation/services/add_member_dialog.dart';
 import 'package:go_router/go_router.dart';
 
 class WorkspacePage extends StatelessWidget {
   const WorkspacePage({super.key});
-
-  void _openAddMemberDialog(BuildContext context, Workspace workspace) async {
-    final users =
-        await context.read<WorkspaceCubit>().getUsers(); // Fetch users
-    final selectedUser = await showDialog<Member>(
-      context: context,
-      builder:
-          (ctx) => AlertDialog(
-            title: const Text("Add Member"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                DropdownButton<Member>(
-                  hint: const Text("Select a User"),
-                  onChanged: (Member? user) {
-                    Navigator.of(
-                      ctx,
-                    ).pop(user); // Close the dialog with the selected user
-                  },
-                  items:
-                      users.map((user) {
-                        return DropdownMenuItem<Member>(
-                          value: user,
-                          child: Text(user.name),
-                        );
-                      }).toList(),
-                ),
-              ],
-            ),
-          ),
-    );
-
-    if (selectedUser != null) {
-      context.read<WorkspaceCubit>().addMember(workspace.id, selectedUser);
-    }
-  }
-
-  void _navigateToCreateWorkspace(BuildContext context, String userId) {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => WorkspaceForm(userId: userId)));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,16 +84,17 @@ class WorkspacePage extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 2.0,
-                mainAxisSpacing: 2.0,
+                crossAxisSpacing: 20.0,
+                mainAxisSpacing: 20.0,
               ),
               itemCount: state.workspaces.length,
               itemBuilder: (context, index) {
                 final workspace = state.workspaces[index];
                 return Card(
                   elevation: 4,
+                  color: AppPallete.gradient2,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(6.0),
@@ -146,7 +105,10 @@ class WorkspacePage extends StatelessWidget {
                           right: 0,
                           child: ElevatedButton(
                             onPressed: () {},
-                            child: const Text('Enter'),
+                            child: const Text(
+                              'Enter',
+                              style: TextStyle(color: AppPallete.gradient1),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -155,7 +117,10 @@ class WorkspacePage extends StatelessWidget {
                           child: IconButton(
                             icon: const Icon(Icons.person_add),
                             onPressed:
-                                () => _openAddMemberDialog(context, workspace),
+                                () => AddMemberDialog.openAddMemberDialog(
+                                  context,
+                                  workspace,
+                                ),
                           ),
                         ),
                         Padding(
@@ -168,6 +133,7 @@ class WorkspacePage extends StatelessWidget {
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
+                                  color: AppPallete.gradient1,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -207,7 +173,11 @@ class WorkspacePage extends StatelessWidget {
             if (state is AuthAuthenticated) {
               return FloatingActionButton(
                 onPressed:
-                    () => _navigateToCreateWorkspace(context, state.user.uid),
+                    () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => WorkspaceForm(userId: state.user.uid),
+                      ),
+                    ),
                 child: const Icon(Icons.add),
               );
             } else {
