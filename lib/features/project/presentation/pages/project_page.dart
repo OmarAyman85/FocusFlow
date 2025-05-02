@@ -5,8 +5,8 @@ import 'package:focusflow/core/utils/themes/app_pallete.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
-import 'package:focusflow/features/project/presentation/pages/project_form.dart';
 import 'package:focusflow/features/project/presentation/services/add_member_dialog.dart';
+import 'package:go_router/go_router.dart';
 import '../cubit/project_cubit.dart';
 import '../cubit/project_state.dart';
 
@@ -34,6 +34,7 @@ class _ProjectPageState extends State<ProjectPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Projects'),
+        leading: BackButton(onPressed: () => GoRouter.of(context).pop()),
         centerTitle: true,
         actions: [
           BlocBuilder<AuthBloc, AuthState>(
@@ -85,6 +86,7 @@ class _ProjectPageState extends State<ProjectPage> {
           ),
         ],
       ),
+
       body: BlocBuilder<ProjectCubit, ProjectState>(
         builder: (context, state) {
           if (state is ProjectLoading) {
@@ -107,6 +109,7 @@ class _ProjectPageState extends State<ProjectPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Project name
                         Text(
                           project.name,
                           style: const TextStyle(
@@ -116,6 +119,7 @@ class _ProjectPageState extends State<ProjectPage> {
                           ),
                         ),
                         const SizedBox(height: 8),
+                        // Project description
                         Text(
                           project.description,
                           style: const TextStyle(
@@ -124,6 +128,26 @@ class _ProjectPageState extends State<ProjectPage> {
                           ),
                         ),
                         const SizedBox(height: 8),
+                        // Info row
+                        Row(
+                          children: [
+                            Text(
+                              'Task Boards: ${project.numberOfBoards}',
+                              style: const TextStyle(fontSize: 13),
+                            ),
+                            const SizedBox(width: 16),
+                            Text(
+                              'Members: ${project.numberOfMembers}',
+                              style: const TextStyle(fontSize: 13),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Created by: ${project.createdByName}',
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        const SizedBox(height: 12),
                         IconButton(
                           icon: const Icon(Icons.person_add),
                           onPressed: () {
@@ -134,6 +158,12 @@ class _ProjectPageState extends State<ProjectPage> {
                               widget.workspaceId,
                             );
                           },
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            // TODO : Implement project details page
+                          },
+                          child: const Text('Enter'),
                         ),
                       ],
                     ),
@@ -149,11 +179,8 @@ class _ProjectPageState extends State<ProjectPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => ProjectForm(workspaceId: widget.workspaceId),
-            ),
-          );
+          final workspaceId = widget.workspaceId;
+          GoRouter.of(context).push('/workspace/$workspaceId/project-form');
         },
         child: const Icon(Icons.add),
       ),

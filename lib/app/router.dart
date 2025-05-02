@@ -23,7 +23,6 @@ final router = GoRouter(
       routes: [
         GoRoute(
           path: '/workspace/:id/projects',
-          name: 'projectPage',
           builder: (context, state) {
             final workspaceId = state.pathParameters['id']!;
             return ProjectPage(workspaceId: workspaceId);

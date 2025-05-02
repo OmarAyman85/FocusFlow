@@ -7,7 +7,6 @@ import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_state.dart';
-import 'package:focusflow/features/workspace/presentation/pages/workspace_form.dart';
 import 'package:focusflow/features/workspace/presentation/services/add_member_dialog.dart';
 import 'package:go_router/go_router.dart';
 
@@ -150,10 +149,10 @@ class WorkspacePage extends StatelessWidget {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                context.pushNamed(
-                                  'projectPage',
-                                  pathParameters: {'id': workspace.id},
-                                );
+                                final workspaceId = workspace.id;
+                                GoRouter.of(
+                                  context,
+                                ).push('/workspace/$workspaceId/projects');
                               },
                               child: const Text('Enter'),
                             ),
@@ -172,12 +171,10 @@ class WorkspacePage extends StatelessWidget {
           builder: (context, state) {
             if (state is AuthAuthenticated) {
               return FloatingActionButton(
-                onPressed:
-                    () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => WorkspaceForm(userId: state.user.uid),
-                      ),
-                    ),
+                onPressed: () {
+                  final userId = state.user.uid;
+                  GoRouter.of(context).push('/workspace-form/$userId');
+                },
                 child: const Icon(Icons.add),
               );
             } else {

@@ -8,6 +8,7 @@ import 'package:focusflow/features/project/domain/entities/member.dart';
 import 'package:focusflow/features/project/domain/entities/project.dart';
 import 'package:focusflow/features/project/presentation/cubit/project_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/widgets/workspace_field.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 
 class ProjectForm extends StatefulWidget {
@@ -32,7 +33,7 @@ class _ProjectFormState extends State<ProjectForm> {
         name: _projectName,
         description: _projectDescription,
         numberOfMembers: 1,
-        numberOfBoards: 0, 
+        numberOfBoards: 0,
         workspaceId: widget.workspaceId,
         createdById: userId,
         createdByName: userName,
@@ -55,6 +56,7 @@ class _ProjectFormState extends State<ProjectForm> {
           return Scaffold(
             appBar: AppBar(
               title: const Text('Create Project'),
+              leading: BackButton(onPressed: () => GoRouter.of(context).pop()),
               centerTitle: true,
               actions: [
                 BlocBuilder<AuthBloc, AuthState>(
