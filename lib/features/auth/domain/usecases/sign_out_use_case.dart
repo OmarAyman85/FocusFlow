@@ -1,13 +1,8 @@
-import 'package:focusflow/core/usecases/usecase.dart';
 import 'package:focusflow/features/auth/domain/repositories/auth_repository.dart';
+import 'package:focusflow/injection_container.dart';
 
-class SignOutUseCase implements UseCase<void, void> {
-  final AuthRepository repository;
-
-  SignOutUseCase(this.repository);
-
-  @override
+class SignOutUseCase {
   Future<void> call({void params}) async {
-    return await repository.signOut();
+    return await sl<AuthRepository>().signOut();
   }
 }

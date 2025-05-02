@@ -37,21 +37,13 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl());
 
-  sl.registerLazySingleton<SignUpUseCase>(
-    () => SignUpUseCase(sl<AuthRepository>()),
-  );
-  sl.registerLazySingleton<SignInUseCase>(
-    () => SignInUseCase(sl<AuthRepository>()),
-  );
-  sl.registerLazySingleton<SignOutUseCase>(
-    () => SignOutUseCase(sl<AuthRepository>()),
-  );
+  sl.registerLazySingleton<SignUpUseCase>(() => SignUpUseCase());
+  sl.registerLazySingleton<SignInUseCase>(() => SignInUseCase());
+  sl.registerLazySingleton<SignOutUseCase>(() => SignOutUseCase());
   sl.registerLazySingleton<GetCurrentUserUseCase>(
-    () => GetCurrentUserUseCase(sl<AuthRepository>()),
+    () => GetCurrentUserUseCase(),
   );
-  sl.registerLazySingleton<GetAllUsersUseCase>(
-    () => GetAllUsersUseCase(sl<AuthRepository>()),
-  );
+  sl.registerLazySingleton<GetAllUsersUseCase>(() => GetAllUsersUseCase());
 
   sl.registerFactory<AuthBloc>(
     () => AuthBloc(
@@ -78,17 +70,13 @@ Future<void> init() async {
 
   // Use Cases
   sl.registerLazySingleton<CreateWorkspaceUseCase>(
-    () => CreateWorkspaceUseCase(repository: sl<WorkspaceRepository>()),
+    () => CreateWorkspaceUseCase(),
   );
-  sl.registerLazySingleton<GetWorkspacesUseCase>(
-    () => GetWorkspacesUseCase(repository: sl<WorkspaceRepository>()),
-  );
+  sl.registerLazySingleton<GetWorkspacesUseCase>(() => GetWorkspacesUseCase());
   sl.registerLazySingleton<AddMemberToWorkspaceUseCase>(
-    () => AddMemberToWorkspaceUseCase(repository: sl<WorkspaceRepository>()),
+    () => AddMemberToWorkspaceUseCase(),
   );
-  sl.registerLazySingleton<GetUsersUseCase>(
-    () => GetUsersUseCase(repository: sl<WorkspaceRepository>()),
-  );
+  sl.registerLazySingleton<GetUsersUseCase>(() => GetUsersUseCase());
 
   // Cubit
   sl.registerFactory<WorkspaceCubit>(
