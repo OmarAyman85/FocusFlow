@@ -12,8 +12,10 @@ import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/project/data/repositories/project_repository.dart';
 import 'package:focusflow/features/project/data/sources/project_remote_data_source.dart';
 import 'package:focusflow/features/project/domain/repositories/project_repository.dart';
+import 'package:focusflow/features/project/domain/usecases/add_member_to_project_use_case.dart';
 import 'package:focusflow/features/project/domain/usecases/create_page_use_case.dart';
 import 'package:focusflow/features/project/domain/usecases/get_projects_use_case.dart';
+import 'package:focusflow/features/project/domain/usecases/get_users_use_case.dart';
 import 'package:focusflow/features/project/presentation/cubit/project_cubit.dart';
 import 'package:focusflow/features/workspace/data/repositories/workspace_repository.dart';
 import 'package:focusflow/features/workspace/data/sources/remote_workspace_data_source.dart';
@@ -82,7 +84,9 @@ Future<void> init() async {
   sl.registerLazySingleton<AddMemberToWorkspaceUseCase>(
     () => AddMemberToWorkspaceUseCase(),
   );
-  sl.registerLazySingleton<GetUsersUseCase>(() => GetUsersUseCase());
+  sl.registerLazySingleton<GetWorkspaceUsersUseCase>(
+    () => GetWorkspaceUsersUseCase(),
+  );
 
   // Cubit
   sl.registerFactory<WorkspaceCubit>(
@@ -90,7 +94,7 @@ Future<void> init() async {
       createWorkspaceUseCase: sl<CreateWorkspaceUseCase>(),
       getWorkspacesUseCase: sl<GetWorkspacesUseCase>(),
       addMemberToWorkspaceUseCase: sl<AddMemberToWorkspaceUseCase>(),
-      getUsersUseCase: sl<GetUsersUseCase>(),
+      getUsersUseCase: sl<GetWorkspaceUsersUseCase>(),
     ),
   );
 
@@ -106,6 +110,12 @@ Future<void> init() async {
   // Use Cases
   sl.registerLazySingleton<CreateProjectUseCase>(() => CreateProjectUseCase());
   sl.registerLazySingleton<GetProjectsUseCase>(() => GetProjectsUseCase());
+  sl.registerLazySingleton<AddMemberToProjectUseCase>(
+    () => AddMemberToProjectUseCase(),
+  );
+  sl.registerLazySingleton<GetProjectUsersUseCase>(
+    () => GetProjectUsersUseCase(),
+  );
 
   // Cubit
   sl.registerFactory<ProjectCubit>(() => ProjectCubit());

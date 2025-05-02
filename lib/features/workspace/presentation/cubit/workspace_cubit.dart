@@ -11,7 +11,7 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
   final CreateWorkspaceUseCase createWorkspaceUseCase;
   final GetWorkspacesUseCase getWorkspacesUseCase;
   final AddMemberToWorkspaceUseCase addMemberToWorkspaceUseCase;
-  final GetUsersUseCase getUsersUseCase;
+  final GetWorkspaceUsersUseCase getUsersUseCase;
 
   WorkspaceCubit({
     required this.createWorkspaceUseCase,

@@ -4,6 +4,7 @@ import 'package:focusflow/core/utils/constants/loading_spinner.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
+import 'package:focusflow/features/project/domain/entities/member.dart';
 import 'package:focusflow/features/project/domain/entities/project.dart';
 import 'package:focusflow/features/project/presentation/cubit/project_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/widgets/workspace_field.dart';
@@ -30,15 +31,15 @@ class _ProjectFormState extends State<ProjectForm> {
         id: const Uuid().v4(),
         name: _projectName,
         description: _projectDescription,
+        numberOfMembers: 1,
+        numberOfBoards: 0, 
         workspaceId: widget.workspaceId,
-        createdBy: userId,
+        createdById: userId,
         createdByName: userName,
-        memberIds: [],
+        members: [Member(id: userId, name: userName)],
       );
 
-      context.read<ProjectCubit>().createProject(
-        newProject,
-      ); // Update with your specific method for adding a project
+      context.read<ProjectCubit>().createProject(newProject);
       Navigator.of(context).pop();
     }
   }
@@ -130,6 +131,8 @@ class _ProjectFormState extends State<ProjectForm> {
                       onSaved: (value) => _projectDescription = value ?? '',
                     ),
                     const SizedBox(height: 20),
+                    // Add a member selection widget here to populate the members list
+                    // You would want to provide a way for the user to select members and add them to _members
                     ElevatedButton(
                       onPressed: () => _submitForm(userId, userName),
                       child: const Text('Create Project'),

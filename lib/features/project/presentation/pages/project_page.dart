@@ -6,6 +6,7 @@ import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/project/presentation/pages/project_form.dart';
+import 'package:focusflow/features/project/presentation/services/add_member_dialog.dart';
 import '../cubit/project_cubit.dart';
 import '../cubit/project_state.dart';
 
@@ -97,10 +98,7 @@ class _ProjectPageState extends State<ProjectPage> {
                 return Card(
                   margin: const EdgeInsets.only(bottom: 16.0),
                   elevation: 3,
-                  color:
-                      Colors
-                          .blueGrey
-                          .shade50, // You can adjust the color to match
+                  color: AppPallete.gradient2,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -126,6 +124,17 @@ class _ProjectPageState extends State<ProjectPage> {
                           ),
                         ),
                         const SizedBox(height: 8),
+                        IconButton(
+                          icon: const Icon(Icons.person_add),
+                          onPressed: () {
+                            // Trigger dialog
+                            AddProjectMemberDialog.openAddProjectMemberDialog(
+                              context,
+                              project.id,
+                              widget.workspaceId,
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),
