@@ -20,7 +20,7 @@ class WorkspacePage extends StatelessWidget {
         if (state is AuthUnauthenticated) {
           GoRouter.of(context).go('/signin');
         } else if (state is AuthAuthenticated) {
-          context.read<WorkspaceCubit>().loadUserWorkspaces(state.user.uid);
+          context.read<WorkspaceCubit>().loadWorkspaces(state.user.uid);
         }
       },
       child: Scaffold(
@@ -79,94 +79,99 @@ class WorkspacePage extends StatelessWidget {
         ),
         body: BlocBuilder<WorkspaceCubit, WorkspaceState>(
           builder: (context, state) {
-            return ListView.builder(
-              padding: const EdgeInsets.all(16.0),
-              itemCount: state.workspaces.length,
-              itemBuilder: (context, index) {
-                final workspace = state.workspaces[index];
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 16.0),
-                  elevation: 3,
-                  color: AppPallete.gradient2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Workspace name
-                        Text(
-                          workspace.name,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: AppPallete.gradient1,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        // Description
-                        Text(
-                          workspace.description,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        // Info row
-                        Row(
-                          children: [
-                            Text(
-                              'Projects: ${workspace.numberOfProjects}',
-                              style: const TextStyle(fontSize: 13),
-                            ),
-                            const SizedBox(width: 16),
-                            Text(
-                              'Members: ${workspace.numberOfMembers}',
-                              style: const TextStyle(fontSize: 13),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Created by: ${workspace.createdByName}',
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                        const SizedBox(height: 12),
-                        // Action buttons
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.person_add),
-                              onPressed:
-                                  () => AddMemberDialog.openAddMemberDialog(
-                                    context,
-                                    workspace,
-                                  ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                final workspaceId = workspace.id;
-                                GoRouter.of(
-                                  context,
-                                ).push('/workspace/$workspaceId/projects');
-                              },
-                              child: const Text('Enter'),
-                            ),
-                          ],
-                        ),
-                      ],
+            if (state is WorkspaceLoading) {
+              return const LoadingSpinnerWidget();
+            } else if (state is WorkspaceLoaded) {
+              final workspaces = state.workspaces;
+
+              return ListView.builder(
+                padding: const EdgeInsets.all(16.0),
+                itemCount: workspaces.length,
+                itemBuilder: (context, index) {
+                  final workspace = workspaces[index];
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 16.0),
+                    elevation: 3,
+                    color: AppPallete.gradient2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                  ),
-                );
-              },
-            );
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            workspace.name,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: AppPallete.gradient1,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            workspace.description,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Text(
+                                'Projects: ${workspace.numberOfProjects}',
+                                style: const TextStyle(fontSize: 13),
+                              ),
+                              const SizedBox(width: 16),
+                              Text(
+                                'Members: ${workspace.numberOfMembers}',
+                                style: const TextStyle(fontSize: 13),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Created by: ${workspace.createdByName}',
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                          const SizedBox(height: 12),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.person_add),
+                                onPressed:
+                                    () => AddMemberDialog.openAddMemberDialog(
+                                      context,
+                                      workspace,
+                                    ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  final workspaceId = workspace.id;
+                                  GoRouter.of(
+                                    context,
+                                  ).push('/workspace/$workspaceId/projects');
+                                },
+                                child: const Text('Enter'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            } else if (state is WorkspaceError) {
+              return Center(child: Text('Error: ${state.message}'));
+            } else {
+              return const Center(child: Text('No workspaces found.'));
+            }
           },
         ),
-
         floatingActionButton: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             if (state is AuthAuthenticated) {

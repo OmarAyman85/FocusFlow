@@ -39,7 +39,7 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
         members: [Member(id: userId, name: userName)],
       );
 
-      context.read<WorkspaceCubit>().addWorkspace(newWorkspace);
+      context.read<WorkspaceCubit>().createWorkspace(newWorkspace, userId);
       Navigator.of(context).pop();
     }
   }
@@ -159,7 +159,7 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
             ),
           );
         } else {
-          return const Center(child: CircularProgressIndicator());
+          return LoadingSpinnerWidget();
         }
       },
     );

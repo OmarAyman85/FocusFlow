@@ -148,22 +148,26 @@ class _ProjectPageState extends State<ProjectPage> {
                           style: const TextStyle(fontSize: 12),
                         ),
                         const SizedBox(height: 12),
-                        IconButton(
-                          icon: const Icon(Icons.person_add),
-                          onPressed: () {
-                            // Trigger dialog
-                            AddProjectMemberDialog.openAddProjectMemberDialog(
-                              context,
-                              project.id,
-                              widget.workspaceId,
-                            );
-                          },
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            // TODO : Implement project details page
-                          },
-                          child: const Text('Enter'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.person_add),
+                              onPressed: () {
+                                AddProjectMemberDialog.openAddProjectMemberDialog(
+                                  context,
+                                  project.id,
+                                  widget.workspaceId,
+                                );
+                              },
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                // TODO : Implement project details page
+                              },
+                              child: const Text('Enter'),
+                            ),
+                          ],
                         ),
                       ],
                     ),

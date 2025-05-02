@@ -1,17 +1,18 @@
+import 'package:focusflow/features/auth/data/models/user_model.dart';
+
 abstract class AuthEvent {}
 
-class SignInRequested extends AuthEvent {
-  final String email, password;
-  SignInRequested({required this.email, required this.password});
+class SignUpRequested extends AuthEvent {
+  final UserModel user;
+
+  SignUpRequested(this.user);
 }
 
-class SignUpRequested extends AuthEvent {
-  final String name, email, password;
-  SignUpRequested({
-    required this.name,
-    required this.email,
-    required this.password,
-  });
+class SignInRequested extends AuthEvent {
+  final String email;
+  final String password;
+
+  SignInRequested({required this.email, required this.password});
 }
 
 class SignOutRequested extends AuthEvent {}

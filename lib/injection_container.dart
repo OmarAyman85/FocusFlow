@@ -37,14 +37,18 @@ Future<void> init() async {
   sl.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
 
   // Auth Feature
+  // Remote Data Source
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(
       auth: sl<FirebaseAuth>(),
       firestore: sl<FirebaseFirestore>(),
     ),
   );
+
+  // Repository
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl());
 
+  // Use Cases
   sl.registerLazySingleton<SignUpUseCase>(() => SignUpUseCase());
   sl.registerLazySingleton<SignInUseCase>(() => SignInUseCase());
   sl.registerLazySingleton<SignOutUseCase>(() => SignOutUseCase());
@@ -53,15 +57,8 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<GetAllUsersUseCase>(() => GetAllUsersUseCase());
 
-  sl.registerFactory<AuthBloc>(
-    () => AuthBloc(
-      signUp: sl<SignUpUseCase>(),
-      signIn: sl<SignInUseCase>(),
-      signOut: sl<SignOutUseCase>(),
-      getCurrentUser: sl<GetCurrentUserUseCase>(),
-      getAllUsers: sl<GetAllUsersUseCase>(),
-    ),
-  );
+  // Bloc
+  sl.registerFactory<AuthBloc>(() => AuthBloc());
 
   // Workspace Feature
   // Remote Data Source
@@ -71,9 +68,7 @@ Future<void> init() async {
 
   // Repository
   sl.registerLazySingleton<WorkspaceRepository>(
-    () => WorkspaceRepositoryImpl(
-      remoteDataSource: sl<WorkspaceRemoteDataSource>(),
-    ),
+    () => WorkspaceRepositoryImpl(),
   );
 
   // Use Cases
@@ -89,14 +84,7 @@ Future<void> init() async {
   );
 
   // Cubit
-  sl.registerFactory<WorkspaceCubit>(
-    () => WorkspaceCubit(
-      createWorkspaceUseCase: sl<CreateWorkspaceUseCase>(),
-      getWorkspacesUseCase: sl<GetWorkspacesUseCase>(),
-      addMemberToWorkspaceUseCase: sl<AddMemberToWorkspaceUseCase>(),
-      getUsersUseCase: sl<GetWorkspaceUsersUseCase>(),
-    ),
-  );
+  sl.registerFactory<WorkspaceCubit>(() => WorkspaceCubit());
 
   // Project Feature
   // Remote Data Source

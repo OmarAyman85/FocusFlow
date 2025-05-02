@@ -84,6 +84,7 @@ class _SignInPageState extends State<SignInPage> {
                       }
                     },
                   ),
+                  const SizedBox(height: 30),
                   GestureText(
                     route: '/signup',
                     text: 'Don\'t have an account? ',

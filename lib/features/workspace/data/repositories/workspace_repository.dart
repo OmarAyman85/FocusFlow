@@ -5,9 +5,6 @@ import 'package:focusflow/features/workspace/domain/repositories/workspace_repos
 import 'package:focusflow/injection_container.dart';
 
 class WorkspaceRepositoryImpl implements WorkspaceRepository {
-  final WorkspaceRemoteDataSource remoteDataSource;
-  WorkspaceRepositoryImpl({required this.remoteDataSource});
-
   @override
   Future<void> createWorkspace(Workspace workspace) async {
     try {

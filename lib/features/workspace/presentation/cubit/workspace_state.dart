@@ -1,13 +1,17 @@
-import '../../domain/entities/workspace.dart';
+import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 
-class WorkspaceState {
+abstract class WorkspaceState {}
+
+class WorkspaceInitial extends WorkspaceState {}
+
+class WorkspaceLoading extends WorkspaceState {}
+
+class WorkspaceLoaded extends WorkspaceState {
   final List<Workspace> workspaces;
+  WorkspaceLoaded(this.workspaces);
+}
 
-  WorkspaceState({required this.workspaces});
-
-  factory WorkspaceState.initial() => WorkspaceState(workspaces: []);
-
-  WorkspaceState copyWith({List<Workspace>? workspaces}) {
-    return WorkspaceState(workspaces: workspaces ?? this.workspaces);
-  }
+class WorkspaceError extends WorkspaceState {
+  final String message;
+  WorkspaceError(this.message);
 }

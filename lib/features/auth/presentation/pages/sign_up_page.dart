@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/core/utils/constants/loading_spinner.dart';
+import 'package:focusflow/features/auth/data/models/user_model.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
@@ -45,7 +46,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   const SnackBar(content: Text('Sign Up Successful!')),
                 );
                 context.read<AuthBloc>().add(AppStarted());
-                context.go('/home'); // prefer `go` to reset stack
+                context.go('/workspace'); // prefer `go` to reset stack
               } else if (state is AuthError) {
                 ScaffoldMessenger.of(
                   context,
@@ -79,17 +80,17 @@ class _SignUpPageState extends State<SignUpPage> {
                     buttonText: "Sign Up",
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        context.read<AuthBloc>().add(
-                          SignUpRequested(
-                            name: _nameController.text,
-                            email: _emailController.text,
-                            password: _passwordController.text,
-                          ),
+                        final user = UserModel(
+                          name: _nameController.text.trim(),
+                          email: _emailController.text.trim(),
+                          password: _passwordController.text.trim(),
+                          uid: '',
                         );
+                        context.read<AuthBloc>().add(SignUpRequested(user));
                       }
                     },
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 30),
                   GestureText(
                     route: '/signin',
                     text: 'Already have an account? ',

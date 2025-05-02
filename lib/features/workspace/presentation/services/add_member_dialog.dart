@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/workspace/domain/entities/member.dart';
 import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
@@ -40,7 +42,15 @@ class AddMemberDialog {
     );
 
     if (selectedUser != null) {
-      context.read<WorkspaceCubit>().addMember(workspace.id, selectedUser);
+      final authState = context.read<AuthBloc>().state;
+      if (authState is AuthAuthenticated) {
+        final userId = authState.user.uid;
+        context.read<WorkspaceCubit>().addWorkspaceMember(
+          workspace.id,
+          selectedUser,
+          userId,
+        );
+      }
     }
   }
 }
