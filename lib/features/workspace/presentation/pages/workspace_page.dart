@@ -4,6 +4,8 @@ import 'package:focusflow/core/utils/constants/loading_spinner.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
+import 'package:focusflow/features/workspace/domain/entities/member.dart';
+import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_state.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +13,52 @@ import 'workspace_form.dart';
 
 class WorkspacePage extends StatelessWidget {
   const WorkspacePage({super.key});
+
+  void _openAddMemberDialog(BuildContext context, Workspace workspace) {
+    final memberIdController = TextEditingController();
+    final memberNameController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder:
+          (ctx) => AlertDialog(
+            title: const Text("Add Member"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: memberIdController,
+                  decoration: const InputDecoration(labelText: "Member ID"),
+                ),
+                TextField(
+                  controller: memberNameController,
+                  decoration: const InputDecoration(labelText: "Member Name"),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: const Text("Cancel"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  final id = memberIdController.text.trim();
+                  final name = memberNameController.text.trim();
+                  if (id.isNotEmpty && name.isNotEmpty) {
+                    context.read<WorkspaceCubit>().addMember(
+                      workspace.name, // Use workspaceId here if available
+                      Member(id: id, name: name),
+                    );
+                    Navigator.of(ctx).pop();
+                  }
+                },
+                child: const Text("Add"),
+              ),
+            ],
+          ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +117,6 @@ class WorkspacePage extends StatelessWidget {
                       ),
                     ),
                   );
-                } else if (state is AuthError) {
-                  return const Padding(
-                    padding: EdgeInsets.only(right: 16.0),
-                    child: Icon(Icons.error),
-                  );
                 } else {
                   return const SizedBox();
                 }
@@ -107,14 +150,16 @@ class WorkspacePage extends StatelessWidget {
                           right: 0,
                           child: ElevatedButton(
                             onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 6,
-                              ),
-                              textStyle: const TextStyle(fontSize: 12),
-                            ),
                             child: const Text('Enter'),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          child: IconButton(
+                            icon: const Icon(Icons.person_add),
+                            onPressed:
+                                () => _openAddMemberDialog(context, workspace),
                           ),
                         ),
                         Column(
@@ -131,11 +176,11 @@ class WorkspacePage extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             Text(
-                              'Number of Members: ${workspace.numberOfMembers}',
+                              'Members: ${workspace.numberOfMembers}',
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             Text(
-                              'Number of Projects: ${workspace.numberOfProjects}',
+                              'Projects: ${workspace.numberOfProjects}',
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],

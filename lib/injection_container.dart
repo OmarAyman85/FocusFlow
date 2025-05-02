@@ -12,6 +12,7 @@ import 'package:focusflow/features/workspace/data/repositories/workspace_reposit
 import 'package:focusflow/features/workspace/data/sources/remote_workspace_data_source.dart';
 
 import 'package:focusflow/features/workspace/domain/repositories/workspace_repository.dart';
+import 'package:focusflow/features/workspace/domain/usecases/add_member_to_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/domain/usecases/create_workspace.dart';
 import 'package:focusflow/features/workspace/domain/usecases/get_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
@@ -57,7 +58,6 @@ Future<void> init() async {
   );
 
   // Workspace Feature
-  //injection_container.dart
   // Remote Data Source
   sl.registerLazySingleton<WorkspaceRemoteDataSource>(
     () => WorkspaceRemoteDataSourceImpl(firestore: sl<FirebaseFirestore>()),
@@ -77,12 +77,16 @@ Future<void> init() async {
   sl.registerLazySingleton<GetWorkspacesUseCase>(
     () => GetWorkspacesUseCase(repository: sl<WorkspaceRepository>()),
   );
+  sl.registerLazySingleton<AddMemberToWorkspaceUseCase>(
+    () => AddMemberToWorkspaceUseCase(repository: sl<WorkspaceRepository>()),
+  );
 
   // Cubit
   sl.registerFactory<WorkspaceCubit>(
     () => WorkspaceCubit(
       createWorkspaceUseCase: sl<CreateWorkspaceUseCase>(),
       getWorkspacesUseCase: sl<GetWorkspacesUseCase>(),
+      addMemberToWorkspaceUseCase: sl<AddMemberToWorkspaceUseCase>(),
     ),
   );
 }

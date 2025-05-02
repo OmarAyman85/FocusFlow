@@ -1,11 +1,10 @@
 import 'package:focusflow/features/workspace/data/sources/remote_workspace_data_source.dart';
+import 'package:focusflow/features/workspace/domain/entities/member.dart';
 import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 import 'package:focusflow/features/workspace/domain/repositories/workspace_repository.dart';
 
-// workspace_repository_impl.dart
 class WorkspaceRepositoryImpl implements WorkspaceRepository {
   final WorkspaceRemoteDataSource remoteDataSource;
-
   WorkspaceRepositoryImpl({required this.remoteDataSource});
 
   @override
@@ -25,6 +24,13 @@ class WorkspaceRepositoryImpl implements WorkspaceRepository {
       return Stream.error(e.toString());
     }
   }
+
+  @override
+  Future<void> addMemberToWorkspace(String workspaceId, Member member) async {
+    try {
+      return remoteDataSource.addMemberToWorkspace(workspaceId, member);
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
 }
-
-

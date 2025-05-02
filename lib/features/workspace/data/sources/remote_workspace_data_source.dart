@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:focusflow/features/workspace/domain/entities/member.dart';
 import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 
 abstract class WorkspaceRemoteDataSource {
   Future<void> createWorkspace(Workspace workspace);
   Stream<List<Workspace>> getWorkspaces(String userId);
+  Future<void> addMemberToWorkspace(String workspaceId, Member member);
 }
 
 class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
   final FirebaseFirestore firestore;
-
   WorkspaceRemoteDataSourceImpl({required this.firestore});
 
   @override
@@ -21,7 +22,8 @@ class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
     return firestore.collection('workspaces').snapshots().map((snapshot) {
       return snapshot.docs
           .map((doc) {
-            return Workspace.fromMap(doc.data());
+            final data = doc.data();
+            return Workspace.fromMap(data);
           })
           .where((workspace) {
             final isCreator = workspace.createdById == userId;
@@ -29,6 +31,24 @@ class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
             return isCreator || isMember;
           })
           .toList();
+    });
+  }
+
+  @override
+  Future<void> addMemberToWorkspace(String workspaceId, Member member) async {
+    final docRef = firestore.collection('workspaces').doc(workspaceId);
+    await firestore.runTransaction((transaction) async {
+      final snapshot = await transaction.get(docRef);
+      if (!snapshot.exists) throw Exception("Workspace not found");
+      final members = List<Map<String, dynamic>>.from(
+        snapshot['members'] ?? [],
+      );
+      if (members.any((m) => m['id'] == member.id)) return;
+      members.add(member.toMap());
+      transaction.update(docRef, {
+        'members': members,
+        'numberOfMembers': members.length,
+      });
     });
   }
 }
