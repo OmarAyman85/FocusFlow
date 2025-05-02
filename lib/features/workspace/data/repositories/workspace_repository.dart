@@ -1,8 +1,8 @@
 import 'package:focusflow/features/workspace/data/sources/remote_workspace_data_source.dart';
 import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 import 'package:focusflow/features/workspace/domain/repositories/workspace_repository.dart';
-import 'package:focusflow/injection_container.dart';
 
+// workspace_repository_impl.dart
 class WorkspaceRepositoryImpl implements WorkspaceRepository {
   final WorkspaceRemoteDataSource remoteDataSource;
 
@@ -11,18 +11,20 @@ class WorkspaceRepositoryImpl implements WorkspaceRepository {
   @override
   Future<void> createWorkspace(Workspace workspace) async {
     try {
-      return sl<WorkspaceRemoteDataSource>().createWorkspace(workspace);
+      return remoteDataSource.createWorkspace(workspace);
     } catch (e) {
       return Future.error(e.toString());
     }
   }
 
   @override
-  Stream<List<Workspace>> getWorkspaces() {
+  Stream<List<Workspace>> getWorkspaces(String userId) {
     try {
-      return sl<WorkspaceRemoteDataSource>().getWorkspaces();
+      return remoteDataSource.getWorkspaces(userId);
     } catch (e) {
       return Stream.error(e.toString());
     }
   }
 }
+
+

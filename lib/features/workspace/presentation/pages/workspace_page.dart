@@ -4,7 +4,6 @@ import 'package:focusflow/core/utils/constants/loading_spinner.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
-import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_state.dart';
 import 'package:go_router/go_router.dart';
@@ -19,6 +18,8 @@ class WorkspacePage extends StatelessWidget {
       listener: (context, state) {
         if (state is AuthUnauthenticated) {
           GoRouter.of(context).go('/signin');
+        } else if (state is AuthAuthenticated) {
+          context.read<WorkspaceCubit>().loadUserWorkspaces(state.user.uid);
         }
       },
       child: Scaffold(
@@ -91,7 +92,7 @@ class WorkspacePage extends StatelessWidget {
               ),
               itemCount: state.workspaces.length,
               itemBuilder: (context, index) {
-                Workspace workspace = state.workspaces[index];
+                final workspace = state.workspaces[index];
                 return Card(
                   elevation: 4,
                   shape: RoundedRectangleBorder(
@@ -130,11 +131,11 @@ class WorkspacePage extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             Text(
-                              'Number of Members: ${workspace.numberOfMembers.toString()}',
+                              'Number of Members: ${workspace.numberOfMembers}',
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             Text(
-                              'Number of Projects: ${workspace.numberOfProjects.toString()}',
+                              'Number of Projects: ${workspace.numberOfProjects}',
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
@@ -147,14 +148,24 @@ class WorkspacePage extends StatelessWidget {
             );
           },
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            final userId = 'dummy-user-id'; // Replace with real ID
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => WorkspaceForm(userId: userId)),
-            );
+        floatingActionButton: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            if (state is AuthAuthenticated) {
+              final userId = state.user.uid;
+              return FloatingActionButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => WorkspaceForm(userId: userId),
+                    ),
+                  );
+                },
+                child: const Icon(Icons.add),
+              );
+            } else {
+              return const SizedBox();
+            }
           },
-          child: const Icon(Icons.add),
         ),
       ),
     );

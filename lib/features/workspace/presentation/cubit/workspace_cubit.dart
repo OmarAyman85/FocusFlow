@@ -4,6 +4,7 @@ import 'package:focusflow/features/workspace/domain/usecases/create_workspace.da
 import 'package:focusflow/features/workspace/domain/usecases/get_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_state.dart';
 
+// workspace_cubit.dart
 class WorkspaceCubit extends Cubit<WorkspaceState> {
   final CreateWorkspaceUseCase createWorkspaceUseCase;
   final GetWorkspacesUseCase getWorkspacesUseCase;
@@ -11,8 +12,10 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
   WorkspaceCubit({
     required this.createWorkspaceUseCase,
     required this.getWorkspacesUseCase,
-  }) : super(WorkspaceState.initial()) {
-    getWorkspacesUseCase().listen((workspaces) {
+  }) : super(WorkspaceState.initial());
+
+  void loadUserWorkspaces(String userId) {
+    getWorkspacesUseCase(userId).listen((workspaces) {
       emit(state.copyWith(workspaces: workspaces));
     });
   }

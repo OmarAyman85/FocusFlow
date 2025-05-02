@@ -4,9 +4,9 @@ import 'package:focusflow/features/workspace/domain/repositories/workspace_repos
 class GetWorkspacesUseCase {
   final WorkspaceRepository repository;
 
-  GetWorkspacesUseCase(this.repository);
+  GetWorkspacesUseCase({required this.repository});
 
-  Stream<List<Workspace>> call() {
-    return repository.getWorkspaces();
+  Stream<List<Workspace>> call(String userId) {
+    return repository.getWorkspaces(userId);
   }
 }

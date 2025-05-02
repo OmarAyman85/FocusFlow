@@ -57,7 +57,7 @@ Future<void> init() async {
   );
 
   // Workspace Feature
-
+  //injection_container.dart
   // Remote Data Source
   sl.registerLazySingleton<WorkspaceRemoteDataSource>(
     () => WorkspaceRemoteDataSourceImpl(firestore: sl<FirebaseFirestore>()),
@@ -75,7 +75,7 @@ Future<void> init() async {
     () => CreateWorkspaceUseCase(repository: sl<WorkspaceRepository>()),
   );
   sl.registerLazySingleton<GetWorkspacesUseCase>(
-    () => GetWorkspacesUseCase(sl<WorkspaceRepository>()),
+    () => GetWorkspacesUseCase(repository: sl<WorkspaceRepository>()),
   );
 
   // Cubit
