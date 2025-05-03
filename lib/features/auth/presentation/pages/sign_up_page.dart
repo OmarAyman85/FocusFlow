@@ -67,20 +67,30 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 30),
                   AppTextFormField(
-                    hintText: 'Name',
+                    label: 'Name',
                     controller: _nameController,
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty ? 'Required' : null,
                   ),
                   const SizedBox(height: 15),
                   AppTextFormField(
-                    hintText: 'Email',
+                    label: 'Email',
                     controller: _emailController,
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty ? 'Required' : null,
                   ),
                   const SizedBox(height: 15),
                   AppTextFormField(
-                    hintText: 'Password',
-                    isObscureText: true,
+                    label: 'Password',
                     controller: _passwordController,
+                    isObscureText: true,
+                    validator:
+                        (value) =>
+                            value == null || value.isEmpty ? 'Required' : null,
                   ),
+
                   const SizedBox(height: 20),
                   AuthButton(
                     buttonText: "Sign Up",
