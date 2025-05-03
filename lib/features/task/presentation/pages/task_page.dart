@@ -7,7 +7,6 @@ import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/task/presentation/cubit/task_cubit.dart';
 import 'package:focusflow/features/task/presentation/cubit/task_state.dart';
-import 'package:focusflow/features/task/presentation/services/add_member_dialogue_tasks.dart';
 import 'package:go_router/go_router.dart';
 
 class TaskPage extends StatefulWidget {
@@ -24,7 +23,6 @@ class _TaskPageState extends State<TaskPage> {
   @override
   void initState() {
     super.initState();
-    // Delay ensures context is fully initialized before use
     Future.microtask(() {
       context.read<TaskCubit>().loadTasks(
         workspaceId: widget.workspaceId,
@@ -153,26 +151,11 @@ class _TaskPageState extends State<TaskPage> {
                           style: const TextStyle(fontSize: 12),
                         ),
                         const SizedBox(height: 12),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.person_add),
-                              onPressed: () {
-                                // Pass the whole task object instead of just the id
-                                AddMemberDialog.openAddMemberDialog(
-                                  context,
-                                  task,
-                                );
-                              },
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                // TODO : Implement task details page
-                              },
-                              child: const Text('Moreee'),
-                            ),
-                          ],
+                        ElevatedButton(
+                          onPressed: () {
+                            // Implement task details page navigation
+                          },
+                          child: const Text('Moreee'),
                         ),
                       ],
                     ),

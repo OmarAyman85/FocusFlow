@@ -4,6 +4,7 @@ import 'package:focusflow/core/utils/constants/loading_spinner.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
+import 'package:focusflow/features/board/domain/entities/member.dart';
 import 'package:focusflow/features/task/domain/entities/task_entity.dart';
 import 'package:focusflow/features/task/presentation/cubit/task_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/widgets/workspace_field.dart';
@@ -50,6 +51,41 @@ class _TaskFormState extends State<TaskForm> {
         task: newTask,
       );
       Navigator.of(context).pop();
+    }
+  }
+
+  void _openAddMemberDialog() async {
+    final users = await context.read<TaskCubit>().getUsers();
+    final selectedUser = await showDialog<Member>(
+      context: context,
+      builder:
+          (ctx) => AlertDialog(
+            title: const Text("Add Member to Task"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DropdownButton<Member>(
+                  hint: const Text("Select a User"),
+                  onChanged: (Member? user) {
+                    Navigator.of(ctx).pop(user);
+                  },
+                  items:
+                      users.map((user) {
+                        return DropdownMenuItem<Member>(
+                          value: user,
+                          child: Text(user.name),
+                        );
+                      }).toList(),
+                ),
+              ],
+            ),
+          ),
+    );
+
+    if (selectedUser != null) {
+      setState(() {
+        _assignedTo.add(selectedUser.id);
+      });
     }
   }
 
@@ -140,25 +176,26 @@ class _TaskFormState extends State<TaskForm> {
                       onSaved: (value) => _taskDescription = value ?? '',
                     ),
                     const SizedBox(height: 20),
-                    LabeledTextFormField(
-                      label: 'Assigned To (Comma separated)',
-                      validator:
-                          (value) =>
-                              value == null || value.isEmpty
-                                  ? 'Required'
-                                  : null,
-                      onSaved: (value) {
-                        _assignedTo = value?.split(',') ?? [];
-                      },
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Assigned To (Click to add)',
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: _openAddMemberDialog,
+                        ),
+                      ),
+                      readOnly: true,
+                      controller: TextEditingController(
+                        text: _assignedTo.join(', '),
+                      ),
                     ),
                     const SizedBox(height: 20),
                     DropdownButtonFormField<String>(
                       value: _status,
-                      onChanged: (newValue) {
-                        setState(() {
-                          _status = newValue ?? 'Not Started';
-                        });
-                      },
+                      onChanged:
+                          (newValue) => setState(() {
+                            _status = newValue!;
+                          }),
                       items: const [
                         DropdownMenuItem(
                           value: 'Not Started',
@@ -173,48 +210,11 @@ class _TaskFormState extends State<TaskForm> {
                           child: Text('Completed'),
                         ),
                       ],
-                      decoration: const InputDecoration(labelText: 'Status'),
-                    ),
-                    const SizedBox(height: 20),
-                    DropdownButtonFormField<String>(
-                      value: _priority,
-                      onChanged: (newValue) {
-                        setState(() {
-                          _priority = newValue ?? 'Medium';
-                        });
-                      },
-                      items: const [
-                        DropdownMenuItem(value: 'Low', child: Text('Low')),
-                        DropdownMenuItem(
-                          value: 'Medium',
-                          child: Text('Medium'),
-                        ),
-                        DropdownMenuItem(value: 'High', child: Text('High')),
-                      ],
-                      decoration: const InputDecoration(labelText: 'Priority'),
-                    ),
-                    const SizedBox(height: 20),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Due Date (yyyy-MM-dd)',
-                      ),
-                      keyboardType: TextInputType.datetime,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Required';
-                        }
-                        try {
-                          _dueDate = DateTime.parse(value);
-                        } catch (e) {
-                          return 'Invalid date format';
-                        }
-                        return null;
-                      },
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () => _submitForm(userId, userName),
-                      child: const Text('Create Task'),
+                      child: const Text('Save Task'),
                     ),
                   ],
                 ),
@@ -222,7 +222,7 @@ class _TaskFormState extends State<TaskForm> {
             ),
           );
         } else {
-          return LoadingSpinnerWidget();
+          return const SizedBox();
         }
       },
     );
