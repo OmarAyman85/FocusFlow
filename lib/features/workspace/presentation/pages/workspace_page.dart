@@ -24,7 +24,7 @@ class WorkspacePage extends StatelessWidget {
         }
       },
       child: Scaffold(
-        appBar: const MainAppBar(title: 'Workspaces', showBackButton: false),
+        appBar: const MainAppBar(showBackButton: false),
         body: BlocBuilder<WorkspaceCubit, WorkspaceState>(
           builder: (context, state) {
             if (state is WorkspaceLoading) {

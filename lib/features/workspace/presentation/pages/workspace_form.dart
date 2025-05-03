@@ -53,7 +53,7 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
           final userName = state.user.name;
 
           return Scaffold(
-            appBar: const MainAppBar(title: 'Add Workspace'),
+            appBar: const MainAppBar(),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(

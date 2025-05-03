@@ -6,14 +6,9 @@ import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import '../../../features/auth/presentation/bloc/auth_bloc.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
   final bool showBackButton;
 
-  const MainAppBar({
-    super.key,
-    required this.title,
-    this.showBackButton = true,
-  });
+  const MainAppBar({super.key, this.showBackButton = true});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -21,7 +16,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(title),
+      title: Text('FocusFlow'),
       centerTitle: true,
       leading:
           showBackButton

@@ -97,7 +97,7 @@ class _TaskFormState extends State<TaskForm> {
           final userName = state.user.name;
 
           return Scaffold(
-            appBar: MainAppBar(title: 'Add Task'),
+            appBar: MainAppBar(),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(

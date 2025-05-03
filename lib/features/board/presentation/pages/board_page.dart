@@ -29,7 +29,7 @@ class _BoardPageState extends State<BoardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MainAppBar(title: 'Boards'),
+      appBar: MainAppBar(),
       body: BlocBuilder<BoardCubit, BoardState>(
         builder: (context, state) {
           if (state is BoardLoading) {
