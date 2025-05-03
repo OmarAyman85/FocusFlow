@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/core/services/add_member_dialog.dart';
-import 'package:focusflow/core/widgets/loading_spinner.dart';
+import 'package:focusflow/core/widgets/loading_spinner_widget.dart';
 import 'package:focusflow/core/theme/app_pallete.dart';
 import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';

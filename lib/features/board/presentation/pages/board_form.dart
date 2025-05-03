@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
+import 'package:focusflow/core/widgets/text_form_field_widget.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/board/domain/entities/board.dart';
 import 'package:focusflow/core/entities/member.dart';
 import 'package:focusflow/features/board/presentation/cubit/board_cubit.dart';
-import 'package:focusflow/features/workspace/presentation/widgets/workspace_field.dart';
 import 'package:uuid/uuid.dart';
 
 class BoardForm extends StatefulWidget {
@@ -59,7 +59,7 @@ class _BoardFormState extends State<BoardForm> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    LabeledTextFormField(
+                    AppTextFormField(
                       label: 'Board Name',
                       validator:
                           (value) =>
@@ -69,7 +69,7 @@ class _BoardFormState extends State<BoardForm> {
                       onSaved: (value) => _boardName = value ?? '',
                     ),
                     const SizedBox(height: 20),
-                    LabeledTextFormField(
+                    AppTextFormField(
                       label: 'Board Description',
                       validator:
                           (value) =>

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:focusflow/core/widgets/loading_spinner.dart';
+import 'package:focusflow/core/widgets/loading_spinner_widget.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import '../../../features/auth/presentation/bloc/auth_bloc.dart';

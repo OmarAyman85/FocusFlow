@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/core/entities/member.dart';
-import 'package:focusflow/core/widgets/loading_spinner.dart';
+import 'package:focusflow/core/widgets/loading_spinner_widget.dart';
 import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
+import 'package:focusflow/core/widgets/text_form_field_widget.dart';
 import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
-import 'package:focusflow/features/workspace/presentation/widgets/workspace_field.dart';
 import 'package:uuid/uuid.dart';
 
 class WorkspaceForm extends StatefulWidget {
@@ -60,7 +60,7 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    LabeledTextFormField(
+                    AppTextFormField(
                       label: 'Name',
                       validator:
                           (value) =>
@@ -70,7 +70,7 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
                       onSaved: (value) => _workspaceName = value ?? '',
                     ),
                     const SizedBox(height: 20),
-                    LabeledTextFormField(
+                    AppTextFormField(
                       label: 'Description',
                       validator:
                           (value) =>

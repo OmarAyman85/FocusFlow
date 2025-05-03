@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:focusflow/core/widgets/loading_spinner.dart';
+import 'package:focusflow/core/widgets/loading_spinner_widget.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_button.dart';
-import 'package:focusflow/features/auth/presentation/widgets/auth_field.dart';
+import 'package:focusflow/core/widgets/text_form_field_widget.dart';
 import 'package:focusflow/features/auth/presentation/widgets/gesture_text.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,11 +63,14 @@ class _SignInPageState extends State<SignInPage> {
                     style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 30),
-                  AuthField(hintText: 'Email', controller: _emailController),
+                  AppTextFormField(
+                    hintText: 'Email',
+                    controller: _emailController,
+                  ),
                   const SizedBox(height: 15),
-                  AuthField(
+                  AppTextFormField(
                     hintText: 'Password',
-                    isObsecureText: true,
+                    isObscureText: true,
                     controller: _passwordController,
                   ),
                   const SizedBox(height: 20),

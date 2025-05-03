@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
+import 'package:focusflow/core/widgets/text_form_field_widget.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/core/entities/member.dart';
 import 'package:focusflow/features/task/domain/entities/task_entity.dart';
 import 'package:focusflow/features/task/presentation/cubit/task_cubit.dart';
-import 'package:focusflow/features/workspace/presentation/widgets/workspace_field.dart';
 import 'package:uuid/uuid.dart';
 
 class TaskForm extends StatefulWidget {
@@ -104,7 +104,7 @@ class _TaskFormState extends State<TaskForm> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    LabeledTextFormField(
+                    AppTextFormField(
                       label: 'Task Title',
                       validator:
                           (value) =>
@@ -114,7 +114,7 @@ class _TaskFormState extends State<TaskForm> {
                       onSaved: (value) => _taskTitle = value ?? '',
                     ),
                     const SizedBox(height: 20),
-                    LabeledTextFormField(
+                    AppTextFormField(
                       label: 'Task Description',
                       validator:
                           (value) =>
