@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:focusflow/features/board/domain/entities/member.dart';
+import 'package:focusflow/core/entities/member.dart';
 import '../models/task_model.dart';
 
 abstract class TaskRemoteDataSource {

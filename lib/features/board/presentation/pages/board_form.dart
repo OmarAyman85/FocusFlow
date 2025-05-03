@@ -4,7 +4,7 @@ import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/board/domain/entities/board.dart';
-import 'package:focusflow/features/board/domain/entities/member.dart';
+import 'package:focusflow/core/entities/member.dart';
 import 'package:focusflow/features/board/presentation/cubit/board_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/widgets/workspace_field.dart';
 import 'package:uuid/uuid.dart';

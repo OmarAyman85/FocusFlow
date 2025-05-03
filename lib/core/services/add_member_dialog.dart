@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:focusflow/core/entities/member.dart';
 
-import 'package:focusflow/features/workspace/domain/entities/member.dart';
 
 class AddMemberDialog {
   static Future<void> open<T>({

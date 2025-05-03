@@ -1,4 +1,4 @@
-import 'package:focusflow/features/board/domain/entities/member.dart';
+import 'package:focusflow/core/entities/member.dart';
 
 import '../entities/task_entity.dart';
 

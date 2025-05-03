@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/entities/member.dart';
 import 'package:focusflow/features/board/domain/entities/board.dart';
 import 'package:focusflow/features/board/domain/usecases/add_member_to_board_use_case.dart';
 import 'package:focusflow/features/board/domain/usecases/create_board_use_case.dart';
 import 'package:focusflow/features/board/domain/usecases/get_boards_use_case.dart';
 import 'package:focusflow/features/board/domain/usecases/get_users_use_case.dart';
-import 'package:focusflow/features/workspace/domain/entities/member.dart';
 import 'package:focusflow/core/injection/injection_container.dart';
 import 'board_state.dart';
 

@@ -1,4 +1,4 @@
-import 'package:focusflow/features/board/domain/entities/member.dart';
+import 'package:focusflow/core/entities/member.dart';
 
 class Board {
   final String id;

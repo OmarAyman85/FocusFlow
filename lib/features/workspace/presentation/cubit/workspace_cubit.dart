@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:focusflow/features/workspace/domain/entities/member.dart';
+import 'package:focusflow/core/entities/member.dart';
 import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 import 'package:focusflow/features/workspace/domain/usecases/add_member_to_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/domain/usecases/create_workspace.dart';

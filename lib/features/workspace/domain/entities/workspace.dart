@@ -1,5 +1,4 @@
-// import 'package:focusflow/features/workspace/domain/entities/member.dart';
-import 'member.dart';
+import 'package:focusflow/core/entities/member.dart';
 
 class Workspace {
   final String id;

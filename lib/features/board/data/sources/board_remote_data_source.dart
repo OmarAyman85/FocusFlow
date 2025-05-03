@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:focusflow/core/entities/member.dart';
 import 'package:focusflow/features/board/data/model/board_model.dart';
 import 'package:focusflow/features/board/domain/entities/board.dart';
-import 'package:focusflow/features/workspace/domain/entities/member.dart';
 
 abstract class BoardRemoteDataSource {
   Future<void> createBoard(Board board);

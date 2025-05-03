@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:focusflow/features/board/domain/entities/member.dart';
+import 'package:focusflow/core/entities/member.dart';
 import 'package:focusflow/features/task/domain/entities/task_entity.dart';
 import 'package:focusflow/features/task/domain/usecases/add_member_to_task_use_case.dart';
 import 'package:focusflow/features/task/domain/usecases/create_task_use_case.dart';

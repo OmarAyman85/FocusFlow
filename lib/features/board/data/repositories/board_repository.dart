@@ -1,7 +1,7 @@
+import 'package:focusflow/core/entities/member.dart';
 import 'package:focusflow/features/board/data/sources/board_remote_data_source.dart';
 import 'package:focusflow/features/board/domain/entities/board.dart';
 import 'package:focusflow/features/board/domain/repositories/board_repository.dart';
-import 'package:focusflow/features/workspace/domain/entities/member.dart';
 import 'package:focusflow/core/injection/injection_container.dart';
 
 class BoardRepositoryImpl implements BoardRepository {

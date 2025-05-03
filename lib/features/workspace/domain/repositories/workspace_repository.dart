@@ -1,4 +1,4 @@
-import 'package:focusflow/features/workspace/domain/entities/member.dart';
+import 'package:focusflow/core/entities/member.dart';
 import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 
 abstract class WorkspaceRepository {
