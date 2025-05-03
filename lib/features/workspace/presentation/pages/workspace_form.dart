@@ -22,7 +22,7 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
   final _formKey = GlobalKey<FormState>();
   String _workspaceName = '';
   String _workspaceDescription = '';
-  int _workspacenumberOfBoards = 0;
+  final int _workspacenumberOfBoards = 0;
 
   void _submitForm(String userId, String userName) {
     if (_formKey.currentState?.validate() ?? false) {

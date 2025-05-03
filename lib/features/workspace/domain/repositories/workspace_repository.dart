@@ -6,5 +6,5 @@ abstract class WorkspaceRepository {
   Stream<List<Workspace>> getWorkspaces(String userId);
   Future<void> addMemberToWorkspace(String workspaceId, Member member);
   Future<List<Member>> getUsers();
-  Future<int> getProjectCount(String workspaceId);
+  Future<int> getBoardCount(String workspaceId);
 }

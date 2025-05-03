@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/features/workspace/domain/entities/member.dart';
-import 'package:focusflow/features/project/presentation/cubit/project_cubit.dart';
+import 'package:focusflow/features/board/presentation/cubit/board_cubit.dart';
 
-class AddProjectMemberDialog {
-  static Future<void> openAddProjectMemberDialog(
+class AddBoardMemberDialog {
+  static Future<void> openAddBoardMemberDialog(
     BuildContext context,
-    String projectId,
+    String boardId,
     String workspaceId,
   ) async {
-    final users =
-        await context.read<ProjectCubit>().getUsers(); // Implement this
+    final users = await context.read<BoardCubit>().getUsers(); // Implement this
     final selectedUser = await showDialog<Member>(
       context: context,
       builder:
           (ctx) => AlertDialog(
-            title: const Text("Add Project Member"),
+            title: const Text("Add Board Member"),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -38,9 +37,9 @@ class AddProjectMemberDialog {
     );
 
     if (selectedUser != null) {
-      context.read<ProjectCubit>().addProjectMember(
+      context.read<BoardCubit>().addBoardMember(
         workspaceId,
-        projectId,
+        boardId,
         selectedUser,
       );
     }

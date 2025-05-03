@@ -1,76 +1,76 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:focusflow/features/project/data/model/project_model.dart';
-import 'package:focusflow/features/project/domain/entities/project.dart';
+import 'package:focusflow/features/board/data/model/board_model.dart';
+import 'package:focusflow/features/board/domain/entities/board.dart';
 import 'package:focusflow/features/workspace/domain/entities/member.dart';
 
-abstract class ProjectRemoteDataSource {
-  Future<void> createProject(Project project);
-  Future<List<Project>> getProjects(String workspaceId);
+abstract class BoardRemoteDataSource {
+  Future<void> createBoard(Board board);
+  Future<List<Board>> getBoards(String workspaceId);
   Future<List<Member>> getUsers();
-  Future<void> addProjectMember(
+  Future<void> addBoardMember(
     String workspaceId,
-    String projectId,
+    String boardId,
     Member member,
   );
 }
 
-class ProjectRemoteDataSourceImpl implements ProjectRemoteDataSource {
+class BoardRemoteDataSourceImpl implements BoardRemoteDataSource {
   final FirebaseFirestore firestore;
 
-  ProjectRemoteDataSourceImpl({required this.firestore});
+  BoardRemoteDataSourceImpl({required this.firestore});
 
   @override
-  Future<void> createProject(Project project) async {
+  Future<void> createBoard(Board board) async {
     final docRef = firestore
         .collection('workspaces')
-        .doc(project.workspaceId)
-        .collection('projects')
-        .doc(project.id);
+        .doc(board.workspaceId)
+        .collection('boards')
+        .doc(board.id);
 
-    final projectModel = ProjectModel(
-      id: project.id,
-      workspaceId: project.workspaceId,
-      name: project.name,
-      description: project.description,
-      numberOfMembers: project.numberOfMembers,
-      numberOfBoards: project.numberOfBoards,
-      createdById: project.createdById,
-      createdByName: project.createdByName,
-      members: project.members,
+    final boardModel = BoardModel(
+      id: board.id,
+      workspaceId: board.workspaceId,
+      name: board.name,
+      description: board.description,
+      numberOfMembers: board.numberOfMembers,
+      numberOfTasks: board.numberOfTasks,
+      createdById: board.createdById,
+      createdByName: board.createdByName,
+      members: board.members,
     );
 
-    await docRef.set(projectModel.toMap());
+    await docRef.set(boardModel.toMap());
   }
 
   @override
-  Future<List<Project>> getProjects(String workspaceId) async {
+  Future<List<Board>> getBoards(String workspaceId) async {
     final snapshot =
         await firestore
             .collection('workspaces')
             .doc(workspaceId)
-            .collection('projects')
+            .collection('boards')
             .get();
 
     return snapshot.docs
-        .map((doc) => ProjectModel.fromMap(doc.data(), doc.id))
+        .map((doc) => BoardModel.fromMap(doc.data(), doc.id))
         .toList();
   }
 
   @override
-  Future<void> addProjectMember(
+  Future<void> addBoardMember(
     String workspaceId,
-    String projectId,
+    String boardId,
     Member member,
   ) async {
     final docRef = firestore
         .collection('workspaces')
         .doc(workspaceId)
-        .collection('projects')
-        .doc(projectId);
+        .collection('boards')
+        .doc(boardId);
 
     await firestore.runTransaction((transaction) async {
       final snapshot = await transaction.get(docRef);
-      if (!snapshot.exists) throw Exception("Project not found");
+      if (!snapshot.exists) throw Exception("Board not found");
 
       final data = snapshot.data()!;
       final members = List<Map<String, dynamic>>.from(data['members'] ?? []);

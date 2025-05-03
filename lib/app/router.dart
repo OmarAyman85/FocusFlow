@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:focusflow/features/project/presentation/cubit/project_cubit.dart';
-import 'package:focusflow/features/project/presentation/pages/project_form.dart';
-import 'package:focusflow/features/project/presentation/pages/project_page.dart';
+import 'package:focusflow/features/board/presentation/cubit/board_cubit.dart';
+import 'package:focusflow/features/board/presentation/pages/board_form.dart';
+import 'package:focusflow/features/board/presentation/pages/board_page.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/pages/workspace_form.dart';
 import 'package:focusflow/features/workspace/presentation/pages/workspace_page.dart';
@@ -18,21 +18,21 @@ final router = GoRouter(
 
     ShellRoute(
       builder: (context, state, child) {
-        return BlocProvider(create: (_) => sl<ProjectCubit>(), child: child);
+        return BlocProvider(create: (_) => sl<BoardCubit>(), child: child);
       },
       routes: [
         GoRoute(
-          path: '/workspace/:id/projects',
+          path: '/workspace/:id/boards',
           builder: (context, state) {
             final workspaceId = state.pathParameters['id']!;
-            return ProjectPage(workspaceId: workspaceId);
+            return BoardPage(workspaceId: workspaceId);
           },
         ),
         GoRoute(
-          path: '/workspace/:workspaceId/project-form',
+          path: '/workspace/:workspaceId/board-form',
           builder: (context, state) {
             final workspaceId = state.pathParameters['workspaceId']!;
-            return ProjectForm(workspaceId: workspaceId);
+            return BoardForm(workspaceId: workspaceId);
           },
         ),
       ],

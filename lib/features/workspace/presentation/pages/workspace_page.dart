@@ -154,9 +154,9 @@ class WorkspacePage extends StatelessWidget {
 
                                   final result = await GoRouter.of(
                                     context,
-                                  ).push('/workspace/$workspaceId/projects');
+                                  ).push('/workspace/$workspaceId/boards');
 
-                                  if (result == 'project_added') {
+                                  if (result == 'board_added') {
                                     final authState =
                                         context.read<AuthBloc>().state;
                                     if (authState is AuthAuthenticated) {

@@ -4,43 +4,43 @@ import 'package:focusflow/core/utils/constants/loading_spinner.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
-import 'package:focusflow/features/project/domain/entities/member.dart';
-import 'package:focusflow/features/project/domain/entities/project.dart';
-import 'package:focusflow/features/project/presentation/cubit/project_cubit.dart';
+import 'package:focusflow/features/board/domain/entities/board.dart';
+import 'package:focusflow/features/board/domain/entities/member.dart';
+import 'package:focusflow/features/board/presentation/cubit/board_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/widgets/workspace_field.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 
-class ProjectForm extends StatefulWidget {
+class BoardForm extends StatefulWidget {
   final String workspaceId;
-  const ProjectForm({super.key, required this.workspaceId});
+  const BoardForm({super.key, required this.workspaceId});
 
   @override
-  State<ProjectForm> createState() => _ProjectFormState();
+  State<BoardForm> createState() => _BoardFormState();
 }
 
-class _ProjectFormState extends State<ProjectForm> {
+class _BoardFormState extends State<BoardForm> {
   final _formKey = GlobalKey<FormState>();
-  String _projectName = '';
-  String _projectDescription = '';
+  String _boardName = '';
+  String _boardDescription = '';
 
   void _submitForm(String userId, String userName) {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState!.save();
 
-      final newProject = Project(
+      final newBoard = Board(
         id: const Uuid().v4(),
-        name: _projectName,
-        description: _projectDescription,
+        name: _boardName,
+        description: _boardDescription,
         numberOfMembers: 1,
-        numberOfBoards: 0,
+        numberOfTasks: 0,
         workspaceId: widget.workspaceId,
         createdById: userId,
         createdByName: userName,
         members: [Member(id: userId, name: userName)],
       );
 
-      context.read<ProjectCubit>().createProject(newProject);
+      context.read<BoardCubit>().createBoard(newBoard);
       Navigator.of(context).pop();
     }
   }
@@ -55,7 +55,7 @@ class _ProjectFormState extends State<ProjectForm> {
 
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Create Project'),
+              title: const Text('Create Board'),
               leading: BackButton(onPressed: () => GoRouter.of(context).pop()),
               centerTitle: true,
               actions: [
@@ -114,30 +114,30 @@ class _ProjectFormState extends State<ProjectForm> {
                 child: Column(
                   children: [
                     LabeledTextFormField(
-                      label: 'Project Name',
+                      label: 'Board Name',
                       validator:
                           (value) =>
                               value == null || value.isEmpty
                                   ? 'Required'
                                   : null,
-                      onSaved: (value) => _projectName = value ?? '',
+                      onSaved: (value) => _boardName = value ?? '',
                     ),
                     const SizedBox(height: 20),
                     LabeledTextFormField(
-                      label: 'Project Description',
+                      label: 'Board Description',
                       validator:
                           (value) =>
                               value == null || value.isEmpty
                                   ? 'Required'
                                   : null,
-                      onSaved: (value) => _projectDescription = value ?? '',
+                      onSaved: (value) => _boardDescription = value ?? '',
                     ),
                     const SizedBox(height: 20),
                     // Add a member selection widget here to populate the members list
                     // You would want to provide a way for the user to select members and add them to _members
                     ElevatedButton(
                       onPressed: () => _submitForm(userId, userName),
-                      child: const Text('Create Project'),
+                      child: const Text('Create Board'),
                     ),
                   ],
                 ),

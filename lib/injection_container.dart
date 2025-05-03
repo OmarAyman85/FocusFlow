@@ -9,21 +9,21 @@ import 'package:focusflow/features/auth/domain/usecases/sign_in_use_case.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_out_use_case.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_up_use_case.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:focusflow/features/project/data/repositories/project_repository.dart';
-import 'package:focusflow/features/project/data/sources/project_remote_data_source.dart';
-import 'package:focusflow/features/project/domain/repositories/project_repository.dart';
-import 'package:focusflow/features/project/domain/usecases/add_member_to_project_use_case.dart';
-import 'package:focusflow/features/project/domain/usecases/create_page_use_case.dart';
-import 'package:focusflow/features/project/domain/usecases/get_projects_use_case.dart';
-import 'package:focusflow/features/project/domain/usecases/get_users_use_case.dart';
-import 'package:focusflow/features/project/presentation/cubit/project_cubit.dart';
+import 'package:focusflow/features/board/data/repositories/board_repository.dart';
+import 'package:focusflow/features/board/data/sources/board_remote_data_source.dart';
+import 'package:focusflow/features/board/domain/repositories/board_repository.dart';
+import 'package:focusflow/features/board/domain/usecases/add_member_to_board_use_case.dart';
+import 'package:focusflow/features/board/domain/usecases/create_board_use_case.dart';
+import 'package:focusflow/features/board/domain/usecases/get_boards_use_case.dart';
+import 'package:focusflow/features/board/domain/usecases/get_users_use_case.dart';
+import 'package:focusflow/features/board/presentation/cubit/board_cubit.dart';
 import 'package:focusflow/features/workspace/data/repositories/workspace_repository.dart';
 import 'package:focusflow/features/workspace/data/sources/remote_workspace_data_source.dart';
 
 import 'package:focusflow/features/workspace/domain/repositories/workspace_repository.dart';
 import 'package:focusflow/features/workspace/domain/usecases/add_member_to_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/domain/usecases/create_workspace.dart';
-import 'package:focusflow/features/workspace/domain/usecases/get_project_count.dart';
+import 'package:focusflow/features/workspace/domain/usecases/get_board_count.dart';
 import 'package:focusflow/features/workspace/domain/usecases/get_users_use_case.dart';
 import 'package:focusflow/features/workspace/domain/usecases/get_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
@@ -83,32 +83,32 @@ Future<void> init() async {
   sl.registerLazySingleton<GetWorkspaceUsersUseCase>(
     () => GetWorkspaceUsersUseCase(),
   );
-  sl.registerLazySingleton<GetProjectCountUseCase>(
-    () => GetProjectCountUseCase(),
+  sl.registerLazySingleton<GetBoardCountUseCase>(
+    () => GetBoardCountUseCase(),
   );
 
   // Cubit
   sl.registerFactory<WorkspaceCubit>(() => WorkspaceCubit());
 
-  // Project Feature
+  // Board Feature
   // Remote Data Source
-  sl.registerLazySingleton<ProjectRemoteDataSource>(
-    () => ProjectRemoteDataSourceImpl(firestore: sl<FirebaseFirestore>()),
+  sl.registerLazySingleton<BoardRemoteDataSource>(
+    () => BoardRemoteDataSourceImpl(firestore: sl<FirebaseFirestore>()),
   );
 
   // Repository
-  sl.registerLazySingleton<ProjectRepository>(() => ProjectRepositoryImpl());
+  sl.registerLazySingleton<BoardRepository>(() => BoardRepositoryImpl());
 
   // Use Cases
-  sl.registerLazySingleton<CreateProjectUseCase>(() => CreateProjectUseCase());
-  sl.registerLazySingleton<GetProjectsUseCase>(() => GetProjectsUseCase());
-  sl.registerLazySingleton<AddMemberToProjectUseCase>(
-    () => AddMemberToProjectUseCase(),
+  sl.registerLazySingleton<CreateBoardUseCase>(() => CreateBoardUseCase());
+  sl.registerLazySingleton<GetBoardsUseCase>(() => GetBoardsUseCase());
+  sl.registerLazySingleton<AddMemberToBoardUseCase>(
+    () => AddMemberToBoardUseCase(),
   );
-  sl.registerLazySingleton<GetProjectUsersUseCase>(
-    () => GetProjectUsersUseCase(),
+  sl.registerLazySingleton<GetBoardUsersUseCase>(
+    () => GetBoardUsersUseCase(),
   );
 
   // Cubit
-  sl.registerFactory<ProjectCubit>(() => ProjectCubit());
+  sl.registerFactory<BoardCubit>(() => BoardCubit());
 }

@@ -7,7 +7,7 @@ abstract class WorkspaceRemoteDataSource {
   Stream<List<Workspace>> getWorkspaces(String userId);
   Future<void> addMemberToWorkspace(String workspaceId, Member member);
   Future<List<Member>> getUsers();
-  Future<int> getProjectCount(String workspaceId);
+  Future<int> getBoardCount(String workspaceId);
 }
 
 class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
@@ -64,15 +64,15 @@ class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
   }
 
   @override
-  Future<int> getProjectCount(String workspaceId) async {
+  Future<int> getBoardCount(String workspaceId) async {
     try {
-      final projectSnapshot =
+      final boardSnapshot =
           await firestore
               .collection('workspaces')
               .doc(workspaceId)
-              .collection('projects')
+              .collection('boards')
               .get();
-      return projectSnapshot.docs.length;
+      return boardSnapshot.docs.length;
     } catch (e) {
       return 0;
     }

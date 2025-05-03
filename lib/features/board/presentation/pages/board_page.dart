@@ -5,27 +5,27 @@ import 'package:focusflow/core/utils/themes/app_pallete.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
-import 'package:focusflow/features/project/presentation/services/add_member_dialog.dart';
+import 'package:focusflow/features/board/presentation/services/add_member_dialog.dart';
 import 'package:go_router/go_router.dart';
-import '../cubit/project_cubit.dart';
-import '../cubit/project_state.dart';
+import '../cubit/board_cubit.dart';
+import '../cubit/board_state.dart';
 
-class ProjectPage extends StatefulWidget {
+class BoardPage extends StatefulWidget {
   final String workspaceId;
 
-  const ProjectPage({super.key, required this.workspaceId});
+  const BoardPage({super.key, required this.workspaceId});
 
   @override
-  State<ProjectPage> createState() => _ProjectPageState();
+  State<BoardPage> createState() => _BoardPageState();
 }
 
-class _ProjectPageState extends State<ProjectPage> {
+class _BoardPageState extends State<BoardPage> {
   @override
   void initState() {
     super.initState();
     // Delay ensures context is fully initialized before use
     Future.microtask(() {
-      context.read<ProjectCubit>().loadProjects(widget.workspaceId);
+      context.read<BoardCubit>().loadBoards(widget.workspaceId);
     });
   }
 
@@ -35,7 +35,7 @@ class _ProjectPageState extends State<ProjectPage> {
       appBar: AppBar(
         title: const Text('Task Boards'),
         leading: BackButton(
-          onPressed: () => GoRouter.of(context).pop('project_added'),
+          onPressed: () => GoRouter.of(context).pop('board_added'),
         ),
         centerTitle: true,
         actions: [
@@ -89,16 +89,16 @@ class _ProjectPageState extends State<ProjectPage> {
         ],
       ),
 
-      body: BlocBuilder<ProjectCubit, ProjectState>(
+      body: BlocBuilder<BoardCubit, BoardState>(
         builder: (context, state) {
-          if (state is ProjectLoading) {
+          if (state is BoardLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is ProjectLoaded) {
+          } else if (state is BoardLoaded) {
             return ListView.builder(
               padding: const EdgeInsets.all(16.0),
-              itemCount: state.projects.length,
+              itemCount: state.boards.length,
               itemBuilder: (context, index) {
-                final project = state.projects[index];
+                final board = state.boards[index];
                 return Card(
                   margin: const EdgeInsets.only(bottom: 16.0),
                   elevation: 3,
@@ -111,9 +111,9 @@ class _ProjectPageState extends State<ProjectPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Project name
+                        // Board name
                         Text(
-                          project.name,
+                          board.name,
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -121,9 +121,9 @@ class _ProjectPageState extends State<ProjectPage> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        // Project description
+                        // Board description
                         Text(
-                          project.description,
+                          board.description,
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
@@ -134,19 +134,19 @@ class _ProjectPageState extends State<ProjectPage> {
                         Row(
                           children: [
                             Text(
-                              'Task Boards: ${project.numberOfBoards}',
+                              'Tasks: ${board.numberOfTasks}',
                               style: const TextStyle(fontSize: 13),
                             ),
                             const SizedBox(width: 16),
                             Text(
-                              'Members: ${project.numberOfMembers}',
+                              'Members: ${board.numberOfMembers}',
                               style: const TextStyle(fontSize: 13),
                             ),
                           ],
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Created by: ${project.createdByName}',
+                          'Created by: ${board.createdByName}',
                           style: const TextStyle(fontSize: 12),
                         ),
                         const SizedBox(height: 12),
@@ -156,16 +156,16 @@ class _ProjectPageState extends State<ProjectPage> {
                             IconButton(
                               icon: const Icon(Icons.person_add),
                               onPressed: () {
-                                AddProjectMemberDialog.openAddProjectMemberDialog(
+                                AddBoardMemberDialog.openAddBoardMemberDialog(
                                   context,
-                                  project.id,
+                                  board.id,
                                   widget.workspaceId,
                                 );
                               },
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                // TODO : Implement project details page
+                                // TODO : Implement board details page
                               },
                               child: const Text('Enter'),
                             ),
@@ -177,7 +177,7 @@ class _ProjectPageState extends State<ProjectPage> {
                 );
               },
             );
-          } else if (state is ProjectError) {
+          } else if (state is BoardError) {
             return Center(child: Text('Error: ${state.message}'));
           }
           return const SizedBox.shrink();
@@ -186,7 +186,7 @@ class _ProjectPageState extends State<ProjectPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           final workspaceId = widget.workspaceId;
-          GoRouter.of(context).push('/workspace/$workspaceId/project-form');
+          GoRouter.of(context).push('/workspace/$workspaceId/board-form');
         },
         child: const Icon(Icons.add),
       ),

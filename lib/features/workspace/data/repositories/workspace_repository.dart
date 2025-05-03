@@ -41,7 +41,7 @@ class WorkspaceRepositoryImpl implements WorkspaceRepository {
   }
 
   @override
-  Future<int> getProjectCount(String workspaceId) {
-    return sl<WorkspaceRemoteDataSource>().getProjectCount(workspaceId);
+  Future<int> getBoardCount(String workspaceId) {
+    return sl<WorkspaceRemoteDataSource>().getBoardCount(workspaceId);
   }
 }

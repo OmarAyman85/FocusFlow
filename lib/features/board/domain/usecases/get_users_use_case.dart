@@ -1,9 +1,9 @@
-import 'package:focusflow/features/project/domain/repositories/project_repository.dart';
+import 'package:focusflow/features/board/domain/repositories/board_repository.dart';
 import 'package:focusflow/features/workspace/domain/entities/member.dart';
 import 'package:focusflow/injection_container.dart';
 
-class GetProjectUsersUseCase {
+class GetBoardUsersUseCase {
   Future<List<Member>> call() async {
-    return sl<ProjectRepository>().getUsers();
+    return sl<BoardRepository>().getUsers();
   }
 }

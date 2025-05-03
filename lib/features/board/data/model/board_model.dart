@@ -1,27 +1,27 @@
-import 'package:focusflow/features/project/domain/entities/member.dart';
-import 'package:focusflow/features/project/domain/entities/project.dart';
+import 'package:focusflow/features/board/domain/entities/board.dart';
+import 'package:focusflow/features/board/domain/entities/member.dart';
 
-class ProjectModel extends Project {
-  ProjectModel({
+class BoardModel extends Board {
+  BoardModel({
     required super.id,
     required super.workspaceId,
     required super.name,
     required super.description,
     required super.numberOfMembers,
-    required super.numberOfBoards,
+    required super.numberOfTasks,
     required super.createdById,
     required super.createdByName,
     required super.members,
   });
 
-  factory ProjectModel.fromMap(Map<String, dynamic> map, String id) {
-    return ProjectModel(
+  factory BoardModel.fromMap(Map<String, dynamic> map, String id) {
+    return BoardModel(
       id: id,
       workspaceId: map['workspaceId'],
       name: map['name'],
       description: map['description'],
       numberOfMembers: map['numberOfMembers'] ?? 0,
-      numberOfBoards: map['numberOfBoards'] ?? 0,
+      numberOfTasks: map['numberOfTasks'] ?? 0,
       createdById: map['createdById'],
       createdByName: map['createdByName'],
       members:
@@ -37,7 +37,7 @@ class ProjectModel extends Project {
       'name': name,
       'description': description,
       'numberOfMembers': numberOfMembers,
-      'numberOfBoards': numberOfBoards,
+      'numberOfTasks': numberOfTasks,
       'createdById': createdById,
       'createdByName': createdByName,
       'members': members.map((e) => e.toMap()).toList(),
