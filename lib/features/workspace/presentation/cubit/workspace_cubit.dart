@@ -24,7 +24,7 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
 
           for (final workspace in workspaces) {
             final count = await sl<GetProjectCountUseCase>().call(workspace.id);
-            enrichedWorkspaces.add(workspace.copyWith(numberOfProjects: count));
+            enrichedWorkspaces.add(workspace.copyWith(numberOfBoards: count));
           }
 
           emit(WorkspaceLoaded(enrichedWorkspaces));

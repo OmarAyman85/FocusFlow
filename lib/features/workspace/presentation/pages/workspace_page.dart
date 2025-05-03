@@ -121,7 +121,7 @@ class WorkspacePage extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                'Projects: ${workspace.numberOfProjects}',
+                                'Boards: ${workspace.numberOfBoards}',
                                 style: const TextStyle(fontSize: 13),
                               ),
                               const SizedBox(width: 16),

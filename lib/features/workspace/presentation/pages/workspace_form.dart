@@ -22,7 +22,7 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
   final _formKey = GlobalKey<FormState>();
   String _workspaceName = '';
   String _workspaceDescription = '';
-  int _workspaceNumberOfProjects = 0;
+  int _workspacenumberOfBoards = 0;
 
   void _submitForm(String userId, String userName) {
     if (_formKey.currentState?.validate() ?? false) {
@@ -33,7 +33,7 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
         name: _workspaceName,
         description: _workspaceDescription,
         numberOfMembers: 1,
-        numberOfProjects: _workspaceNumberOfProjects,
+        numberOfBoards: _workspacenumberOfBoards,
         createdById: userId,
         createdByName: userName,
         members: [Member(id: userId, name: userName)],
@@ -129,24 +129,6 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
                                   ? 'Required'
                                   : null,
                       onSaved: (value) => _workspaceDescription = value ?? '',
-                    ),
-                    const SizedBox(height: 20),
-                    LabeledTextFormField(
-                      label: 'Number of Projects',
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Required';
-                        }
-                        if (int.tryParse(value) == null) {
-                          return 'Please enter a valid number';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        _workspaceNumberOfProjects =
-                            int.tryParse(value ?? '') ?? 0;
-                      },
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(

@@ -33,7 +33,7 @@ class _ProjectPageState extends State<ProjectPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Projects'),
+        title: const Text('Task Boards'),
         leading: BackButton(
           onPressed: () => GoRouter.of(context).pop('project_added'),
         ),

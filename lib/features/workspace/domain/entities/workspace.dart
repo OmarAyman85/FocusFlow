@@ -6,7 +6,7 @@ class Workspace {
   final String name;
   final String description;
   final int numberOfMembers;
-  final int numberOfProjects;
+  final int numberOfBoards;
   final String createdById;
   final String createdByName;
   final List<Member> members;
@@ -16,7 +16,7 @@ class Workspace {
     required this.name,
     required this.description,
     required this.numberOfMembers,
-    required this.numberOfProjects,
+    required this.numberOfBoards,
     required this.createdById,
     required this.createdByName,
     required this.members,
@@ -27,7 +27,7 @@ class Workspace {
       'name': name,
       'description': description,
       'numberOfMembers': numberOfMembers,
-      'numberOfProjects': numberOfProjects,
+      'numberOfBoards': numberOfBoards,
       'createdBy': {'id': createdById, 'name': createdByName},
       'members': members.map((m) => m.toMap()).toList(),
     };
@@ -39,7 +39,7 @@ class Workspace {
       name: map['name'],
       description: map['description'],
       numberOfMembers: map['numberOfMembers'],
-      numberOfProjects: map['numberOfProjects'],
+      numberOfBoards: map['numberOfBoards'],
       createdById: map['createdBy']['id'],
       createdByName: map['createdBy']['name'],
       members: List<Member>.from(
@@ -53,7 +53,7 @@ class Workspace {
     String? name,
     String? description,
     int? numberOfMembers,
-    int? numberOfProjects,
+    int? numberOfBoards,
     String? createdById,
     String? createdByName,
     List<Member>? members,
@@ -63,7 +63,7 @@ class Workspace {
       name: name ?? this.name,
       description: description ?? this.description,
       numberOfMembers: numberOfMembers ?? this.numberOfMembers,
-      numberOfProjects: numberOfProjects ?? this.numberOfProjects,
+      numberOfBoards: numberOfBoards ?? this.numberOfBoards,
       createdById: createdById ?? this.createdById,
       createdByName: createdByName ?? this.createdByName,
       members: members ?? this.members,
