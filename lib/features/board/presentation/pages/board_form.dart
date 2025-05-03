@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:focusflow/core/utils/constants/loading_spinner.dart';
+import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/board/domain/entities/board.dart';
 import 'package:focusflow/features/board/domain/entities/member.dart';
 import 'package:focusflow/features/board/presentation/cubit/board_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/widgets/workspace_field.dart';
-import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 
 class BoardForm extends StatefulWidget {
@@ -54,59 +52,7 @@ class _BoardFormState extends State<BoardForm> {
           final userName = state.user.name;
 
           return Scaffold(
-            appBar: AppBar(
-              title: const Text('Create Board'),
-              leading: BackButton(onPressed: () => GoRouter.of(context).pop()),
-              centerTitle: true,
-              actions: [
-                BlocBuilder<AuthBloc, AuthState>(
-                  builder: (context, state) {
-                    if (state is AuthLoading) {
-                      return const Padding(
-                        padding: EdgeInsets.only(right: 16.0),
-                        child: LoadingSpinnerWidget(),
-                      );
-                    } else if (state is AuthAuthenticated) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: PopupMenuButton<String>(
-                          onSelected: (value) {
-                            if (value == 'logout') {
-                              context.read<AuthBloc>().add(SignOutRequested());
-                            }
-                          },
-                          itemBuilder:
-                              (_) => [
-                                PopupMenuItem(
-                                  value: 'user_name',
-                                  child: Text('Name: ${state.user.name}'),
-                                ),
-                                const PopupMenuItem(
-                                  value: 'logout',
-                                  child: Text('Logout'),
-                                ),
-                              ],
-                          child: CircleAvatar(
-                            radius: 20,
-                            backgroundColor: Colors.white,
-                            child: Text(
-                              state.user.name[0],
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
-                ),
-              ],
-            ),
+            appBar: MainAppBar(title: 'Add Board'),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(

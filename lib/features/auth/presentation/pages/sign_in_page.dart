@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:focusflow/core/utils/constants/loading_spinner.dart';
+import 'package:focusflow/core/widgets/loading_spinner.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_button.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_field.dart';
 import 'package:focusflow/features/auth/presentation/widgets/gesture_text.dart';

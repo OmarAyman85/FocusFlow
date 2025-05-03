@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:focusflow/core/utils/themes/app_pallete.dart';
+import 'package:focusflow/core/theme/app_pallete.dart';
+import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
 import 'package:focusflow/features/task/presentation/cubit/task_cubit.dart';
 import 'package:focusflow/features/task/presentation/cubit/task_state.dart';
 import 'package:go_router/go_router.dart';
@@ -43,13 +44,7 @@ class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tasks'),
-        centerTitle: true,
-        leading: BackButton(
-          onPressed: () => GoRouter.of(context).pop('task_added'),
-        ),
-      ),
+      appBar: MainAppBar(title: 'Tasks'),
       body: FutureBuilder<Map<String, String>>(
         future: userIdToNameMap,
         builder: (context, snapshot) {
@@ -88,7 +83,8 @@ class _TaskPageState extends State<TaskPage> {
                     crossAxisCount: 2, // Two cards per row
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
-                    childAspectRatio: 0.7, // Adjust this ratio for a natural card height
+                    childAspectRatio:
+                        0.7, // Adjust this ratio for a natural card height
                   ),
                   itemCount: tasks.length,
                   itemBuilder: (context, index) {

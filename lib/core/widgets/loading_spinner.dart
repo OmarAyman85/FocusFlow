@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:focusflow/core/utils/themes/app_pallete.dart';
+import 'package:focusflow/core/theme/app_pallete.dart';
 
 class LoadingSpinnerWidget extends StatelessWidget {
   const LoadingSpinnerWidget({super.key});

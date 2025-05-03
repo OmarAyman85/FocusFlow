@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:focusflow/core/utils/constants/loading_spinner.dart';
+import 'package:focusflow/core/widgets/loading_spinner.dart';
+import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/workspace/domain/entities/member.dart';
 import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
@@ -53,58 +53,7 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
           final userName = state.user.name;
 
           return Scaffold(
-            appBar: AppBar(
-              title: const Text('FocusFlow'),
-              centerTitle: true,
-              actions: [
-                BlocBuilder<AuthBloc, AuthState>(
-                  builder: (context, state) {
-                    if (state is AuthLoading) {
-                      return const Padding(
-                        padding: EdgeInsets.only(right: 16.0),
-                        child: LoadingSpinnerWidget(),
-                      );
-                    } else if (state is AuthAuthenticated) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: PopupMenuButton<String>(
-                          onSelected: (value) {
-                            if (value == 'logout') {
-                              context.read<AuthBloc>().add(SignOutRequested());
-                            }
-                          },
-                          itemBuilder:
-                              (_) => [
-                                PopupMenuItem(
-                                  value: 'user_name',
-                                  child: Text('Name: ${state.user.name}'),
-                                ),
-                                const PopupMenuItem(
-                                  value: 'logout',
-                                  child: Text('Logout'),
-                                ),
-                              ],
-                          child: CircleAvatar(
-                            radius: 20,
-                            backgroundColor: Colors.white,
-                            child: Text(
-                              state.user.name[0],
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
-                ),
-              ],
-            ),
+            appBar: const MainAppBar(title: 'Add Workspace'),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(

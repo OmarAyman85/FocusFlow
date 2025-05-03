@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:focusflow/core/utils/themes/app_pallete.dart';
+import 'package:focusflow/core/theme/app_pallete.dart';
 import 'package:go_router/go_router.dart';
 
 class GestureText extends StatelessWidget {

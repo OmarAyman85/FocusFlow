@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:focusflow/core/utils/constants/loading_spinner.dart';
-import 'package:focusflow/core/utils/themes/app_pallete.dart';
+import 'package:focusflow/core/widgets/loading_spinner.dart';
+import 'package:focusflow/core/theme/app_pallete.dart';
+import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_state.dart';
@@ -24,59 +24,7 @@ class WorkspacePage extends StatelessWidget {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('FocusFlow'),
-          centerTitle: true,
-          actions: [
-            BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                if (state is AuthLoading) {
-                  return const Padding(
-                    padding: EdgeInsets.only(right: 16.0),
-                    child: LoadingSpinnerWidget(),
-                  );
-                } else if (state is AuthAuthenticated) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: PopupMenuButton<String>(
-                      onSelected: (value) {
-                        if (value == 'logout') {
-                          context.read<AuthBloc>().add(SignOutRequested());
-                        }
-                      },
-                      itemBuilder: (BuildContext context) {
-                        return [
-                          PopupMenuItem<String>(
-                            value: 'user_name',
-                            child: Text('Name: ${state.user.name}'),
-                          ),
-                          const PopupMenuItem<String>(
-                            value: 'logout',
-                            child: Text('Logout'),
-                          ),
-                        ];
-                      },
-                      child: CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Colors.white,
-                        child: Text(
-                          state.user.name[0],
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                } else {
-                  return const SizedBox();
-                }
-              },
-            ),
-          ],
-        ),
+        appBar: const MainAppBar(title: 'Workspaces', showBackButton: false),
         body: BlocBuilder<WorkspaceCubit, WorkspaceState>(
           builder: (context, state) {
             if (state is WorkspaceLoading) {

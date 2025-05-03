@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:focusflow/core/utils/themes/theme.dart';
+import 'package:focusflow/core/theme/theme.dart';
 
 import 'router.dart';
 
