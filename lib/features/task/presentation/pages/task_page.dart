@@ -82,8 +82,14 @@ class _TaskPageState extends State<TaskPage> {
                   return const Center(child: Text('No tasks found.'));
                 }
 
-                return ListView.builder(
+                return GridView.builder(
                   padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // Two cards per row
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.7, // Adjust this ratio for a natural card height
+                  ),
                   itemCount: tasks.length,
                   itemBuilder: (context, index) {
                     final task = tasks[index];
@@ -97,61 +103,64 @@ class _TaskPageState extends State<TaskPage> {
                         userMap[task.createdBy] ?? task.createdBy;
 
                     return Card(
-                      margin: const EdgeInsets.only(bottom: 16),
+                      margin: EdgeInsets.zero,
                       elevation: 3,
                       color: AppPallete.gradient2,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              task.title,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: AppPallete.gradient1,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              task.description,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Text(
+                                  task.title,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppPallete.gradient1,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  task.description,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
                                 Text(
                                   'Due: ${task.dueDate}',
                                   style: const TextStyle(fontSize: 13),
                                 ),
-                                const SizedBox(width: 16),
+                                const SizedBox(height: 8),
                                 Text(
                                   'Assigned to: $assignedToNames',
                                   style: const TextStyle(fontSize: 13),
                                 ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Created by: $createdByName',
+                                  style: const TextStyle(fontSize: 12),
+                                ),
                               ],
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Created by: $createdByName',
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                            const SizedBox(height: 12),
-                            ElevatedButton(
+                          ),
+                          Positioned(
+                            bottom: 16,
+                            right: 16,
+                            child: ElevatedButton(
                               onPressed: () {
                                 // TODO: Navigate to task detail page
                               },
-                              child: const Text('Moreee'),
+                              child: const Text('More'),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     );
                   },
