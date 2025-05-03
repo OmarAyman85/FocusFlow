@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:focusflow/core/utils/form_validators.dart';
 import 'package:focusflow/core/widgets/loading_spinner_widget.dart';
 import 'package:focusflow/features/auth/presentation/widgets/auth_button.dart';
 import 'package:focusflow/core/widgets/text_form_field_widget.dart';
@@ -54,7 +55,6 @@ class _SignInPageState extends State<SignInPage> {
               if (state is AuthLoading) {
                 return const LoadingSpinnerWidget();
               }
-
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -66,21 +66,15 @@ class _SignInPageState extends State<SignInPage> {
                   AppTextFormField(
                     label: 'Email',
                     controller: _emailController,
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty ? 'Required' : null,
+                    validator: FormValidators.validateEmail,
                   ),
-
                   const SizedBox(height: 15),
                   AppTextFormField(
                     label: 'Password',
                     controller: _passwordController,
                     isObscureText: true,
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty ? 'Required' : null,
+                    validator: FormValidators.validatePasswordSignIn,
                   ),
-
                   const SizedBox(height: 20),
                   AuthButton(
                     buttonText: "Sign In",

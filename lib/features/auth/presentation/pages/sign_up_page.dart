@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/utils/form_validators.dart';
 import 'package:focusflow/core/widgets/loading_spinner_widget.dart';
 import 'package:focusflow/features/auth/data/models/user_model.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
@@ -57,7 +58,6 @@ class _SignUpPageState extends State<SignUpPage> {
               if (state is AuthLoading) {
                 return const LoadingSpinnerWidget();
               }
-
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -69,28 +69,21 @@ class _SignUpPageState extends State<SignUpPage> {
                   AppTextFormField(
                     label: 'Name',
                     controller: _nameController,
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty ? 'Required' : null,
+                    validator: FormValidators.validateName,
                   ),
                   const SizedBox(height: 15),
                   AppTextFormField(
                     label: 'Email',
                     controller: _emailController,
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty ? 'Required' : null,
+                    validator: FormValidators.validateEmail,
                   ),
                   const SizedBox(height: 15),
                   AppTextFormField(
                     label: 'Password',
                     controller: _passwordController,
                     isObscureText: true,
-                    validator:
-                        (value) =>
-                            value == null || value.isEmpty ? 'Required' : null,
+                    validator: FormValidators.validatePasswordSignUp,
                   ),
-
                   const SizedBox(height: 20),
                   AuthButton(
                     buttonText: "Sign Up",
