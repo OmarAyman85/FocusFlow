@@ -23,6 +23,7 @@ import 'package:focusflow/features/workspace/data/sources/remote_workspace_data_
 import 'package:focusflow/features/workspace/domain/repositories/workspace_repository.dart';
 import 'package:focusflow/features/workspace/domain/usecases/add_member_to_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/domain/usecases/create_workspace.dart';
+import 'package:focusflow/features/workspace/domain/usecases/get_project_count.dart';
 import 'package:focusflow/features/workspace/domain/usecases/get_users_use_case.dart';
 import 'package:focusflow/features/workspace/domain/usecases/get_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
@@ -81,6 +82,9 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<GetWorkspaceUsersUseCase>(
     () => GetWorkspaceUsersUseCase(),
+  );
+  sl.registerLazySingleton<GetProjectCountUseCase>(
+    () => GetProjectCountUseCase(),
   );
 
   // Cubit

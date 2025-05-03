@@ -39,4 +39,9 @@ class WorkspaceRepositoryImpl implements WorkspaceRepository {
   Future<List<Member>> getUsers() async {
     return sl<WorkspaceRemoteDataSource>().getUsers();
   }
+
+  @override
+  Future<int> getProjectCount(String workspaceId) {
+    return sl<WorkspaceRemoteDataSource>().getProjectCount(workspaceId);
+  }
 }

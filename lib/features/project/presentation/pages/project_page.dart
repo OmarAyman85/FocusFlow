@@ -34,7 +34,9 @@ class _ProjectPageState extends State<ProjectPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Projects'),
-        leading: BackButton(onPressed: () => GoRouter.of(context).pop()),
+        leading: BackButton(
+          onPressed: () => GoRouter.of(context).pop('project_added'),
+        ),
         centerTitle: true,
         actions: [
           BlocBuilder<AuthBloc, AuthState>(

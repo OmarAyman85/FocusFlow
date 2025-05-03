@@ -7,6 +7,7 @@ abstract class WorkspaceRemoteDataSource {
   Stream<List<Workspace>> getWorkspaces(String userId);
   Future<void> addMemberToWorkspace(String workspaceId, Member member);
   Future<List<Member>> getUsers();
+  Future<int> getProjectCount(String workspaceId);
 }
 
 class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
@@ -24,7 +25,7 @@ class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
       return snapshot.docs
           .map((doc) {
             final data = doc.data();
-            return Workspace.fromMap(data, doc.id); 
+            return Workspace.fromMap(data, doc.id);
           })
           .where((workspace) {
             final isCreator = workspace.createdById == userId;
@@ -60,5 +61,20 @@ class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
       final data = doc.data();
       return Member(id: doc.id, name: data['name']);
     }).toList();
+  }
+
+  @override
+  Future<int> getProjectCount(String workspaceId) async {
+    try {
+      final projectSnapshot =
+          await firestore
+              .collection('workspaces')
+              .doc(workspaceId)
+              .collection('projects')
+              .get();
+      return projectSnapshot.docs.length;
+    } catch (e) {
+      return 0;
+    }
   }
 }

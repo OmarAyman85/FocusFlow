@@ -149,11 +149,23 @@ class WorkspacePage extends StatelessWidget {
                                     ),
                               ),
                               ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   final workspaceId = workspace.id;
-                                  GoRouter.of(
+
+                                  final result = await GoRouter.of(
                                     context,
                                   ).push('/workspace/$workspaceId/projects');
+
+                                  if (result == 'project_added') {
+                                    final authState =
+                                        context.read<AuthBloc>().state;
+                                    if (authState is AuthAuthenticated) {
+                                      final userId = authState.user.uid;
+                                      context
+                                          .read<WorkspaceCubit>()
+                                          .loadWorkspaces(userId);
+                                    }
+                                  }
                                 },
                                 child: const Text('Enter'),
                               ),

@@ -1,4 +1,5 @@
-import 'package:focusflow/features/workspace/domain/entities/member.dart';
+// import 'package:focusflow/features/workspace/domain/entities/member.dart';
+import 'member.dart';
 
 class Workspace {
   final String id;
@@ -44,6 +45,28 @@ class Workspace {
       members: List<Member>.from(
         (map['members'] ?? []).map((m) => Member.fromMap(m)),
       ),
+    );
+  }
+
+  Workspace copyWith({
+    String? id,
+    String? name,
+    String? description,
+    int? numberOfMembers,
+    int? numberOfProjects,
+    String? createdById,
+    String? createdByName,
+    List<Member>? members,
+  }) {
+    return Workspace(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      numberOfMembers: numberOfMembers ?? this.numberOfMembers,
+      numberOfProjects: numberOfProjects ?? this.numberOfProjects,
+      createdById: createdById ?? this.createdById,
+      createdByName: createdByName ?? this.createdByName,
+      members: members ?? this.members,
     );
   }
 }
