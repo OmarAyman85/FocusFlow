@@ -1,0 +1,50 @@
+import 'package:focusflow/features/board/domain/entities/member.dart';
+import 'package:focusflow/features/task/data/models/task_model.dart';
+import 'package:focusflow/features/task/data/sources/task_remote_data_source.dart';
+import 'package:focusflow/features/task/domain/entities/task_entity.dart';
+import 'package:focusflow/features/task/domain/repositories/task_repository.dart';
+import 'package:focusflow/injection_container.dart';
+
+class TaskRepositoryImpl implements TaskRepository {
+  @override
+  Future<void> createTask({
+    required String workspaceId,
+    required String boardId,
+    required TaskEntity task,
+  }) async {
+    final model = TaskModel.fromEntity(task);
+    await sl<TaskRemoteDataSource>().createTask(
+      workspaceId: workspaceId,
+      boardId: boardId,
+      task: model,
+    );
+  }
+
+  @override
+  Future<List<TaskEntity>> getTasks({
+    required String workspaceId,
+    required String boardId,
+  }) async {
+    final models = await sl<TaskRemoteDataSource>().getTasks(
+      workspaceId: workspaceId,
+      boardId: boardId,
+    );
+    return models.map((model) => model.toEntity()).toList();
+  }
+
+  @override
+  Future<List<Member>> getUsers() async {
+    return await sl<TaskRemoteDataSource>().getUsers();
+  }
+
+  @override
+  Future<void> addMemberToTask({
+    required String taskId,
+    required String memberId,
+  }) async {
+    await sl<TaskRemoteDataSource>().addMemberToTask(
+      taskId: taskId,
+      memberId: memberId,
+    );
+  }
+}

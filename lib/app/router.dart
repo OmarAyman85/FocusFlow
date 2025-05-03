@@ -5,6 +5,9 @@ import 'package:focusflow/features/board/presentation/pages/board_page.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/pages/workspace_form.dart';
 import 'package:focusflow/features/workspace/presentation/pages/workspace_page.dart';
+import 'package:focusflow/features/task/presentation/cubit/task_cubit.dart';
+import 'package:focusflow/features/task/presentation/pages/task_form.dart';
+import 'package:focusflow/features/task/presentation/pages/task_page.dart';
 import 'package:focusflow/injection_container.dart';
 import 'package:go_router/go_router.dart';
 import '../features/auth/presentation/pages/sign_in_page.dart';
@@ -52,6 +55,30 @@ final router = GoRouter(
           builder: (context, state) {
             final uid = state.pathParameters['uid']!;
             return WorkspaceForm(userId: uid);
+          },
+        ),
+      ],
+    ),
+
+    ShellRoute(
+      builder: (context, state, child) {
+        return BlocProvider(create: (_) => sl<TaskCubit>(), child: child);
+      },
+      routes: [
+        GoRoute(
+          path: '/workspace/:workspaceId/board/:boardId/tasks',
+          builder: (context, state) {
+            final workspaceId = state.pathParameters['workspaceId']!;
+            final boardId = state.pathParameters['boardId']!;
+            return TaskPage(workspaceId: workspaceId, boardId: boardId);
+          },
+        ),
+        GoRoute(
+          path: '/workspace/:workspaceId/board/:boardId/task-form',
+          builder: (context, state) {
+            final workspaceId = state.pathParameters['workspaceId']!;
+            final boardId = state.pathParameters['boardId']!;
+            return TaskForm(workspaceId: workspaceId, boardId: boardId);
           },
         ),
       ],

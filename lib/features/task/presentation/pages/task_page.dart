@@ -5,27 +5,31 @@ import 'package:focusflow/core/utils/themes/app_pallete.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
-import 'package:focusflow/features/board/presentation/services/add_member_dialog.dart';
+import 'package:focusflow/features/task/presentation/cubit/task_cubit.dart';
+import 'package:focusflow/features/task/presentation/cubit/task_state.dart';
+import 'package:focusflow/features/task/presentation/services/add_member_dialogue_tasks.dart';
 import 'package:go_router/go_router.dart';
-import '../cubit/board_cubit.dart';
-import '../cubit/board_state.dart';
 
-class BoardPage extends StatefulWidget {
+class TaskPage extends StatefulWidget {
   final String workspaceId;
+  final String boardId;
 
-  const BoardPage({super.key, required this.workspaceId});
+  const TaskPage({super.key, required this.workspaceId, required this.boardId});
 
   @override
-  State<BoardPage> createState() => _BoardPageState();
+  State<TaskPage> createState() => _TaskPageState();
 }
 
-class _BoardPageState extends State<BoardPage> {
+class _TaskPageState extends State<TaskPage> {
   @override
   void initState() {
     super.initState();
     // Delay ensures context is fully initialized before use
     Future.microtask(() {
-      context.read<BoardCubit>().loadBoards(widget.workspaceId);
+      context.read<TaskCubit>().loadTasks(
+        workspaceId: widget.workspaceId,
+        boardId: widget.boardId,
+      );
     });
   }
 
@@ -33,9 +37,9 @@ class _BoardPageState extends State<BoardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Task Boards'),
+        title: const Text('Tasks'),
         leading: BackButton(
-          onPressed: () => GoRouter.of(context).pop('board_added'),
+          onPressed: () => GoRouter.of(context).pop('task_added'),
         ),
         centerTitle: true,
         actions: [
@@ -88,17 +92,16 @@ class _BoardPageState extends State<BoardPage> {
           ),
         ],
       ),
-
-      body: BlocBuilder<BoardCubit, BoardState>(
+      body: BlocBuilder<TaskCubit, TaskState>(
         builder: (context, state) {
-          if (state is BoardLoading) {
+          if (state is TaskLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is BoardLoaded) {
+          } else if (state is TaskLoaded) {
             return ListView.builder(
               padding: const EdgeInsets.all(16.0),
-              itemCount: state.boards.length,
+              itemCount: state.tasks.length,
               itemBuilder: (context, index) {
-                final board = state.boards[index];
+                final task = state.tasks[index];
                 return Card(
                   margin: const EdgeInsets.only(bottom: 16.0),
                   elevation: 3,
@@ -111,9 +114,9 @@ class _BoardPageState extends State<BoardPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Board name
+                        // Task Title
                         Text(
-                          board.name,
+                          task.title,
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -121,9 +124,9 @@ class _BoardPageState extends State<BoardPage> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        // Board description
+                        // Task description
                         Text(
-                          board.description,
+                          task.description,
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
@@ -134,19 +137,19 @@ class _BoardPageState extends State<BoardPage> {
                         Row(
                           children: [
                             Text(
-                              'Tasks: ${board.numberOfTasks}',
+                              'Due: ${task.dueDate}',
                               style: const TextStyle(fontSize: 13),
                             ),
                             const SizedBox(width: 16),
                             Text(
-                              'Members: ${board.numberOfMembers}',
+                              'Assigned to: ${task.assignedTo}',
                               style: const TextStyle(fontSize: 13),
                             ),
                           ],
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Created by: ${board.createdByName}',
+                          'Created by: ${task.createdBy}',
                           style: const TextStyle(fontSize: 12),
                         ),
                         const SizedBox(height: 12),
@@ -156,22 +159,18 @@ class _BoardPageState extends State<BoardPage> {
                             IconButton(
                               icon: const Icon(Icons.person_add),
                               onPressed: () {
-                                AddBoardMemberDialog.openAddBoardMemberDialog(
+                                // Pass the whole task object instead of just the id
+                                AddMemberDialog.openAddMemberDialog(
                                   context,
-                                  board.id,
-                                  widget.workspaceId,
+                                  task,
                                 );
                               },
                             ),
                             ElevatedButton(
-                              onPressed: () async {
-                                final workspaceId = widget.workspaceId;
-                                final boardId = board.id;
-                                GoRouter.of(context).push(
-                                  '/workspace/$workspaceId/board/$boardId/tasks',
-                                );
+                              onPressed: () {
+                                // TODO : Implement task details page
                               },
-                              child: const Text('Enter'),
+                              child: const Text('Moreee'),
                             ),
                           ],
                         ),
@@ -181,7 +180,7 @@ class _BoardPageState extends State<BoardPage> {
                 );
               },
             );
-          } else if (state is BoardError) {
+          } else if (state is TaskError) {
             return Center(child: Text('Error: ${state.message}'));
           }
           return const SizedBox.shrink();
@@ -190,7 +189,10 @@ class _BoardPageState extends State<BoardPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           final workspaceId = widget.workspaceId;
-          GoRouter.of(context).push('/workspace/$workspaceId/board-form');
+          final boardId = widget.boardId;
+          GoRouter.of(
+            context,
+          ).push('/workspace/$workspaceId/board/$boardId/task-form');
         },
         child: const Icon(Icons.add),
       ),
