@@ -3,7 +3,7 @@ import 'package:focusflow/features/task/data/models/task_model.dart';
 import 'package:focusflow/features/task/data/sources/task_remote_data_source.dart';
 import 'package:focusflow/features/task/domain/entities/task_entity.dart';
 import 'package:focusflow/features/task/domain/repositories/task_repository.dart';
-import 'package:focusflow/injection_container.dart';
+import 'package:focusflow/core/injection/injection_container.dart';
 
 class TaskRepositoryImpl implements TaskRepository {
   @override

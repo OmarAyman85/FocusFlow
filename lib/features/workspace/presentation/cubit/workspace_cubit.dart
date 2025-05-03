@@ -7,7 +7,7 @@ import 'package:focusflow/features/workspace/domain/usecases/get_board_count.dar
 import 'package:focusflow/features/workspace/domain/usecases/get_users_use_case.dart';
 import 'package:focusflow/features/workspace/domain/usecases/get_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_state.dart';
-import 'package:focusflow/injection_container.dart';
+import 'package:focusflow/core/injection/injection_container.dart';
 
 class WorkspaceCubit extends Cubit<WorkspaceState> {
   WorkspaceCubit() : super(WorkspaceInitial());

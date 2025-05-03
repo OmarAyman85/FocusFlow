@@ -5,7 +5,7 @@ import 'package:focusflow/features/board/domain/usecases/create_board_use_case.d
 import 'package:focusflow/features/board/domain/usecases/get_boards_use_case.dart';
 import 'package:focusflow/features/board/domain/usecases/get_users_use_case.dart';
 import 'package:focusflow/features/workspace/domain/entities/member.dart';
-import 'package:focusflow/injection_container.dart';
+import 'package:focusflow/core/injection/injection_container.dart';
 import 'board_state.dart';
 
 class BoardCubit extends Cubit<BoardState> {

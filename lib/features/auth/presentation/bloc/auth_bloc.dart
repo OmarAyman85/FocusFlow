@@ -5,7 +5,7 @@ import 'package:focusflow/features/auth/domain/usecases/get_current_user.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_up_use_case.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_out_use_case.dart';
 import 'package:focusflow/features/auth/domain/usecases/sign_in_use_case.dart';
-import 'package:focusflow/injection_container.dart';
+import 'package:focusflow/core/injection/injection_container.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 

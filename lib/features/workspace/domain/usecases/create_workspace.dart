@@ -1,4 +1,4 @@
-import 'package:focusflow/injection_container.dart';
+import 'package:focusflow/core/injection/injection_container.dart';
 
 import '../entities/workspace.dart';
 import '../repositories/workspace_repository.dart';

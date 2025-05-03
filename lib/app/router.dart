@@ -8,7 +8,7 @@ import 'package:focusflow/features/workspace/presentation/pages/workspace_page.d
 import 'package:focusflow/features/task/presentation/cubit/task_cubit.dart';
 import 'package:focusflow/features/task/presentation/pages/task_form.dart';
 import 'package:focusflow/features/task/presentation/pages/task_page.dart';
-import 'package:focusflow/injection_container.dart';
+import 'package:focusflow/core/injection/injection_container.dart';
 import 'package:go_router/go_router.dart';
 import '../features/auth/presentation/pages/sign_in_page.dart';
 import '../features/auth/presentation/pages/sign_up_page.dart';

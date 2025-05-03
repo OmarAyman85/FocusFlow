@@ -5,7 +5,7 @@ import 'package:focusflow/features/task/domain/usecases/add_member_to_task_use_c
 import 'package:focusflow/features/task/domain/usecases/create_task_use_case.dart';
 import 'package:focusflow/features/task/domain/usecases/get_tasks_use_case.dart';
 import 'package:focusflow/features/task/domain/usecases/get_users_use_case.dart';
-import 'package:focusflow/injection_container.dart';
+import 'package:focusflow/core/injection/injection_container.dart';
 import 'task_state.dart';
 
 class TaskCubit extends Cubit<TaskState> {
