@@ -6,7 +6,6 @@ import 'package:focusflow/features/board/domain/entities/board.dart';
 abstract class BoardRemoteDataSource {
   Future<void> createBoard(Board board);
   Future<List<Board>> getBoards(String workspaceId);
-  Future<List<Member>> getUsers();
   Future<void> addBoardMember(
     String workspaceId,
     String boardId,
@@ -84,14 +83,5 @@ class BoardRemoteDataSourceImpl implements BoardRemoteDataSource {
         'numberOfMembers': members.length,
       });
     });
-  }
-
-  @override
-  Future<List<Member>> getUsers() async {
-    final snapshot = await firestore.collection('users').get();
-    return snapshot.docs.map((doc) {
-      final data = doc.data();
-      return Member(id: doc.id, name: data['name']);
-    }).toList();
   }
 }

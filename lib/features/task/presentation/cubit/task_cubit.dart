@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/core/entities/member.dart';
+import 'package:focusflow/core/services/user_service.dart';
 import 'package:focusflow/features/task/domain/entities/task_entity.dart';
 import 'package:focusflow/features/task/domain/usecases/add_member_to_task_use_case.dart';
 import 'package:focusflow/features/task/domain/usecases/create_task_use_case.dart';
 import 'package:focusflow/features/task/domain/usecases/get_tasks_use_case.dart';
-import 'package:focusflow/features/task/domain/usecases/get_users_use_case.dart';
 import 'package:focusflow/core/injection/injection_container.dart';
 import 'task_state.dart';
 
@@ -47,7 +47,7 @@ class TaskCubit extends Cubit<TaskState> {
 
   Future<List<Member>> getUsers() async {
     try {
-      final users = await sl<GetTaskUsersUseCase>().call();
+      final users = await sl<UserService>().getUsers();
       return users;
     } catch (e) {
       emit(TaskError("Failed to load users: $e"));

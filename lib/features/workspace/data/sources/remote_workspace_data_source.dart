@@ -6,7 +6,7 @@ abstract class WorkspaceRemoteDataSource {
   Future<void> createWorkspace(Workspace workspace);
   Stream<List<Workspace>> getWorkspaces(String userId);
   Future<void> addMemberToWorkspace(String workspaceId, Member member);
-  Future<List<Member>> getUsers();
+  // Future<List<Member>> getUsers();
   Future<int> getBoardCount(String workspaceId);
 }
 
@@ -52,15 +52,6 @@ class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
         'numberOfMembers': members.length,
       });
     });
-  }
-
-  @override
-  Future<List<Member>> getUsers() async {
-    final snapshot = await firestore.collection('users').get();
-    return snapshot.docs.map((doc) {
-      final data = doc.data();
-      return Member(id: doc.id, name: data['name']);
-    }).toList();
   }
 
   @override

@@ -1,4 +1,3 @@
-import 'package:focusflow/core/entities/member.dart';
 import 'package:focusflow/features/task/data/models/task_model.dart';
 import 'package:focusflow/features/task/data/sources/task_remote_data_source.dart';
 import 'package:focusflow/features/task/domain/entities/task_entity.dart';
@@ -30,11 +29,6 @@ class TaskRepositoryImpl implements TaskRepository {
       boardId: boardId,
     );
     return models.map((model) => model.toEntity()).toList();
-  }
-
-  @override
-  Future<List<Member>> getUsers() async {
-    return await sl<TaskRemoteDataSource>().getUsers();
   }
 
   @override

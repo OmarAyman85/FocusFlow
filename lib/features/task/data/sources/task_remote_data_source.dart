@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:focusflow/core/entities/member.dart';
 import '../models/task_model.dart';
 
 abstract class TaskRemoteDataSource {
@@ -13,8 +12,6 @@ abstract class TaskRemoteDataSource {
     required String workspaceId,
     required String boardId,
   });
-
-  Future<List<Member>> getUsers();
 
   Future<void> addMemberToTask({
     required String taskId,
@@ -65,15 +62,6 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
     return snapshot.docs
         .map((doc) => TaskModel.fromMap(doc.data(), doc.id))
         .toList();
-  }
-
-  @override
-  Future<List<Member>> getUsers() async {
-    final snapshot = await firestore.collection('users').get();
-    return snapshot.docs.map((doc) {
-      final data = doc.data();
-      return Member(id: doc.id, name: data['name']);
-    }).toList();
   }
 
   @override

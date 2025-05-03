@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/core/entities/member.dart';
+import 'package:focusflow/core/services/user_service.dart';
 import 'package:focusflow/features/board/domain/entities/board.dart';
 import 'package:focusflow/features/board/domain/usecases/add_member_to_board_use_case.dart';
 import 'package:focusflow/features/board/domain/usecases/create_board_use_case.dart';
 import 'package:focusflow/features/board/domain/usecases/get_boards_use_case.dart';
-import 'package:focusflow/features/board/domain/usecases/get_users_use_case.dart';
 import 'package:focusflow/core/injection/injection_container.dart';
 import 'board_state.dart';
 
@@ -33,7 +33,7 @@ class BoardCubit extends Cubit<BoardState> {
   }
 
   Future<List<Member>> getUsers() async {
-    return await sl<GetBoardUsersUseCase>().call();
+    return await sl<UserService>().getUsers();
   }
 
   Future<void> addBoardMember(
@@ -42,6 +42,6 @@ class BoardCubit extends Cubit<BoardState> {
     Member member,
   ) async {
     await sl<AddMemberToBoardUseCase>().call(workspaceId, boardId, member);
-    loadBoards(workspaceId); // Refresh boards
+    loadBoards(workspaceId);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:focusflow/core/services/user_service.dart';
 import 'package:focusflow/features/auth/data/repositories/auth_repository.dart';
 import 'package:focusflow/features/auth/data/sources/auth_remote_data_source.dart';
 import 'package:focusflow/features/auth/domain/repositories/auth_repository.dart';
@@ -15,7 +16,6 @@ import 'package:focusflow/features/board/domain/repositories/board_repository.da
 import 'package:focusflow/features/board/domain/usecases/add_member_to_board_use_case.dart';
 import 'package:focusflow/features/board/domain/usecases/create_board_use_case.dart';
 import 'package:focusflow/features/board/domain/usecases/get_boards_use_case.dart';
-import 'package:focusflow/features/board/domain/usecases/get_users_use_case.dart';
 import 'package:focusflow/features/board/presentation/cubit/board_cubit.dart';
 import 'package:focusflow/features/task/data/repositories/task_repository.dart';
 import 'package:focusflow/features/task/data/sources/task_remote_data_source.dart';
@@ -23,7 +23,6 @@ import 'package:focusflow/features/task/domain/repositories/task_repository.dart
 import 'package:focusflow/features/task/domain/usecases/add_member_to_task_use_case.dart';
 import 'package:focusflow/features/task/domain/usecases/create_task_use_case.dart';
 import 'package:focusflow/features/task/domain/usecases/get_tasks_use_case.dart';
-import 'package:focusflow/features/task/domain/usecases/get_users_use_case.dart';
 import 'package:focusflow/features/task/presentation/cubit/task_cubit.dart';
 import 'package:focusflow/features/workspace/data/repositories/workspace_repository.dart';
 import 'package:focusflow/features/workspace/data/sources/remote_workspace_data_source.dart';
@@ -32,7 +31,6 @@ import 'package:focusflow/features/workspace/domain/repositories/workspace_repos
 import 'package:focusflow/features/workspace/domain/usecases/add_member_to_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/domain/usecases/create_workspace.dart';
 import 'package:focusflow/features/workspace/domain/usecases/get_board_count.dart';
-import 'package:focusflow/features/workspace/domain/usecases/get_users_use_case.dart';
 import 'package:focusflow/features/workspace/domain/usecases/get_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
 
@@ -41,9 +39,18 @@ import 'package:get_it/get_it.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  // Firebase services
+  // ***************************************************************************
+  // *****************Firebase Services*****************************************
+  // ***************************************************************************
   sl.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
   sl.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
+
+  // ***************************************************************************
+  // *****************Shared Services*******************************************
+  // ***************************************************************************
+  sl.registerLazySingleton<UserService>(
+    () => UserServiceImpl(firestore: sl<FirebaseFirestore>()),
+  );
 
   // ***************************************************************************
   // *****************Auth Feature**********************************************
@@ -94,9 +101,6 @@ Future<void> init() async {
   sl.registerLazySingleton<AddMemberToWorkspaceUseCase>(
     () => AddMemberToWorkspaceUseCase(),
   );
-  sl.registerLazySingleton<GetWorkspaceUsersUseCase>(
-    () => GetWorkspaceUsersUseCase(),
-  );
   sl.registerLazySingleton<GetBoardCountUseCase>(() => GetBoardCountUseCase());
 
   // Cubit
@@ -120,7 +124,6 @@ Future<void> init() async {
   sl.registerLazySingleton<AddMemberToBoardUseCase>(
     () => AddMemberToBoardUseCase(),
   );
-  sl.registerLazySingleton<GetBoardUsersUseCase>(() => GetBoardUsersUseCase());
 
   // Cubit
   sl.registerFactory<BoardCubit>(() => BoardCubit());
@@ -140,7 +143,6 @@ Future<void> init() async {
   // Use Cases
   sl.registerLazySingleton<CreateTaskUseCase>(() => CreateTaskUseCase());
   sl.registerLazySingleton<GetTasksUseCase>(() => GetTasksUseCase());
-  sl.registerLazySingleton<GetTaskUsersUseCase>(() => GetTaskUsersUseCase());
   sl.registerLazySingleton<AddTaskMemberUseCase>(() => AddTaskMemberUseCase());
 
   // Cubit

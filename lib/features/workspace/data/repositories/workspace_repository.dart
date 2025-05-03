@@ -36,11 +36,6 @@ class WorkspaceRepositoryImpl implements WorkspaceRepository {
   }
 
   @override
-  Future<List<Member>> getUsers() async {
-    return sl<WorkspaceRemoteDataSource>().getUsers();
-  }
-
-  @override
   Future<int> getBoardCount(String workspaceId) {
     return sl<WorkspaceRemoteDataSource>().getBoardCount(workspaceId);
   }

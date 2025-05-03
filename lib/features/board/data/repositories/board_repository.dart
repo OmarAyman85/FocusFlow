@@ -24,15 +24,6 @@ class BoardRepositoryImpl implements BoardRepository {
   }
 
   @override
-  Future<List<Member>> getUsers() async {
-    try {
-      return await sl<BoardRemoteDataSource>().getUsers();
-    } catch (e) {
-      return Future.error(e.toString());
-    }
-  }
-
-  @override
   Future<void> addBoardMember(
     String workspaceId,
     String boardId,

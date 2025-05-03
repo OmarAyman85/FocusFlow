@@ -1,5 +1,3 @@
-import 'package:focusflow/core/entities/member.dart';
-
 import '../entities/task_entity.dart';
 
 abstract class TaskRepository {
@@ -13,8 +11,6 @@ abstract class TaskRepository {
     required String workspaceId,
     required String boardId,
   });
-
-  Future<List<Member>> getUsers();
 
   Future<void> addMemberToTask({
     required String taskId,
