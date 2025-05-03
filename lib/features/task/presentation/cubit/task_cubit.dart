@@ -45,9 +45,10 @@ class TaskCubit extends Cubit<TaskState> {
     }
   }
 
-  Future<List<Member>> getUsers() {
+  Future<List<Member>> getUsers() async {
     try {
-      return sl<GetTaskUsersUseCase>().call();
+      final users = await sl<GetTaskUsersUseCase>().call();
+      return users;
     } catch (e) {
       emit(TaskError("Failed to load users: $e"));
       return Future.error("Failed to load users: $e");

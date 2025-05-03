@@ -23,7 +23,7 @@ class _TaskFormState extends State<TaskForm> {
   final _formKey = GlobalKey<FormState>();
   String _taskTitle = '';
   String _taskDescription = '';
-  List<String> _assignedTo = [];
+  List<String> _assignedTo = []; // This will store user names now
   String _status = 'Not Started'; // Default status
   String _priority = 'Medium'; // Default priority
   DateTime? _dueDate;
@@ -36,7 +36,7 @@ class _TaskFormState extends State<TaskForm> {
         id: const Uuid().v4(),
         title: _taskTitle,
         description: _taskDescription,
-        assignedTo: _assignedTo,
+        assignedTo: _assignedTo, // Now it's a list of names
         status: _status,
         priority: _priority,
         dueDate: _dueDate,
@@ -84,7 +84,7 @@ class _TaskFormState extends State<TaskForm> {
 
     if (selectedUser != null) {
       setState(() {
-        _assignedTo.add(selectedUser.id);
+        _assignedTo.add(selectedUser.name); // Add the user's name
       });
     }
   }
@@ -186,7 +186,9 @@ class _TaskFormState extends State<TaskForm> {
                       ),
                       readOnly: true,
                       controller: TextEditingController(
-                        text: _assignedTo.join(', '),
+                        text: _assignedTo.join(
+                          ', ',
+                        ), // Show names instead of IDs
                       ),
                     ),
                     const SizedBox(height: 20),
