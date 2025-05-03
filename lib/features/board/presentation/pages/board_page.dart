@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/services/add_member_dialog.dart';
 import 'package:focusflow/core/theme/app_pallete.dart';
 import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
-import 'package:focusflow/features/board/presentation/services/add_member_dialog.dart';
 import 'package:go_router/go_router.dart';
 import '../cubit/board_cubit.dart';
 import '../cubit/board_state.dart';
@@ -96,13 +96,23 @@ class _BoardPageState extends State<BoardPage> {
                           children: [
                             IconButton(
                               icon: const Icon(Icons.person_add),
-                              onPressed: () {
-                                AddBoardMemberDialog.openAddBoardMemberDialog(
-                                  context,
-                                  board.id,
-                                  widget.workspaceId,
-                                );
-                              },
+                              onPressed:
+                                  () => AddMemberDialog.open(
+                                    context: context,
+                                    title: 'Add Board Member',
+                                    getUsers:
+                                        () =>
+                                            context
+                                                .read<BoardCubit>()
+                                                .getUsers(),
+                                    onUserSelected: (selectedUser) async {
+                                      context.read<BoardCubit>().addBoardMember(
+                                        widget.workspaceId,
+                                        board.id,
+                                        selectedUser,
+                                      );
+                                    },
+                                  ),
                             ),
                             ElevatedButton(
                               onPressed: () async {

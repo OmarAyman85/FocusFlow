@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/services/add_member_dialog.dart';
 import 'package:focusflow/core/widgets/loading_spinner.dart';
 import 'package:focusflow/core/theme/app_pallete.dart';
 import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
@@ -7,7 +8,6 @@ import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_state.dart';
-import 'package:focusflow/features/workspace/presentation/services/add_member_dialog.dart';
 import 'package:go_router/go_router.dart';
 
 class WorkspacePage extends StatelessWidget {
@@ -91,9 +91,28 @@ class WorkspacePage extends StatelessWidget {
                               IconButton(
                                 icon: const Icon(Icons.person_add),
                                 onPressed:
-                                    () => AddMemberDialog.openAddMemberDialog(
-                                      context,
-                                      workspace,
+                                    () => AddMemberDialog.open(
+                                      context: context,
+                                      title: 'Add Workspace Member',
+                                      getUsers:
+                                          () =>
+                                              context
+                                                  .read<WorkspaceCubit>()
+                                                  .getUsers(),
+                                      onUserSelected: (selectedUser) async {
+                                        final authState =
+                                            context.read<AuthBloc>().state;
+                                        if (authState is AuthAuthenticated) {
+                                          final userId = authState.user.uid;
+                                          context
+                                              .read<WorkspaceCubit>()
+                                              .addWorkspaceMember(
+                                                workspace.id,
+                                                selectedUser,
+                                                userId,
+                                              );
+                                        }
+                                      },
                                     ),
                               ),
                               ElevatedButton(
