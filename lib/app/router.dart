@@ -21,6 +21,25 @@ final router = GoRouter(
 
     ShellRoute(
       builder: (context, state, child) {
+        return BlocProvider(create: (_) => sl<WorkspaceCubit>(), child: child);
+      },
+      routes: [
+        GoRoute(
+          path: '/workspace',
+          builder: (context, state) => const WorkspacePage(),
+        ),
+        GoRoute(
+          path: '/workspace-form/:uid',
+          builder: (context, state) {
+            final uid = state.pathParameters['uid']!;
+            return WorkspaceForm(userId: uid);
+          },
+        ),
+      ],
+    ),
+
+    ShellRoute(
+      builder: (context, state, child) {
         return BlocProvider(create: (_) => sl<BoardCubit>(), child: child);
       },
       routes: [
@@ -36,25 +55,6 @@ final router = GoRouter(
           builder: (context, state) {
             final workspaceId = state.pathParameters['workspaceId']!;
             return BoardForm(workspaceId: workspaceId);
-          },
-        ),
-      ],
-    ),
-
-    ShellRoute(
-      builder: (context, state, child) {
-        return BlocProvider(create: (_) => sl<WorkspaceCubit>(), child: child);
-      },
-      routes: [
-        GoRoute(
-          path: '/workspace',
-          builder: (context, state) => const WorkspacePage(),
-        ),
-        GoRoute(
-          path: '/workspace-form/:uid',
-          builder: (context, state) {
-            final uid = state.pathParameters['uid']!;
-            return WorkspaceForm(userId: uid);
           },
         ),
       ],
