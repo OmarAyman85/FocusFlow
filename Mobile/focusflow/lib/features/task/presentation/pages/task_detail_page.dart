@@ -42,69 +42,123 @@ class TaskDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(task.title)),
-      body: Padding(
+      appBar: AppBar(title: Text(task.title), centerTitle: true, elevation: 2),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Task Title
-            Text(
-              task.title,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-
-            const SizedBox(height: 12),
-
-            // Description
-            Text(
-              task.description,
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-
-            const SizedBox(height: 12),
-
-            // Status and Priority
-            Wrap(
-              spacing: 8,
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 3,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // priority chip
-                Chip(
-                  label: Text(task.priority),
-                  backgroundColor: _getPriorityColor(task.priority),
-                  labelStyle: const TextStyle(fontSize: 14),
-                ),
-                // Status Chip
-                Chip(
-                  label: Text(task.status),
-                  backgroundColor: _getStatusColor(task.status),
-                  labelStyle: const TextStyle(fontSize: 12),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 12),
-
-            // Due Date
-            Row(
-              children: [
-                const Icon(Icons.calendar_today, size: 14, color: Colors.grey),
-                const SizedBox(width: 4),
+                // Title
                 Text(
-                  'Due: ${task.dueDate?.toLocal().toString().split(' ')[0]}',
-                  style: const TextStyle(fontSize: 14),
+                  task.title,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Description
+                Text(
+                  task.description,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade700),
+                ),
+                const SizedBox(height: 20),
+
+                // Chips
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    Chip(
+                      label: Text(task.priority),
+                      backgroundColor: _getPriorityColor(task.priority),
+                      labelStyle: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    Chip(
+                      label: Text(task.status),
+                      backgroundColor: _getStatusColor(task.status),
+                      labelStyle: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Due Date
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.calendar_today,
+                      size: 18,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      task.dueDate != null
+                          ? 'Due: ${task.dueDate!.toLocal().toString().split(' ')[0]}'
+                          : 'No due date',
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Created By
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.person_outline,
+                      size: 18,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Created by: $createdByName',
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Action Buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Mark Complete Button
+                    ElevatedButton(
+                      onPressed: () {
+                        // TODO: Implement the logic to mark the task as completed.
+                      },
+                      child: const Text('Mark as Complete'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green.shade400,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                      ),
+                    ),
+                    // Delete Task Button
+                    ElevatedButton(
+                      onPressed: () {
+                        // TODO: Implement the logic to delete the task.
+                      },
+                      child: const Text('Delete Task'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red.shade400,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-
-            const SizedBox(height: 20),
-
-            // Created By
-            Text(
-              'Created By: $createdByName',
-              style: const TextStyle(fontSize: 14),
-            ),
-          ],
+          ),
         ),
       ),
     );
