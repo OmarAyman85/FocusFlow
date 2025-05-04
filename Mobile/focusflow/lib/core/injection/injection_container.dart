@@ -32,8 +32,10 @@ import 'package:focusflow/features/workspace/data/sources/remote_workspace_data_
 import 'package:focusflow/features/workspace/domain/repositories/workspace_repository.dart';
 import 'package:focusflow/features/workspace/domain/usecases/add_member_to_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/domain/usecases/create_workspace.dart';
+import 'package:focusflow/features/workspace/domain/usecases/delete_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/domain/usecases/get_board_count.dart';
 import 'package:focusflow/features/workspace/domain/usecases/get_workspace_use_case.dart';
+import 'package:focusflow/features/workspace/domain/usecases/update_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
 
 import 'package:get_it/get_it.dart';
@@ -104,6 +106,12 @@ Future<void> init() async {
     () => AddMemberToWorkspaceUseCase(),
   );
   sl.registerLazySingleton<GetBoardCountUseCase>(() => GetBoardCountUseCase());
+  sl.registerLazySingleton<UpdateWorkspaceUseCase>(
+    () => UpdateWorkspaceUseCase(),
+  );
+  sl.registerLazySingleton<DeleteWorkspaceUseCase>(
+    () => DeleteWorkspaceUseCase(),
+  );
 
   // Cubit
   sl.registerFactory<WorkspaceCubit>(() => WorkspaceCubit());

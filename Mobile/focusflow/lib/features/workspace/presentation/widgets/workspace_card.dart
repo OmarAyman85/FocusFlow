@@ -25,13 +25,37 @@ class WorkspaceCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              workspace.name,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppPallete.gradient1,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    workspace.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppPallete.gradient1,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.view_stream, size: 20),
+                  onPressed: () async {
+                    final result = await GoRouter.of(
+                      context,
+                    ).push('/workspace/${workspace.id}/boards');
+                    if (result == 'board_added') {
+                      final authState = context.read<AuthBloc>().state;
+                      if (authState is AuthAuthenticated) {
+                        context.read<WorkspaceCubit>().loadWorkspaces(
+                          authState.user.uid,
+                        );
+                      }
+                    }
+                  },
+                ),
+              ],
             ),
             const SizedBox(height: 4),
             Text(
@@ -83,32 +107,23 @@ class WorkspaceCard extends StatelessWidget {
                         },
                       ),
                 ),
-                ElevatedButton(
+                IconButton(
                   onPressed: () async {
-                    final result = await GoRouter.of(
-                      context,
-                    ).push('/workspace/${workspace.id}/boards');
-                    if (result == 'board_added') {
-                      final authState = context.read<AuthBloc>().state;
-                      if (authState is AuthAuthenticated) {
-                        context.read<WorkspaceCubit>().loadWorkspaces(
-                          authState.user.uid,
-                        );
-                      }
+                    final authState = context.read<AuthBloc>().state;
+                    if (authState is AuthAuthenticated) {
+                      final userId = authState.user.uid;
+
+                      await context.read<WorkspaceCubit>().deleteWorkspace(
+                        workspace.id,
+                        userId,
+                      );
+                      await context.read<WorkspaceCubit>().loadWorkspaces(
+                        userId,
+                      );
+                      // GoRouter.of(context).pop();
                     }
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppPallete.backgroundColor,
-                    foregroundColor: AppPallete.gradient1,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
-                  ),
-                  child: const Text('Enter'),
+                  icon: const Icon(Icons.delete, size: 20),
                 ),
               ],
             ),

@@ -7,10 +7,15 @@ abstract class WorkspaceRemoteDataSource {
   Stream<List<Workspace>> getWorkspaces(String userId);
   Future<void> addMemberToWorkspace(String workspaceId, Member member);
   Future<int> getBoardCount(String workspaceId);
+
+  // 🔧 New methods
+  Future<void> deleteWorkspace(String workspaceId);
+  Future<void> updateWorkspace(String workspaceId, Workspace updatedWorkspace);
 }
 
 class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
   final FirebaseFirestore firestore;
+
   WorkspaceRemoteDataSourceImpl({required this.firestore});
 
   @override
@@ -41,11 +46,15 @@ class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
     await firestore.runTransaction((transaction) async {
       final snapshot = await transaction.get(docRef);
       if (!snapshot.exists) throw Exception("Workspace not found");
+
       final members = List<Map<String, dynamic>>.from(
         snapshot['members'] ?? [],
       );
+
       if (members.any((m) => m['id'] == member.id)) return;
+
       members.add(member.toMap());
+
       transaction.update(docRef, {
         'members': members,
         'numberOfMembers': members.length,
@@ -66,5 +75,28 @@ class WorkspaceRemoteDataSourceImpl implements WorkspaceRemoteDataSource {
     } catch (e) {
       return 0;
     }
+  }
+
+  @override
+  Future<void> deleteWorkspace(String workspaceId) async {
+    final workspaceRef = firestore.collection('workspaces').doc(workspaceId);
+    final boardsSnapshot = await workspaceRef.collection('boards').get();
+    for (final boardDoc in boardsSnapshot.docs) {
+      final tasksSnapshot = await boardDoc.reference.collection('tasks').get();
+      for (final taskDoc in tasksSnapshot.docs) {
+        await taskDoc.reference.delete();
+      }
+      await boardDoc.reference.delete();
+    }
+    await workspaceRef.delete();
+  }
+
+  @override
+  Future<void> updateWorkspace(
+    String workspaceId,
+    Workspace updatedWorkspace,
+  ) async {
+    final workspaceRef = firestore.collection('workspaces').doc(workspaceId);
+    await workspaceRef.update(updatedWorkspace.toMap());
   }
 }

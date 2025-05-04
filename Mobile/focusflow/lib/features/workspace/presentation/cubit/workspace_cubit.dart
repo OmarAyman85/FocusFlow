@@ -4,15 +4,17 @@ import 'package:focusflow/core/services/user_service.dart';
 import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 import 'package:focusflow/features/workspace/domain/usecases/add_member_to_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/domain/usecases/create_workspace.dart';
+import 'package:focusflow/features/workspace/domain/usecases/delete_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/domain/usecases/get_board_count.dart';
 import 'package:focusflow/features/workspace/domain/usecases/get_workspace_use_case.dart';
+import 'package:focusflow/features/workspace/domain/usecases/update_workspace_use_case.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_state.dart';
 import 'package:focusflow/core/injection/injection_container.dart';
 
 class WorkspaceCubit extends Cubit<WorkspaceState> {
   WorkspaceCubit() : super(WorkspaceInitial());
 
-  void loadWorkspaces(String userId) async {
+  Future<void> loadWorkspaces(String userId) async {
     emit(WorkspaceLoading());
     try {
       final stream = sl<GetWorkspacesUseCase>().call(userId);
@@ -37,7 +39,7 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
     }
   }
 
-  void createWorkspace(Workspace workspace, String userId) async {
+  Future<void> createWorkspace(Workspace workspace, String userId) async {
     try {
       await sl<CreateWorkspaceUseCase>().call(workspace);
       loadWorkspaces(userId);
@@ -65,6 +67,28 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
       loadWorkspaces(userId);
     } catch (e) {
       emit(WorkspaceError("Failed to add member: $e"));
+    }
+  }
+
+  Future<void> deleteWorkspace(String workspaceId, String userId) async {
+    try {
+      await sl<DeleteWorkspaceUseCase>().call(workspaceId);
+      loadWorkspaces(userId);
+    } catch (e) {
+      emit(WorkspaceError("Failed to delete workspace: $e"));
+    }
+  }
+
+  Future<void> updateWorkspace(
+    String workspaceId,
+    Workspace updatedWorkspace,
+    String userId,
+  ) async {
+    try {
+      await sl<UpdateWorkspaceUseCase>().call(workspaceId, updatedWorkspace);
+      loadWorkspaces(userId);
+    } catch (e) {
+      emit(WorkspaceError("Failed to update workspace: $e"));
     }
   }
 }

@@ -39,4 +39,17 @@ class WorkspaceRepositoryImpl implements WorkspaceRepository {
   Future<int> getBoardCount(String workspaceId) {
     return sl<WorkspaceRemoteDataSource>().getBoardCount(workspaceId);
   }
+
+  @override
+  Future<void> deleteWorkspace(String workspaceId) {
+    return sl<WorkspaceRemoteDataSource>().deleteWorkspace(workspaceId);
+  }
+
+  @override
+  Future<void> updateWorkspace(String workspaceId, Workspace updatedWorkspace) {
+    return sl<WorkspaceRemoteDataSource>().updateWorkspace(
+      workspaceId,
+      updatedWorkspace,
+    );
+  }
 }

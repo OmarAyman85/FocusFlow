@@ -157,7 +157,6 @@ class TaskDetailPage extends StatelessWidget {
                           boardId: boardId,
                           taskId: task.id,
                         );
-                        // Reload tasks after deletion
                         await context.read<TaskCubit>().loadTasks(
                           workspaceId: workspaceId,
                           boardId: boardId,
