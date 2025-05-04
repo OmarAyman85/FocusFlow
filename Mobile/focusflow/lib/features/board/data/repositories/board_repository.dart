@@ -51,4 +51,25 @@ class BoardRepositoryImpl implements BoardRepository {
       return Future.error(e.toString());
     }
   }
+
+  @override
+  Future<void> deleteBoard(String workspaceId, String boardId) async {
+    try {
+      return await sl<BoardRemoteDataSource>().deleteBoard(
+        workspaceId,
+        boardId,
+      );
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
+  @override
+  Future<void> updateBoard(Board board) async {
+    try {
+      return await sl<BoardRemoteDataSource>().updateBoard(board);
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
 }

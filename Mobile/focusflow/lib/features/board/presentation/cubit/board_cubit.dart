@@ -4,6 +4,8 @@ import 'package:focusflow/core/services/user_service.dart';
 import 'package:focusflow/features/board/domain/entities/board.dart';
 import 'package:focusflow/features/board/domain/usecases/add_member_to_board_use_case.dart';
 import 'package:focusflow/features/board/domain/usecases/create_board_use_case.dart';
+import 'package:focusflow/features/board/domain/usecases/delete_board_use_case.dart';
+import 'package:focusflow/features/board/domain/usecases/update_board_use_case.dart';
 import 'package:focusflow/features/board/domain/usecases/get_boards_use_case.dart';
 import 'package:focusflow/core/injection/injection_container.dart';
 import 'package:focusflow/features/board/domain/usecases/get_task_count.dart';
@@ -11,8 +13,6 @@ import 'board_state.dart';
 
 class BoardCubit extends Cubit<BoardState> {
   BoardCubit() : super(BoardInitial());
-
-  get boardRepository => null;
 
   Future<void> loadBoards(String workspaceId) async {
     emit(BoardLoading());
@@ -48,12 +48,30 @@ class BoardCubit extends Cubit<BoardState> {
     }
   }
 
-  void createBoard(Board board) async {
+  Future<void> createBoard(Board board) async {
     try {
       await sl<CreateBoardUseCase>().call(board);
       loadBoards(board.workspaceId);
     } catch (e) {
       emit(BoardError(e.toString()));
+    }
+  }
+
+  Future<void> deleteBoard(String workspaceId, String boardId) async {
+    try {
+      await sl<DeleteBoardUseCase>().call(workspaceId, boardId);
+      loadBoards(workspaceId);
+    } catch (e) {
+      emit(BoardError("Failed to delete board: $e"));
+    }
+  }
+
+  Future<void> updateBoard(Board board) async {
+    try {
+      await sl<UpdateBoardUseCase>().call(board);
+      loadBoards(board.workspaceId);
+    } catch (e) {
+      emit(BoardError("Failed to update board: $e"));
     }
   }
 

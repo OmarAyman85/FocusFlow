@@ -10,11 +10,7 @@ class BoardCard extends StatelessWidget {
   final Board board;
   final String workspaceId;
 
-  const BoardCard({
-    super.key,
-    required this.board,
-    required this.workspaceId,
-  });
+  const BoardCard({super.key, required this.board, required this.workspaceId});
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +24,29 @@ class BoardCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              board.name,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppPallete.gradient1,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    board.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppPallete.gradient1,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.view_compact, size: 20),
+                  onPressed: () {
+                    GoRouter.of(
+                      context,
+                    ).push('/workspace/$workspaceId/board/${board.id}/tasks');
+                  },
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             Text(
@@ -44,13 +56,22 @@ class BoardCard extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                Text('Tasks: ${board.numberOfTasks}', style: const TextStyle(fontSize: 13)),
+                Text(
+                  'Tasks: ${board.numberOfTasks}',
+                  style: const TextStyle(fontSize: 13),
+                ),
                 const SizedBox(width: 16),
-                Text('Members: ${board.numberOfMembers}', style: const TextStyle(fontSize: 13)),
+                Text(
+                  'Members: ${board.numberOfMembers}',
+                  style: const TextStyle(fontSize: 13),
+                ),
               ],
             ),
             const SizedBox(height: 8),
-            Text('Created by: ${board.createdByName}', style: const TextStyle(fontSize: 12)),
+            Text(
+              'Created by: ${board.createdByName}',
+              style: const TextStyle(fontSize: 12),
+            ),
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,22 +85,24 @@ class BoardCard extends StatelessWidget {
                       getUsers: () => context.read<BoardCubit>().getUsers(),
                       onUserSelected: (selectedUser) async {
                         await context.read<BoardCubit>().addBoardMember(
-                              workspaceId,
-                              board.id,
-                              selectedUser,
-                            );
+                          workspaceId,
+                          board.id,
+                          selectedUser,
+                        );
                         return;
                       },
                     );
                   },
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    GoRouter.of(context).push(
-                      '/workspace/$workspaceId/board/${board.id}/tasks',
+                IconButton(
+                  onPressed: () async {
+                    await context.read<BoardCubit>().deleteBoard(
+                      workspaceId,
+                      board.id,
                     );
+                    await context.read<BoardCubit>().loadBoards(workspaceId);
                   },
-                  child: const Text('Enter'),
+                  icon: const Icon(Icons.delete, size: 20),
                 ),
               ],
             ),

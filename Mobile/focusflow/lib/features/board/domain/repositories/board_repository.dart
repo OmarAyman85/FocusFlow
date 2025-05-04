@@ -10,4 +10,8 @@ abstract class BoardRepository {
     Member member,
   );
   Future<int> getTaskCount(String workspaceId, String boardId);
+
+  Future<void> deleteBoard(String workspaceId, String boardId);
+
+  Future<void> updateBoard(Board board);
 }

@@ -12,6 +12,8 @@ abstract class BoardRemoteDataSource {
     Member member,
   );
   Future<int> getTaskCount(String workspaceId, String boardId);
+  Future<void> deleteBoard(String workspaceId, String boardId);
+  Future<void> updateBoard(Board board);
 }
 
 class BoardRemoteDataSourceImpl implements BoardRemoteDataSource {
@@ -102,5 +104,45 @@ class BoardRemoteDataSourceImpl implements BoardRemoteDataSource {
     } catch (e) {
       return 0;
     }
+  }
+
+  @override
+  Future<void> deleteBoard(String workspaceId, String boardId) async {
+    final boardRef = firestore
+        .collection('workspaces')
+        .doc(workspaceId)
+        .collection('boards')
+        .doc(boardId);
+
+    final tasksRef = boardRef.collection('tasks');
+    final tasksSnapshot = await tasksRef.get();
+    for (var doc in tasksSnapshot.docs) {
+      await doc.reference.delete();
+    }
+
+    await boardRef.delete();
+  }
+
+  @override
+  Future<void> updateBoard(Board board) async {
+    final docRef = firestore
+        .collection('workspaces')
+        .doc(board.workspaceId)
+        .collection('boards')
+        .doc(board.id);
+
+    final boardModel = BoardModel(
+      id: board.id,
+      workspaceId: board.workspaceId,
+      name: board.name,
+      description: board.description,
+      numberOfMembers: board.numberOfMembers,
+      numberOfTasks: board.numberOfTasks,
+      createdById: board.createdById,
+      createdByName: board.createdByName,
+      members: board.members,
+    );
+
+    await docRef.update(boardModel.toMap());
   }
 }

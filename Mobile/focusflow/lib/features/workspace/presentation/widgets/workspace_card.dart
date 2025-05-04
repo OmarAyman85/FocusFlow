@@ -120,7 +120,6 @@ class WorkspaceCard extends StatelessWidget {
                       await context.read<WorkspaceCubit>().loadWorkspaces(
                         userId,
                       );
-                      // GoRouter.of(context).pop();
                     }
                   },
                   icon: const Icon(Icons.delete, size: 20),
