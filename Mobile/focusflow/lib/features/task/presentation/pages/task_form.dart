@@ -31,7 +31,23 @@ class _TaskFormState extends State<TaskForm> {
   DateTime? _dueDate;
 
   Future<void> _submitForm(String userId, String userName) async {
+    // First, validate the form fields
     if (_formKey.currentState?.validate() ?? false) {
+      // Then validate custom fields not inside the form: assigned members and due date
+      if (_assignedTo.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please assign at least one member')),
+        );
+        return;
+      }
+
+      if (_dueDate == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select a due date')),
+        );
+        return;
+      }
+
       _formKey.currentState!.save();
 
       final newTask = TaskEntity(
@@ -112,7 +128,6 @@ class _TaskFormState extends State<TaskForm> {
         if (state is AuthAuthenticated) {
           final userId = state.user.uid;
           final userName = state.user.name;
-
           return Scaffold(
             appBar: MainAppBar(title: 'Create Task'),
             body: Padding(
@@ -125,25 +140,35 @@ class _TaskFormState extends State<TaskForm> {
                     children: [
                       AppTextFormField(
                         label: 'Task Title',
-                        validator:
-                            (value) =>
-                                value == null || value.isEmpty
-                                    ? 'Required'
-                                    : null,
-                        onSaved: (value) => _taskTitle = value ?? '',
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Task title is required';
+                          }
+                          if (value.trim().length < 3) {
+                            return 'Title must be at least 3 characters';
+                          }
+                          if (value.trim().length > 50) {
+                            return 'Title must be under 50 characters';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) => _taskTitle = value!.trim(),
                       ),
                       const SizedBox(height: 20),
                       AppTextFormField(
                         label: 'Task Description',
-                        validator:
-                            (value) =>
-                                value == null || value.isEmpty
-                                    ? 'Required'
-                                    : null,
-                        onSaved: (value) => _taskDescription = value ?? '',
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Description is required';
+                          }
+                          if (value.trim().length < 10) {
+                            return 'Description must be at least 10 characters';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) => _taskDescription = value!.trim(),
                       ),
                       const SizedBox(height: 20),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -171,7 +196,6 @@ class _TaskFormState extends State<TaskForm> {
                                 .toList(),
                       ),
                       const SizedBox(height: 20),
-
                       DropdownButtonFormField<String>(
                         value: _priority,
                         decoration: const InputDecoration(
@@ -194,7 +218,6 @@ class _TaskFormState extends State<TaskForm> {
                         ],
                       ),
                       const SizedBox(height: 20),
-
                       Row(
                         children: [
                           const Text('Due Date:'),
@@ -215,7 +238,6 @@ class _TaskFormState extends State<TaskForm> {
                         ],
                       ),
                       const SizedBox(height: 20),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -229,7 +251,6 @@ class _TaskFormState extends State<TaskForm> {
                         ],
                       ),
                       const SizedBox(height: 30),
-
                       Center(
                         child: ElevatedButton(
                           onPressed: () => _submitForm(userId, userName),
