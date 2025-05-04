@@ -41,4 +41,17 @@ class TaskRepositoryImpl implements TaskRepository {
       memberId: memberId,
     );
   }
+
+  @override
+  Future<void> deleteTask({
+    required String workspaceId,
+    required String boardId,
+    required String taskId,
+  }) async {
+    await sl<TaskRemoteDataSource>().deleteTask(
+      workspaceId: workspaceId,
+      boardId: boardId,
+      taskId: taskId,
+    );
+  }
 }

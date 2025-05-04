@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:focusflow/features/task/domain/entities/task_entity.dart';
+import 'package:focusflow/features/task/presentation/cubit/task_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class TaskDetailPage extends StatelessWidget {
   final TaskEntity task;
   final String createdByName;
+  final String workspaceId;
+  final String boardId;
 
   const TaskDetailPage({
     super.key,
     required this.task,
     required this.createdByName,
+    required this.workspaceId,
+    required this.boardId,
   });
 
   Color _getPriorityColor(String priority) {
@@ -137,22 +144,31 @@ class TaskDetailPage extends StatelessWidget {
                       onPressed: () {
                         // TODO: Implement the logic to mark the task as completed.
                       },
-                      child: const Text('Mark as Complete'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green.shade400,
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                       ),
+                      child: const Text('Mark as Complete'),
                     ),
-                    // Delete Task Button
                     ElevatedButton(
-                      onPressed: () {
-                        // TODO: Implement the logic to delete the task.
+                      onPressed: () async {
+                        await context.read<TaskCubit>().deleteTask(
+                          workspaceId: workspaceId,
+                          boardId: boardId,
+                          taskId: task.id,
+                        );
+                        // Reload tasks after deletion
+                        await context.read<TaskCubit>().loadTasks(
+                          workspaceId: workspaceId,
+                          boardId: boardId,
+                        );
+                        GoRouter.of(context).pop();
                       },
-                      child: const Text('Delete Task'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red.shade400,
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                       ),
+                      child: const Text('Delete Task'),
                     ),
                   ],
                 ),

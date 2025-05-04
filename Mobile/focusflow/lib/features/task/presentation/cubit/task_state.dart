@@ -30,6 +30,15 @@ class TaskError extends TaskState {
   List<Object?> get props => [message];
 }
 
+class TaskDeleted extends TaskState {
+  final String taskId;
+
+  const TaskDeleted(this.taskId);
+
+  @override
+  List<Object?> get props => [taskId];
+}
+
 class TaskMemberAdded extends TaskState {
   final String taskId;
   final String memberId;

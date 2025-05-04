@@ -17,6 +17,12 @@ abstract class TaskRemoteDataSource {
     required String taskId,
     required String memberId,
   });
+
+  Future<void> deleteTask({
+    required String workspaceId,
+    required String boardId,
+    required String taskId,
+  });
 }
 
 class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
@@ -59,13 +65,11 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
             .orderBy('createdAt', descending: true)
             .get();
 
-    // Convert documents to TaskModel objects
     final tasks =
         snapshot.docs
             .map((doc) => TaskModel.fromMap(doc.data(), doc.id))
             .toList();
 
-    // Sort tasks first by dueDate (ascending), then by status
     tasks.sort((a, b) {
       // First compare by dueDate
       int dateComparison = (a.dueDate ?? DateTime(9999)).compareTo(
@@ -103,6 +107,26 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
       await taskRef.update({'assignedTo': assignedTo});
     } else {
       throw Exception('Task not found');
+    }
+  }
+
+  @override
+  Future<void> deleteTask({
+    required String workspaceId,
+    required String boardId,
+    required String taskId,
+  }) async {
+    try {
+      await firestore
+          .collection('workspaces')
+          .doc(workspaceId)
+          .collection('boards')
+          .doc(boardId)
+          .collection('tasks')
+          .doc(taskId)
+          .delete();
+    } catch (e) {
+      throw Exception('Failed to delete task: $e');
     }
   }
 }

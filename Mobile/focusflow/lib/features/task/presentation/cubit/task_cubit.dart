@@ -4,6 +4,7 @@ import 'package:focusflow/core/services/user_service.dart';
 import 'package:focusflow/features/task/domain/entities/task_entity.dart';
 import 'package:focusflow/features/task/domain/usecases/add_member_to_task_use_case.dart';
 import 'package:focusflow/features/task/domain/usecases/create_task_use_case.dart';
+import 'package:focusflow/features/task/domain/usecases/delete_task_use_case.dart';
 import 'package:focusflow/features/task/domain/usecases/get_tasks_use_case.dart';
 import 'package:focusflow/core/injection/injection_container.dart';
 import 'task_state.dart';
@@ -55,24 +56,37 @@ class TaskCubit extends Cubit<TaskState> {
     }
   }
 
-  // Implement the addTaskMember functionality
   Future<void> addTaskMember({
     required String taskId,
     required String memberId,
   }) async {
     emit(TaskLoading());
     try {
-      // Call the use case to add the member to the task
       await sl<AddTaskMemberUseCase>().call(taskId: taskId, memberId: memberId);
 
-      // Reload the tasks after adding the member
       emit(TaskMemberAdded(taskId: taskId, memberId: memberId));
-      await loadTasks(
-        workspaceId: "workspaceId",
-        boardId: "boardId",
-      ); // You might need to pass workspaceId and boardId dynamically
+      await loadTasks(workspaceId: "workspaceId", boardId: "boardId");
     } catch (e) {
       emit(TaskError('Failed to add member to task: ${e.toString()}'));
+    }
+  }
+
+  Future<void> deleteTask({
+    required String workspaceId,
+    required String boardId,
+    required String taskId,
+  }) async {
+    emit(TaskLoading());
+    try {
+      await sl<DeleteTaskUseCase>().call(
+        workspaceId: workspaceId,
+        boardId: boardId,
+        taskId: taskId,
+      );
+      await loadTasks(workspaceId: workspaceId, boardId: boardId);
+      emit(TaskDeleted(taskId));
+    } catch (e) {
+      emit(TaskError('Failed to delete task: ${e.toString()}'));
     }
   }
 }

@@ -16,4 +16,10 @@ abstract class TaskRepository {
     required String taskId,
     required String memberId,
   });
+
+  Future<void> deleteTask({
+    required String workspaceId,
+    required String boardId,
+    required String taskId,
+  });
 }
