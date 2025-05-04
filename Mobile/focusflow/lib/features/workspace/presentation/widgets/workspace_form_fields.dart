@@ -62,15 +62,32 @@ class _WorkspaceFormFieldsState extends State<WorkspaceFormFields> {
           children: [
             AppTextFormField(
               label: 'Workspace Name',
-              validator:
-                  (value) => value == null || value.isEmpty ? 'Required' : null,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Workspace name is required';
+                }
+                if (value.trim().length < 3) {
+                  return 'Name must be at least 3 characters';
+                }
+                if (value.trim().length > 50) {
+                  return 'Name must be under 50 characters';
+                }
+                return null;
+              },
               onSaved: (value) => _workspaceName = value ?? '',
             ),
             const SizedBox(height: 20),
             AppTextFormField(
               label: 'Workspace Description',
-              validator:
-                  (value) => value == null || value.isEmpty ? 'Required' : null,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Description is required';
+                }
+                if (value.trim().length < 10) {
+                  return 'Description must be at least 10 characters';
+                }
+                return null;
+              },
               onSaved: (value) => _workspaceDescription = value ?? '',
             ),
             const SizedBox(height: 20),
