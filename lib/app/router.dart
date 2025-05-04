@@ -54,7 +54,7 @@ final router = GoRouter(
           path: '/workspace/:workspaceId/board-form',
           builder: (context, state) {
             final workspaceId = state.pathParameters['workspaceId']!;
-            return BoardForm(workspaceId: workspaceId);
+            return BoardFormPage(workspaceId: workspaceId);
           },
         ),
       ],
