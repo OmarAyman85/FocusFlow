@@ -26,7 +26,7 @@ class _TaskFormState extends State<TaskForm> {
   String _taskTitle = '';
   String _taskDescription = '';
   final List<String> _assignedTo = [];
-  String _status = 'Not Started';
+  final String _status = 'Not Started';
   String _priority = 'Medium';
   DateTime? _dueDate;
 
