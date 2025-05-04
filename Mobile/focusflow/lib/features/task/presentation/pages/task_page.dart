@@ -54,7 +54,9 @@ class _TaskPageState extends State<TaskPage> {
           }
 
           if (snapshot.hasError) {
-            return Center(child: Text('Error loading users: ${snapshot.error}'));
+            return Center(
+              child: Text('Error loading users: ${snapshot.error}'),
+            );
           }
 
           final userMap = snapshot.data ?? {};
@@ -82,12 +84,14 @@ class _TaskPageState extends State<TaskPage> {
                     crossAxisCount: 2, // Two cards per row
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
-                    childAspectRatio: 0.7, // Adjust this ratio for a natural card height
+                    childAspectRatio:
+                        0.7, // Adjust this ratio for a natural card height
                   ),
                   itemCount: tasks.length,
                   itemBuilder: (context, index) {
                     final task = tasks[index];
-                    final createdByName = userMap[task.createdBy] ?? task.createdBy;
+                    final createdByName =
+                        userMap[task.createdBy] ?? task.createdBy;
 
                     return TaskCard(
                       task: task,
@@ -163,15 +167,12 @@ class TaskCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       elevation: 3,
       color: AppPallete.gradient2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top row: Title and More button
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -202,10 +203,7 @@ class TaskCard extends StatelessWidget {
               task.description,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
 
             const SizedBox(height: 12),
@@ -232,11 +230,7 @@ class TaskCard extends StatelessWidget {
             // Due date
             Row(
               children: [
-                const Icon(
-                  Icons.calendar_today,
-                  size: 14,
-                  color: Colors.grey,
-                ),
+                const Icon(Icons.calendar_today, size: 14, color: Colors.grey),
                 const SizedBox(width: 4),
                 Text(
                   'Due: ${task.dueDate?.toLocal().toString().split(' ')[0]}',
@@ -250,10 +244,7 @@ class TaskCard extends StatelessWidget {
             // Created By (bottom-left)
             Text(
               'Created By: $createdByName',
-              style: const TextStyle(
-                fontSize: 11,
-                color: Colors.black87,
-              ),
+              style: const TextStyle(fontSize: 11, color: Colors.black87),
             ),
           ],
         ),
