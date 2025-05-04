@@ -1,49 +1,16 @@
+// features/workspace/presentation/pages/workspace_form.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:focusflow/core/entities/member.dart';
-import 'package:focusflow/core/theme/app_pallete.dart';
 import 'package:focusflow/core/widgets/loading_spinner_widget.dart';
 import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
-import 'package:focusflow/core/widgets/text_form_field_widget.dart';
-import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
-import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
-import 'package:uuid/uuid.dart';
+import 'package:focusflow/features/workspace/presentation/widgets/workspace_form_fields.dart';
 
-class WorkspaceForm extends StatefulWidget {
+class WorkspaceForm extends StatelessWidget {
   final String userId;
+
   const WorkspaceForm({super.key, required this.userId});
-
-  @override
-  State<WorkspaceForm> createState() => _WorkspaceFormState();
-}
-
-class _WorkspaceFormState extends State<WorkspaceForm> {
-  final _formKey = GlobalKey<FormState>();
-  String _workspaceName = '';
-  String _workspaceDescription = '';
-  final int _workspacenumberOfBoards = 0;
-
-  void _submitForm(String userId, String userName) {
-    if (_formKey.currentState?.validate() ?? false) {
-      _formKey.currentState!.save();
-
-      final newWorkspace = Workspace(
-        id: const Uuid().v4(),
-        name: _workspaceName,
-        description: _workspaceDescription,
-        numberOfMembers: 1,
-        numberOfBoards: _workspacenumberOfBoards,
-        createdById: userId,
-        createdByName: userName,
-        members: [Member(id: userId, name: userName)],
-      );
-
-      context.read<WorkspaceCubit>().createWorkspace(newWorkspace, userId);
-      Navigator.of(context).pop();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,54 +22,10 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
 
           return Scaffold(
             appBar: const MainAppBar(title: 'Create Workspace'),
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    AppTextFormField(
-                      label: 'Workspace Name',
-                      validator:
-                          (value) =>
-                              value == null || value.isEmpty
-                                  ? 'Required'
-                                  : null,
-                      onSaved: (value) => _workspaceName = value ?? '',
-                    ),
-                    const SizedBox(height: 20),
-                    AppTextFormField(
-                      label: 'Workspace Description',
-                      validator:
-                          (value) =>
-                              value == null || value.isEmpty
-                                  ? 'Required'
-                                  : null,
-                      onSaved: (value) => _workspaceDescription = value ?? '',
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () => _submitForm(userId, userName),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppPallete.backgroundColor,
-                        foregroundColor: AppPallete.gradient1,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
-                        ),
-                      ),
-                      child: const Text('Create Workspace'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            body: WorkspaceFormFields(userId: userId, userName: userName),
           );
         } else {
-          return LoadingSpinnerWidget();
+          return const LoadingSpinnerWidget();
         }
       },
     );
