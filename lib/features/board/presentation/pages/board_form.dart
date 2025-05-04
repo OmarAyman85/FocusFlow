@@ -52,7 +52,7 @@ class _BoardFormState extends State<BoardForm> {
           final userName = state.user.name;
 
           return Scaffold(
-            appBar: MainAppBar(),
+            appBar: MainAppBar(title: 'Create Board',),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(

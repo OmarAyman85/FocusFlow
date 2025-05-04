@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/core/widgets/loading_spinner_widget.dart';
+import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
@@ -23,6 +24,11 @@ class WorkspacePage extends StatelessWidget {
         }
       },
       child: Scaffold(
+        appBar: MainAppBar(
+          title: 'FocusFLow',
+          showBackButton: false,
+          profileButtonType: ProfileButtonType.logoutIcon,
+        ),
         body: BlocBuilder<WorkspaceCubit, WorkspaceState>(
           builder: (context, state) {
             final authState = context.read<AuthBloc>().state;

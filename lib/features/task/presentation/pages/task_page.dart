@@ -44,7 +44,7 @@ class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MainAppBar(),
+      appBar: MainAppBar(title: 'Tasks'),
       body: FutureBuilder<Map<String, String>>(
         future: userIdToNameMap,
         builder: (context, snapshot) {

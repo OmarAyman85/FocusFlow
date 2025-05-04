@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/core/entities/member.dart';
+import 'package:focusflow/core/theme/app_pallete.dart';
 import 'package:focusflow/core/widgets/loading_spinner_widget.dart';
 import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
@@ -53,7 +54,7 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
           final userName = state.user.name;
 
           return Scaffold(
-            appBar: const MainAppBar(),
+            appBar: const MainAppBar(title: 'Create Workspace'),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(
@@ -82,6 +83,17 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () => _submitForm(userId, userName),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppPallete.backgroundColor,
+                        foregroundColor: AppPallete.gradient1,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
+                      ),
                       child: const Text('Create Workspace'),
                     ),
                   ],
