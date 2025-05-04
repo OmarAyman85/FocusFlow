@@ -81,11 +81,10 @@ class _TaskPageState extends State<TaskPage> {
                 return GridView.builder(
                   padding: const EdgeInsets.all(16),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Two cards per row
+                    crossAxisCount: 2,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
-                    childAspectRatio:
-                        0.7, // Adjust this ratio for a natural card height
+                    childAspectRatio: 0.7,
                   ),
                   itemCount: tasks.length,
                   itemBuilder: (context, index) {
@@ -97,6 +96,8 @@ class _TaskPageState extends State<TaskPage> {
                       task: task,
                       userMap: userMap,
                       createdByName: createdByName,
+                      workspaceId: widget.workspaceId,
+                      boardId: widget.boardId,
                     );
                   },
                 );
@@ -125,13 +126,30 @@ class TaskCard extends StatelessWidget {
   final TaskEntity task;
   final Map<String, String> userMap;
   final String createdByName;
+  final String workspaceId;
+  final String boardId;
 
   const TaskCard({
     super.key,
     required this.task,
     required this.userMap,
     required this.createdByName,
+    required this.workspaceId,
+    required this.boardId,
   });
+
+  Color _getPriorityColor(String priority) {
+    switch (priority) {
+      case 'High':
+        return Colors.red.shade300;
+      case 'Medium':
+        return Colors.orange.shade300;
+      case 'Low':
+        return Colors.green.shade300;
+      default:
+        return Colors.grey.shade300;
+    }
+  }
 
   // Color _getStatusColor(String status) {
   //   switch (status) {
@@ -148,19 +166,6 @@ class TaskCard extends StatelessWidget {
   //   }
   // }
 
-  Color _getPriorityColor(String priority) {
-    switch (priority) {
-      case 'High':
-        return Colors.red.shade300;
-      case 'Medium':
-        return Colors.orange.shade300;
-      case 'Low':
-        return Colors.green.shade300;
-      default:
-        return Colors.grey.shade300;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -173,6 +178,7 @@ class TaskCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Title & More Icon
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -190,7 +196,10 @@ class TaskCard extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.more_vert, size: 20),
                   onPressed: () {
-                    // TODO: Navigate to task detail page
+                    GoRouter.of(context).push(
+                      '/workspace/$workspaceId/board/$boardId/task/${task.id}',
+                      extra: {'task': task, 'createdByName': createdByName},
+                    );
                   },
                 ),
               ],
@@ -208,7 +217,7 @@ class TaskCard extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            // Status and Priority Chips
+            // Priority & Status
             Wrap(
               spacing: 8,
               children: [
@@ -241,7 +250,7 @@ class TaskCard extends StatelessWidget {
 
             const Spacer(),
 
-            // Created By (bottom-left)
+            // Created By
             Text(
               'Created By: $createdByName',
               style: const TextStyle(fontSize: 11, color: Colors.black87),

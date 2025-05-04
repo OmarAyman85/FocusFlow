@@ -2,6 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/features/board/presentation/cubit/board_cubit.dart';
 import 'package:focusflow/features/board/presentation/pages/board_form.dart';
 import 'package:focusflow/features/board/presentation/pages/board_page.dart';
+import 'package:focusflow/features/task/domain/entities/task_entity.dart';
+import 'package:focusflow/features/task/presentation/pages/task_detail_page.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/pages/workspace_form.dart';
 import 'package:focusflow/features/workspace/presentation/pages/workspace_page.dart';
@@ -79,6 +81,16 @@ final router = GoRouter(
             final workspaceId = state.pathParameters['workspaceId']!;
             final boardId = state.pathParameters['boardId']!;
             return TaskForm(workspaceId: workspaceId, boardId: boardId);
+          },
+        ),
+        GoRoute(
+          path: '/workspace/:workspaceId/board/:boardId/task/:taskId',
+          builder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>;
+            final task = extra['task'] as TaskEntity;
+            final createdByName = extra['createdByName'] as String;
+
+            return TaskDetailPage(task: task, createdByName: createdByName);
           },
         ),
       ],
