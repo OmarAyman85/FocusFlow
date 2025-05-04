@@ -12,7 +12,11 @@ class AppTheme {
     inputDecorationTheme: InputDecorationTheme(
       contentPadding: const EdgeInsets.all(27.0),
       enabledBorder: _border(),
-      focusedBorder: _border(AppPallete.gradient2),
+      focusedBorder: _border(AppPallete.gradient2), 
+      floatingLabelStyle: const TextStyle(
+        color: AppPallete.gradient1, 
+        fontWeight: FontWeight.w600,
+      ),
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: AppPallete.backgroundColor,

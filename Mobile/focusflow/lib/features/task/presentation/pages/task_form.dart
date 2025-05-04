@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/theme/app_pallete.dart';
 import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
 import 'package:focusflow/core/widgets/text_form_field_widget.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
@@ -7,7 +8,9 @@ import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/core/entities/member.dart';
 import 'package:focusflow/features/task/domain/entities/task_entity.dart';
 import 'package:focusflow/features/task/presentation/cubit/task_cubit.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
+import 'package:intl/intl.dart';
 
 class TaskForm extends StatefulWidget {
   final String workspaceId;
@@ -22,12 +25,12 @@ class _TaskFormState extends State<TaskForm> {
   final _formKey = GlobalKey<FormState>();
   String _taskTitle = '';
   String _taskDescription = '';
-  List<String> _assignedTo = []; // This will store user names now
-  String _status = 'Not Started'; // Default status
-  String _priority = 'Medium'; // Default priority
+  final List<String> _assignedTo = [];
+  String _status = 'Not Started';
+  String _priority = 'Medium';
   DateTime? _dueDate;
 
-  void _submitForm(String userId, String userName) {
+  Future<void> _submitForm(String userId, String userName) async {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState!.save();
 
@@ -35,7 +38,7 @@ class _TaskFormState extends State<TaskForm> {
         id: const Uuid().v4(),
         title: _taskTitle,
         description: _taskDescription,
-        assignedTo: _assignedTo, // Now it's a list of names
+        assignedTo: _assignedTo,
         status: _status,
         priority: _priority,
         dueDate: _dueDate,
@@ -44,12 +47,15 @@ class _TaskFormState extends State<TaskForm> {
         attachments: [],
       );
 
-      context.read<TaskCubit>().createTask(
+      await context.read<TaskCubit>().createTask(
         workspaceId: widget.workspaceId,
         boardId: widget.boardId,
         task: newTask,
       );
-      Navigator.of(context).pop();
+
+      if (mounted) {
+        GoRouter.of(context).pop();
+      }
     }
   }
 
@@ -60,30 +66,41 @@ class _TaskFormState extends State<TaskForm> {
       builder:
           (ctx) => AlertDialog(
             title: const Text("Add Member to Task"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                DropdownButton<Member>(
-                  hint: const Text("Select a User"),
-                  onChanged: (Member? user) {
-                    Navigator.of(ctx).pop(user);
-                  },
-                  items:
-                      users.map((user) {
-                        return DropdownMenuItem<Member>(
-                          value: user,
-                          child: Text(user.name),
-                        );
-                      }).toList(),
-                ),
-              ],
+            content: DropdownButton<Member>(
+              hint: const Text("Select a User"),
+              isExpanded: true,
+              onChanged: (Member? user) {
+                Navigator.of(ctx).pop(user);
+              },
+              items:
+                  users.map((user) {
+                    return DropdownMenuItem<Member>(
+                      value: user,
+                      child: Text(user.name),
+                    );
+                  }).toList(),
             ),
           ),
     );
 
-    if (selectedUser != null) {
+    if (selectedUser != null && !_assignedTo.contains(selectedUser.name)) {
       setState(() {
-        _assignedTo.add(selectedUser.name); // Add the user's name
+        _assignedTo.add(selectedUser.name);
+      });
+    }
+  }
+
+  Future<void> _pickDueDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _dueDate ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null) {
+      setState(() {
+        _dueDate = picked;
       });
     }
   }
@@ -102,71 +119,136 @@ class _TaskFormState extends State<TaskForm> {
               padding: const EdgeInsets.all(16.0),
               child: Form(
                 key: _formKey,
-                child: Column(
-                  children: [
-                    AppTextFormField(
-                      label: 'Task Title',
-                      validator:
-                          (value) =>
-                              value == null || value.isEmpty
-                                  ? 'Required'
-                                  : null,
-                      onSaved: (value) => _taskTitle = value ?? '',
-                    ),
-                    const SizedBox(height: 20),
-                    AppTextFormField(
-                      label: 'Task Description',
-                      validator:
-                          (value) =>
-                              value == null || value.isEmpty
-                                  ? 'Required'
-                                  : null,
-                      onSaved: (value) => _taskDescription = value ?? '',
-                    ),
-                    const SizedBox(height: 20),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Assigned To (Click to add)',
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: _openAddMemberDialog,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppTextFormField(
+                        label: 'Task Title',
+                        validator:
+                            (value) =>
+                                value == null || value.isEmpty
+                                    ? 'Required'
+                                    : null,
+                        onSaved: (value) => _taskTitle = value ?? '',
+                      ),
+                      const SizedBox(height: 20),
+                      AppTextFormField(
+                        label: 'Task Description',
+                        validator:
+                            (value) =>
+                                value == null || value.isEmpty
+                                    ? 'Required'
+                                    : null,
+                        onSaved: (value) => _taskDescription = value ?? '',
+                      ),
+                      const SizedBox(height: 20),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Assigned Members'),
+                          IconButton(
+                            icon: const Icon(Icons.person_add),
+                            onPressed: _openAddMemberDialog,
+                          ),
+                        ],
+                      ),
+                      Wrap(
+                        spacing: 8.0,
+                        children:
+                            _assignedTo
+                                .map(
+                                  (name) => Chip(
+                                    label: Text(name),
+                                    onDeleted: () {
+                                      setState(() {
+                                        _assignedTo.remove(name);
+                                      });
+                                    },
+                                  ),
+                                )
+                                .toList(),
+                      ),
+                      const SizedBox(height: 20),
+
+                      DropdownButtonFormField<String>(
+                        value: _priority,
+                        decoration: const InputDecoration(
+                          labelText: 'Priority',
+                        ),
+                        onChanged:
+                            (newValue) => setState(() => _priority = newValue!),
+                        validator:
+                            (value) =>
+                                value == null || value.isEmpty
+                                    ? 'Required'
+                                    : null,
+                        items: const [
+                          DropdownMenuItem(value: 'Low', child: Text('Low')),
+                          DropdownMenuItem(
+                            value: 'Medium',
+                            child: Text('Medium'),
+                          ),
+                          DropdownMenuItem(value: 'High', child: Text('High')),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+
+                      Row(
+                        children: [
+                          const Text('Due Date:'),
+                          const SizedBox(width: 12),
+                          Text(
+                            _dueDate == null
+                                ? 'None'
+                                : DateFormat('yyyy-MM-dd').format(_dueDate!),
+                          ),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: _pickDueDate,
+                            style: TextButton.styleFrom(
+                              foregroundColor: AppPallete.gradient1,
+                            ),
+                            child: const Text('Pick Date'),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Attachments (optional)'),
+                          IconButton(
+                            icon: const Icon(Icons.attach_file),
+                            onPressed: () {
+                              // TODO: Handle attachments
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 30),
+
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () => _submitForm(userId, userName),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppPallete.backgroundColor,
+                            foregroundColor: AppPallete.gradient1,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 12,
+                            ),
+                          ),
+                          child: const Text('Save Task'),
                         ),
                       ),
-                      readOnly: true,
-                      controller: TextEditingController(
-                        text: _assignedTo.join(
-                          ', ',
-                        ), // Show names instead of IDs
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    DropdownButtonFormField<String>(
-                      value: _status,
-                      onChanged:
-                          (newValue) => setState(() {
-                            _status = newValue!;
-                          }),
-                      items: const [
-                        DropdownMenuItem(
-                          value: 'Not Started',
-                          child: Text('Not Started'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'In Progress',
-                          child: Text('In Progress'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Completed',
-                          child: Text('Completed'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () => _submitForm(userId, userName),
-                      child: const Text('Save Task'),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

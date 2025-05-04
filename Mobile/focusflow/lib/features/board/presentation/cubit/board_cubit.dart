@@ -14,7 +14,7 @@ class BoardCubit extends Cubit<BoardState> {
 
   get boardRepository => null;
 
-  void loadBoards(String workspaceId) async {
+  Future<void> loadBoards(String workspaceId) async {
     emit(BoardLoading());
     try {
       final boards = await sl<GetBoardsUseCase>().call(workspaceId);

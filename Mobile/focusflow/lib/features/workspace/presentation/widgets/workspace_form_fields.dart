@@ -6,6 +6,7 @@ import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
 import 'package:focusflow/features/workspace/presentation/widgets/workspace_submit_button.dart';
 import 'package:focusflow/core/entities/member.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 
 class WorkspaceFormFields extends StatefulWidget {
@@ -47,7 +48,7 @@ class _WorkspaceFormFieldsState extends State<WorkspaceFormFields> {
         newWorkspace,
         widget.userId,
       );
-      Navigator.of(context).pop();
+      GoRouter.of(context).pop();
     }
   }
 
