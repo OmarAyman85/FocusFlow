@@ -59,9 +59,28 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
             .orderBy('createdAt', descending: true)
             .get();
 
-    return snapshot.docs
-        .map((doc) => TaskModel.fromMap(doc.data(), doc.id))
-        .toList();
+    // Convert documents to TaskModel objects
+    final tasks =
+        snapshot.docs
+            .map((doc) => TaskModel.fromMap(doc.data(), doc.id))
+            .toList();
+
+    // Sort tasks first by dueDate (ascending), then by status
+    tasks.sort((a, b) {
+      // First compare by dueDate
+      int dateComparison = (a.dueDate ?? DateTime(9999)).compareTo(
+        b.dueDate ?? DateTime(9999),
+      );
+
+      // If dueDate is the same, compare by status
+      if (dateComparison == 0) {
+        return a.status.compareTo(b.status);
+      }
+
+      return dateComparison;
+    });
+
+    return tasks;
   }
 
   @override
