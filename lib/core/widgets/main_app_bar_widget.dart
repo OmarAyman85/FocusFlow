@@ -30,7 +30,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading:
           showBackButton
               ? IconButton(
-                icon: const Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back_ios_new),
                 onPressed: () => Navigator.of(context).pop(),
               )
               : null,
@@ -65,7 +65,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
                             ),
                           ],
                       child: CircleAvatar(
-                        radius: 20,
+                        radius: 15,
                         backgroundColor: Colors.white,
                         child: Text(
                           state.user.name[0],

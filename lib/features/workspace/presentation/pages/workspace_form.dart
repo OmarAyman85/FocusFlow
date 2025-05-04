@@ -62,7 +62,7 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
                 child: Column(
                   children: [
                     AppTextFormField(
-                      label: 'Name',
+                      label: 'Workspace Name',
                       validator:
                           (value) =>
                               value == null || value.isEmpty
@@ -72,7 +72,7 @@ class _WorkspaceFormState extends State<WorkspaceForm> {
                     ),
                     const SizedBox(height: 20),
                     AppTextFormField(
-                      label: 'Description',
+                      label: 'Workspace Description',
                       validator:
                           (value) =>
                               value == null || value.isEmpty
