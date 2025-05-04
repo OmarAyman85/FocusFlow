@@ -169,6 +169,8 @@ class _TaskPageState extends State<TaskPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: AppPallete.backgroundColor,
+        foregroundColor: AppPallete.gradient1,
         onPressed: () {
           final path =
               '/workspace/${widget.workspaceId}/board/${widget.boardId}/task-form';

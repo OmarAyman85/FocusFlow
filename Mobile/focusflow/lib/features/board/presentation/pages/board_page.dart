@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/theme/app_pallete.dart';
 import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
 import 'package:go_router/go_router.dart';
 import '../cubit/board_cubit.dart';
@@ -44,6 +45,8 @@ class _BoardPageState extends State<BoardPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: AppPallete.backgroundColor,
+        foregroundColor: AppPallete.gradient1,
         onPressed: () {
           GoRouter.of(
             context,

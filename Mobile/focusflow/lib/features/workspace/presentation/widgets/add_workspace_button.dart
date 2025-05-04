@@ -15,6 +15,7 @@ class AddWorkspaceButton extends StatelessWidget {
         if (state is AuthAuthenticated) {
           return FloatingActionButton(
             backgroundColor: AppPallete.backgroundColor,
+            foregroundColor: AppPallete.gradient1,
             onPressed: () {
               final userId = state.user.uid;
               GoRouter.of(context).push('/workspace-form/$userId');
