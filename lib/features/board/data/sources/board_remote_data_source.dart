@@ -11,6 +11,7 @@ abstract class BoardRemoteDataSource {
     String boardId,
     Member member,
   );
+  Future<int> getTaskCount(String workspaceId, String boardId);
 }
 
 class BoardRemoteDataSourceImpl implements BoardRemoteDataSource {
@@ -83,5 +84,23 @@ class BoardRemoteDataSourceImpl implements BoardRemoteDataSource {
         'numberOfMembers': members.length,
       });
     });
+  }
+
+  @override
+  Future<int> getTaskCount(String workspaceId, String boardId) async {
+    try {
+      final taskSnapshot =
+          await firestore
+              .collection('workspaces')
+              .doc(workspaceId)
+              .collection('boards')
+              .doc(boardId)
+              .collection('tasks')
+              .get();
+
+      return taskSnapshot.docs.length;
+    } catch (e) {
+      return 0;
+    }
   }
 }

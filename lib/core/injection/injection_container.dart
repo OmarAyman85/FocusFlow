@@ -16,6 +16,7 @@ import 'package:focusflow/features/board/domain/repositories/board_repository.da
 import 'package:focusflow/features/board/domain/usecases/add_member_to_board_use_case.dart';
 import 'package:focusflow/features/board/domain/usecases/create_board_use_case.dart';
 import 'package:focusflow/features/board/domain/usecases/get_boards_use_case.dart';
+import 'package:focusflow/features/board/domain/usecases/get_task_count.dart';
 import 'package:focusflow/features/board/presentation/cubit/board_cubit.dart';
 import 'package:focusflow/features/task/data/repositories/task_repository.dart';
 import 'package:focusflow/features/task/data/sources/task_remote_data_source.dart';
@@ -124,6 +125,7 @@ Future<void> init() async {
   sl.registerLazySingleton<AddMemberToBoardUseCase>(
     () => AddMemberToBoardUseCase(),
   );
+  sl.registerLazySingleton<GetTaskCountUseCase>(() => GetTaskCountUseCase());
 
   // Cubit
   sl.registerFactory<BoardCubit>(() => BoardCubit());

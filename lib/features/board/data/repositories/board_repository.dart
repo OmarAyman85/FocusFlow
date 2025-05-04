@@ -39,4 +39,16 @@ class BoardRepositoryImpl implements BoardRepository {
       return Future.error(e.toString());
     }
   }
+
+  @override
+  Future<int> getTaskCount(String workspaceId, String boardId) async {
+    try {
+      return await sl<BoardRemoteDataSource>().getTaskCount(
+        workspaceId,
+        boardId,
+      );
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
 }

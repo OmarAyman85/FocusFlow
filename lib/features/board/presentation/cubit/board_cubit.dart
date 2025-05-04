@@ -6,6 +6,7 @@ import 'package:focusflow/features/board/domain/usecases/add_member_to_board_use
 import 'package:focusflow/features/board/domain/usecases/create_board_use_case.dart';
 import 'package:focusflow/features/board/domain/usecases/get_boards_use_case.dart';
 import 'package:focusflow/core/injection/injection_container.dart';
+import 'package:focusflow/features/board/domain/usecases/get_task_count.dart';
 import 'board_state.dart';
 
 class BoardCubit extends Cubit<BoardState> {
@@ -17,9 +18,33 @@ class BoardCubit extends Cubit<BoardState> {
     emit(BoardLoading());
     try {
       final boards = await sl<GetBoardsUseCase>().call(workspaceId);
-      emit(BoardLoaded(boards));
+
+      final List<Board> enrichedBoards = [];
+
+      for (final board in boards) {
+        final taskCount = await sl<GetTaskCountUseCase>().call(
+          workspaceId,
+          board.id,
+        );
+
+        final enrichedBoard = Board(
+          id: board.id,
+          workspaceId: board.workspaceId,
+          name: board.name,
+          description: board.description,
+          numberOfMembers: board.numberOfMembers,
+          numberOfTasks: taskCount,
+          createdById: board.createdById,
+          createdByName: board.createdByName,
+          members: board.members,
+        );
+
+        enrichedBoards.add(enrichedBoard);
+      }
+
+      emit(BoardLoaded(enrichedBoards));
     } catch (e) {
-      emit(BoardError(e.toString()));
+      emit(BoardError("Failed to load boards: $e"));
     }
   }
 

@@ -9,4 +9,5 @@ abstract class BoardRepository {
     String boardId,
     Member member,
   );
+  Future<int> getTaskCount(String workspaceId, String boardId);
 }
