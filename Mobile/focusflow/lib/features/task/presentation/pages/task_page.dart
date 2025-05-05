@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/core/theme/app_pallete.dart';
-import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
+import 'package:focusflow/core/widgets/loading_spinner_widget.dart';
 import 'package:focusflow/features/task/presentation/cubit/task_cubit.dart';
 import 'package:focusflow/features/task/presentation/cubit/task_state.dart';
+import 'package:focusflow/features/task/presentation/pages/gantt_chart_page.dart';
 import 'package:focusflow/features/task/presentation/services/task_user_helper.dart';
 import 'package:focusflow/features/task/presentation/widgets/task_card.dart';
 import 'package:go_router/go_router.dart';
@@ -37,7 +38,30 @@ class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MainAppBar(title: 'Tasks'),
+      appBar: AppBar(
+        title: const Text('Tasks'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.timeline),
+            onPressed: () {
+              // You need to get tasks from the state here
+              final state = context.read<TaskCubit>().state;
+              if (state is TaskLoaded) {
+                final tasks = state.tasks;
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            GanttChartPage(tasks: tasks), // Now passing tasks
+                  ),
+                );
+              }
+            },
+          ),
+        ],
+      ),
       body: FutureBuilder<Map<String, String>>(
         future: userIdToNameMap,
         builder: (context, snapshot) {
@@ -56,7 +80,7 @@ class _TaskPageState extends State<TaskPage> {
           return BlocBuilder<TaskCubit, TaskState>(
             builder: (context, state) {
               if (state is TaskLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return const LoadingSpinnerWidget();
               }
 
               if (state is TaskError) {
