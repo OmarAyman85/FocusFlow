@@ -34,9 +34,6 @@ class TaskDetailPage extends StatelessWidget {
             await service.deleteTask(workspaceId, boardId, task.id);
             GoRouter.of(context).pop();
           },
-          onMarkComplete: () {
-            // You can add a complete logic here if needed.
-          },
         ),
       ),
     );

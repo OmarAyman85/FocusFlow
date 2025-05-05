@@ -88,17 +88,11 @@ final router = GoRouter(
         GoRoute(
           path: '/workspace/:workspaceId/board/:boardId/task/:taskId',
           builder: (context, state) {
-            // Retrieve the task entity and createdByName from extra
             final extra = state.extra as Map<String, dynamic>;
             final task = extra['task'] as TaskEntity;
             final createdByName = extra['createdByName'] as String;
-
-            // Retrieve workspaceId, boardId, and taskId from the route parameters
             final workspaceId = state.pathParameters['workspaceId']!;
             final boardId = state.pathParameters['boardId']!;
-            // final taskId = state.pathParameters['taskId']!;
-
-            // Pass all necessary data to the TaskDetailPage
             return TaskDetailPage(
               task: task,
               createdByName: createdByName,

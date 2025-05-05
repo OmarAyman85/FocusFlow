@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:focusflow/core/services/email_service.dart';
 import '../models/task_model.dart';
 
 abstract class TaskRemoteDataSource {
@@ -37,32 +36,12 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
 
   TaskRemoteDataSourceImpl({required this.firestore});
 
-  // @override
-  // Future<void> createTask({
-  //   required String workspaceId,
-  //   required String boardId,
-  //   required TaskModel task,
-  // }) async {
-  //   final taskRef =
-  //       firestore
-  //           .collection('workspaces')
-  //           .doc(workspaceId)
-  //           .collection('boards')
-  //           .doc(boardId)
-  //           .collection('tasks')
-  //           .doc();
-
-  //   final newTask = task.copyWith(id: taskRef.id, createdAt: DateTime.now());
-
-  //   await taskRef.set(newTask.toMap());
-  // }
   @override
   Future<void> createTask({
     required String workspaceId,
     required String boardId,
     required TaskModel task,
   }) async {
-    // Create a reference to Firestore for the task
     final taskRef =
         firestore
             .collection('workspaces')
@@ -72,7 +51,6 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
             .collection('tasks')
             .doc();
 
-    // Add the task to Firestore with a new ID and createdAt timestamp
     final newTask = task.copyWith(id: taskRef.id, createdAt: DateTime.now());
 
     await taskRef.set(newTask.toMap());
@@ -99,12 +77,10 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
             .toList();
 
     tasks.sort((a, b) {
-      // First compare by dueDate
       int dateComparison = (a.dueDate ?? DateTime(9999)).compareTo(
         b.dueDate ?? DateTime(9999),
       );
 
-      // If dueDate is the same, compare by status
       if (dateComparison == 0) {
         return a.status.compareTo(b.status);
       }

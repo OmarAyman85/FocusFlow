@@ -18,7 +18,6 @@ class _UserSelectionPageState extends State<UserSelectionPage> {
   @override
   void initState() {
     super.initState();
-    // Fetch all users when the page is loaded
     context.read<AuthBloc>().add(GetAllUsersRequested());
   }
 
@@ -52,10 +51,7 @@ class _UserSelectionPageState extends State<UserSelectionPage> {
                       _selectedUserId = user.uid;
                     });
                   },
-                  tileColor:
-                      _selectedUserId == user.uid
-                          ? Colors.blue.withOpacity(0.2)
-                          : null,
+                  tileColor: _selectedUserId == user.uid ? Colors.blue : null,
                 );
               },
             );

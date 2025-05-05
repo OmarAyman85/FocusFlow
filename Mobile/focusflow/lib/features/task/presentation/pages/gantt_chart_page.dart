@@ -10,7 +10,6 @@ class GanttChartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Convert tasks to Gantt events
     List<GanttAbsoluteEvent> ganttEvents =
         tasks.map((task) {
           return GanttAbsoluteEvent(
@@ -21,7 +20,6 @@ class GanttChartPage extends StatelessWidget {
           );
         }).toList();
 
-    // Dynamically calculate chart start date (earliest task date)
     final chartStartDate =
         tasks.isNotEmpty
             ? tasks

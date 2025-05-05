@@ -6,14 +6,12 @@ import 'package:focusflow/features/task/presentation/widgets/task_info_chip.dart
 class TaskDetailSection extends StatelessWidget {
   final TaskEntity task;
   final String createdByName;
-  final VoidCallback onMarkComplete;
   final VoidCallback onDelete;
 
   const TaskDetailSection({
     super.key,
     required this.task,
     required this.createdByName,
-    required this.onMarkComplete,
     required this.onDelete,
   });
 
@@ -68,13 +66,6 @@ class TaskDetailSection extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(
-                  onPressed: onMarkComplete,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green.shade400,
-                  ),
-                  child: const Text('Mark as Complete'),
-                ),
                 ElevatedButton(
                   onPressed: onDelete,
                   style: ElevatedButton.styleFrom(

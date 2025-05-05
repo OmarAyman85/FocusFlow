@@ -69,7 +69,6 @@ class TaskCubit extends Cubit<TaskState> {
       await sl<AddTaskMemberUseCase>().call(taskId: taskId, memberId: memberId);
 
       emit(TaskMemberAdded(taskId: taskId, memberId: memberId));
-      // Instead of calling loadTasks again, we update the state to reflect the change.
       if (state is TaskLoaded) {
         final updatedTasks =
             (state as TaskLoaded).tasks.map((task) {
@@ -96,7 +95,6 @@ class TaskCubit extends Cubit<TaskState> {
         boardId: boardId,
         taskId: taskId,
       );
-      // Instead of reloading tasks, update the state to remove the task.
       if (state is TaskLoaded) {
         final updatedTasks =
             (state as TaskLoaded).tasks
@@ -122,7 +120,6 @@ class TaskCubit extends Cubit<TaskState> {
         boardId: boardId,
         task: task,
       );
-      // Instead of emitting TaskUpdated, reload the tasks to keep the state consistent
       await loadTasks(workspaceId: workspaceId, boardId: boardId);
     } catch (e) {
       emit(TaskError('Failed to update task: ${e.toString()}'));

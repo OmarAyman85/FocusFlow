@@ -7,8 +7,6 @@ abstract class WorkspaceRemoteDataSource {
   Stream<List<Workspace>> getWorkspaces(String userId);
   Future<void> addMemberToWorkspace(String workspaceId, Member member);
   Future<int> getBoardCount(String workspaceId);
-
-  // 🔧 New methods
   Future<void> deleteWorkspace(String workspaceId);
   Future<void> updateWorkspace(String workspaceId, Workspace updatedWorkspace);
 }

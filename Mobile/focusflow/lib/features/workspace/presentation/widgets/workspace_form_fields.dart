@@ -1,4 +1,3 @@
-// features/workspace/presentation/widgets/workspace_form_fields.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/core/services/add_member_dialog.dart';
@@ -30,7 +29,7 @@ class _WorkspaceFormFieldsState extends State<WorkspaceFormFields> {
   String _workspaceDescription = '';
   final int _workspacenumberOfBoards = 0;
 
-  List<Member> _members = [];
+  final List<Member> _members = [];
 
   @override
   void initState() {
