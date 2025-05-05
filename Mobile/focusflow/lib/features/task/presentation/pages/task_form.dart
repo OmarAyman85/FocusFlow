@@ -87,8 +87,9 @@ class _TaskFormState extends State<TaskForm> {
                   AppTextFormField(
                     label: 'Task Title',
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty)
+                      if (value == null || value.trim().isEmpty) {
                         return 'Title required';
+                      }
                       if (value.trim().length < 3) return 'Min 3 characters';
                       if (value.trim().length > 50) return 'Max 50 characters';
                       return null;
