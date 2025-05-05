@@ -101,17 +101,21 @@ class _TaskPageState extends State<TaskPage> {
                         child: LongPressDraggable<TaskEntity>(
                           data: task,
                           feedback: Material(
-                            color: Colors.transparent,
-                            child: TaskCard(
-                              task: task,
-                              userMap: userMap,
-                              createdByName: createdByName,
-                              workspaceId: widget.workspaceId,
-                              boardId: widget.boardId,
+                            elevation: 6,
+                            borderRadius: BorderRadius.circular(12),
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 250),
+                              child: TaskCard(
+                                task: task,
+                                userMap: userMap,
+                                createdByName: createdByName,
+                                workspaceId: widget.workspaceId,
+                                boardId: widget.boardId,
+                              ),
                             ),
                           ),
                           childWhenDragging: Opacity(
-                            opacity: 0.4,
+                            opacity: 0.5,
                             child: TaskCard(
                               task: task,
                               userMap: userMap,
