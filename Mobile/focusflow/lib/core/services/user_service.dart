@@ -4,7 +4,7 @@ import 'package:focusflow/core/entities/member.dart';
 abstract class UserService {
   Future<List<Member>> getUsers();
   Future<List<Member>> getWorkspaceMembers(String workspaceId);
-  Future<List<Member>> getBoardMembers(String boardId);
+  Future<List<Member>> getBoardMembers(String workspaceId, String boardId);
 }
 
 class UserServiceImpl implements UserService {
@@ -36,8 +36,18 @@ class UserServiceImpl implements UserService {
   }
 
   @override
-  Future<List<Member>> getBoardMembers(String boardId) async {
-    final boardDoc = await firestore.collection('boards').doc(boardId).get();
+  Future<List<Member>> getBoardMembers(
+    String workspaceId,
+    String boardId,
+  ) async {
+    final boardDoc =
+        await firestore
+            .collection('workspaces')
+            .doc(workspaceId)
+            .collection('boards')
+            .doc(boardId)
+            .get();
+
     final data = boardDoc.data();
     if (data != null && data['members'] != null) {
       final List<dynamic> membersData = data['members'];

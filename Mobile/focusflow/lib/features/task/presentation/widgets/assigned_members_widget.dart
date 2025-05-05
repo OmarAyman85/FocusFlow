@@ -5,6 +5,7 @@ import 'package:focusflow/core/services/user_service.dart';
 
 class AssignedMembersWidget extends StatelessWidget {
   final String boardId;
+  final String workspaceId;
   final List<String> assignedTo;
   final Function(String) onMemberAdded;
   final Function(String) onMemberRemoved;
@@ -15,6 +16,7 @@ class AssignedMembersWidget extends StatelessWidget {
     required this.assignedTo,
     required this.onMemberAdded,
     required this.onMemberRemoved,
+    required this.workspaceId,
   });
 
   @override
@@ -31,7 +33,11 @@ class AssignedMembersWidget extends StatelessWidget {
               onPressed: () async {
                 await AddMemberDialog.open(
                   context: context,
-                  getUsers: () => sl<UserService>().getBoardMembers(boardId),
+                  getUsers:
+                      () => sl<UserService>().getBoardMembers(
+                        workspaceId,
+                        boardId,
+                      ),
                   onUserSelected: (user) async {
                     if (!assignedTo.contains(user.name)) {
                       onMemberAdded(user.name);

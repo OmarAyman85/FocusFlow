@@ -114,6 +114,7 @@ class _TaskFormState extends State<TaskForm> {
                     onMemberRemoved:
                         (name) => setState(() => _assignedTo.remove(name)),
                     boardId: widget.boardId,
+                    workspaceId: widget.workspaceId
                   ),
                   const SizedBox(height: 20),
                   PriorityDropdown(
