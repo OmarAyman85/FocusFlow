@@ -63,60 +63,45 @@ class _TaskPageState extends State<TaskPage> {
   ) {
     return Expanded(
       child: DragTarget<TaskEntity>(
+        onWillAccept: (_) => true,
         onAccept: (task) => _onTaskDropped(task, status, userMap),
-        builder:
-            (context, candidateData, rejectedData) => Container(
-              margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey[300]!),
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+        builder: (context, candidateData, rejectedData) {
+          return Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey[300]!),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const Divider(),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: tasks.length,
-                      itemBuilder: (context, index) {
-                        final task = tasks[index];
-                        final createdByName =
-                            userMap[task.createdBy] ?? task.createdBy;
+                ),
+                const Divider(height: 1),
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    itemCount: tasks.length,
+                    itemBuilder: (context, index) {
+                      final task = tasks[index];
+                      final createdByName =
+                          userMap[task.createdBy] ?? task.createdBy;
 
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: LongPressDraggable<TaskEntity>(
-                            data: task,
-                            feedback: Material(
-                              color: Colors.transparent,
-                              child: TaskCard(
-                                task: task,
-                                userMap: userMap,
-                                createdByName: createdByName,
-                                workspaceId: widget.workspaceId,
-                                boardId: widget.boardId,
-                              ),
-                            ),
-                            childWhenDragging: Opacity(
-                              opacity: 0.4,
-                              child: TaskCard(
-                                task: task,
-                                userMap: userMap,
-                                createdByName: createdByName,
-                                workspaceId: widget.workspaceId,
-                                boardId: widget.boardId,
-                              ),
-                            ),
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: LongPressDraggable<TaskEntity>(
+                          data: task,
+                          feedback: Material(
+                            color: Colors.transparent,
                             child: TaskCard(
                               task: task,
                               userMap: userMap,
@@ -125,13 +110,32 @@ class _TaskPageState extends State<TaskPage> {
                               boardId: widget.boardId,
                             ),
                           ),
-                        );
-                      },
-                    ),
+                          childWhenDragging: Opacity(
+                            opacity: 0.4,
+                            child: TaskCard(
+                              task: task,
+                              userMap: userMap,
+                              createdByName: createdByName,
+                              workspaceId: widget.workspaceId,
+                              boardId: widget.boardId,
+                            ),
+                          ),
+                          child: TaskCard(
+                            task: task,
+                            userMap: userMap,
+                            createdByName: createdByName,
+                            workspaceId: widget.workspaceId,
+                            boardId: widget.boardId,
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
+          );
+        },
       ),
     );
   }

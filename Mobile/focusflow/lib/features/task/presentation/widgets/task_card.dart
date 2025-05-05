@@ -48,7 +48,10 @@ class TaskCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
+                Flexible(
+                  fit:
+                      FlexFit
+                          .loose, // This allows the Text widget to take up as much space as needed
                   child: Text(
                     task.title,
                     style: const TextStyle(
@@ -109,7 +112,7 @@ class TaskCard extends StatelessWidget {
               ],
             ),
 
-            const Spacer(),
+            const SizedBox(height: 12),
 
             // Created By
             Text(

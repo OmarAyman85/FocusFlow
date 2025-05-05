@@ -30,7 +30,7 @@ class _TaskFormState extends State<TaskForm> {
   String _taskTitle = '';
   String _taskDescription = '';
   String _priority = 'Medium';
-  final String _status = 'Not Started';
+  final String _status = 'todo';
   DateTime? _dueDate;
 
   Future<void> _submitForm(String userId) async {
