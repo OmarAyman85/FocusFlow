@@ -76,39 +76,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
     final newTask = task.copyWith(id: taskRef.id, createdAt: DateTime.now());
 
     await taskRef.set(newTask.toMap());
-
-    // // Now, send emails to all assigned members
-    // final emailService = EmailService();
-
-    // // For each assigned member in the task, send an email
-    // for (var memberName in task.assignedTo) {
-    //   // Fetch the member's email from Firestore based on their name
-    //   final memberEmail = await _getUserEmailByName(memberName);
-
-    //   // Send the email to the member
-    //   await emailService.sendEmail(
-    //     memberEmail,
-    //     'You have been assigned a new task',
-    //     'A new task has been created and assigned to you. Please check your dashboard for details.',
-    //   );
-    // }
   }
-
-  // Future<String> _getUserEmailByName(String memberName) async {
-  //   final querySnapshot =
-  //       await firestore
-  //           .collection('users')
-  //           .where('name', isEqualTo: memberName)
-  //           .get();
-
-  //   if (querySnapshot.docs.isNotEmpty) {
-  //     final userDoc = querySnapshot.docs.first;
-  //     final userData = userDoc.data();
-  //     return userData['email'] ?? '';
-  //   } else {
-  //     throw Exception('User not found');
-  //   }
-  // }
 
   @override
   Future<List<TaskModel>> getTasks({
