@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/injection/injection_container.dart';
 import 'package:focusflow/core/services/add_member_dialog.dart';
+import 'package:focusflow/core/services/user_service.dart';
 import 'package:focusflow/core/theme/app_pallete.dart';
 import 'package:go_router/go_router.dart';
 import '../../domain/entities/board.dart';
@@ -82,7 +84,10 @@ class BoardCard extends StatelessWidget {
                     AddMemberDialog.open(
                       context: context,
                       title: 'Add Board Member',
-                      getUsers: () => context.read<BoardCubit>().getUsers(),
+                      getUsers:
+                          () => sl<UserService>().getWorkspaceMembers(
+                            workspaceId,
+                          ),
                       onUserSelected: (selectedUser) async {
                         await context.read<BoardCubit>().addBoardMember(
                           workspaceId,

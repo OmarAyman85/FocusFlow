@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:focusflow/core/injection/injection_container.dart';
 import 'package:focusflow/core/services/add_member_dialog.dart';
-import 'package:focusflow/features/task/presentation/cubit/task_cubit.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/services/user_service.dart';
 
 class AssignedMembersWidget extends StatelessWidget {
+  final String boardId;
   final List<String> assignedTo;
   final Function(String) onMemberAdded;
   final Function(String) onMemberRemoved;
 
   const AssignedMembersWidget({
     super.key,
+    required this.boardId,
     required this.assignedTo,
     required this.onMemberAdded,
     required this.onMemberRemoved,
@@ -29,7 +31,7 @@ class AssignedMembersWidget extends StatelessWidget {
               onPressed: () async {
                 await AddMemberDialog.open(
                   context: context,
-                  getUsers: () => context.read<TaskCubit>().getUsers(),
+                  getUsers: () => sl<UserService>().getBoardMembers(boardId),
                   onUserSelected: (user) async {
                     if (!assignedTo.contains(user.name)) {
                       onMemberAdded(user.name);

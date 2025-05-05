@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/injection/injection_container.dart';
 import 'package:focusflow/core/services/add_member_dialog.dart';
+import 'package:focusflow/core/services/user_service.dart';
 import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
 import 'package:focusflow/features/board/domain/entities/board.dart';
 import 'package:focusflow/core/entities/member.dart';
@@ -61,7 +63,7 @@ class _BoardFormState extends State<BoardForm> {
     AddMemberDialog.open(
       context: context,
       title: 'Add Board Member',
-      getUsers: () => context.read<BoardCubit>().getUsers(),
+      getUsers: () => sl<UserService>().getWorkspaceMembers(widget.workspaceId),
       onUserSelected: (selectedUser) {
         final alreadyExists = _members.any((m) => m.id == selectedUser.id);
         if (!alreadyExists) {
