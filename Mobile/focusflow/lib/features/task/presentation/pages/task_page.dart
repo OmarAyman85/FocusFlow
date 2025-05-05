@@ -194,7 +194,7 @@ class _TaskPageState extends State<TaskPage> {
               future: userIdToNameMap,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: LoadingSpinnerWidget());
                 }
 
                 if (snapshot.hasError) {

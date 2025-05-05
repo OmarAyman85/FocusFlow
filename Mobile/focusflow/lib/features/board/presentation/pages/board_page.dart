@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/core/theme/app_pallete.dart';
+import 'package:focusflow/core/widgets/loading_spinner_widget.dart';
 import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
 import 'package:go_router/go_router.dart';
 import '../cubit/board_cubit.dart';
@@ -32,7 +33,7 @@ class _BoardPageState extends State<BoardPage> {
       body: BlocBuilder<BoardCubit, BoardState>(
         builder: (context, state) {
           if (state is BoardLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: LoadingSpinnerWidget());
           } else if (state is BoardLoaded) {
             return BoardListView(
               boards: state.boards,

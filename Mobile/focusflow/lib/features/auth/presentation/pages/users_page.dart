@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/widgets/loading_spinner_widget.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
@@ -35,7 +36,7 @@ class _UserSelectionPageState extends State<UserSelectionPage> {
         },
         builder: (context, state) {
           if (state is AuthLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: LoadingSpinnerWidget());
           }
 
           if (state is AuthUsersFetched) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/widgets/loading_spinner_widget.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import '../widgets/board_form.dart';
@@ -20,7 +21,7 @@ class BoardFormPage extends StatelessWidget {
           );
         } else {
           return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+            body: Center(child: LoadingSpinnerWidget()),
           );
         }
       },
