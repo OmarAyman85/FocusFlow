@@ -57,11 +57,23 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
                           (context) => [
                             PopupMenuItem<String>(
                               value: 'user_name',
-                              child: Text('Name: ${state.user.name}'),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.account_circle), // Profile icon
+                                  SizedBox(width: 8),
+                                  Text(state.user.name),
+                                ],
+                              ),
                             ),
                             const PopupMenuItem<String>(
                               value: 'logout',
-                              child: Text('Logout'),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.logout),
+                                  SizedBox(width: 8),
+                                  Text('Logout'),
+                                ],
+                              ),
                             ),
                           ],
                       child: CircleAvatar(
