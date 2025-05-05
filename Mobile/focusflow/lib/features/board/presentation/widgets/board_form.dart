@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/services/add_member_dialog.dart';
 import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
 import 'package:focusflow/features/board/domain/entities/board.dart';
 import 'package:focusflow/core/entities/member.dart';
@@ -27,6 +28,13 @@ class _BoardFormState extends State<BoardForm> {
   final _formKey = GlobalKey<FormState>();
   String _boardName = '';
   String _boardDescription = '';
+  List<Member> _members = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _members.add(Member(id: widget.userId, name: widget.userName));
+  }
 
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
@@ -36,17 +44,34 @@ class _BoardFormState extends State<BoardForm> {
         id: const Uuid().v4(),
         name: _boardName,
         description: _boardDescription,
-        numberOfMembers: 1,
+        numberOfMembers: _members.length,
         numberOfTasks: 0,
         workspaceId: widget.workspaceId,
         createdById: widget.userId,
         createdByName: widget.userName,
-        members: [Member(id: widget.userId, name: widget.userName)],
+        members: _members,
       );
 
       context.read<BoardCubit>().createBoard(newBoard);
       Navigator.of(context).pop();
     }
+  }
+
+  void _addMember(BuildContext context) {
+    AddMemberDialog.open(
+      context: context,
+      title: 'Add Board Member',
+      getUsers: () => context.read<BoardCubit>().getUsers(),
+      onUserSelected: (selectedUser) {
+        final alreadyExists = _members.any((m) => m.id == selectedUser.id);
+        if (!alreadyExists) {
+          setState(() {
+            _members.add(selectedUser);
+          });
+        }
+        return Future.value();
+      },
+    );
   }
 
   @override
@@ -57,10 +82,23 @@ class _BoardFormState extends State<BoardForm> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: BoardFormFields(
-            onNameSaved: (val) => _boardName = val ?? '',
-            onDescriptionSaved: (val) => _boardDescription = val ?? '',
-            onSubmit: _submitForm,
+          child: Column(
+            children: [
+              BoardFormFields(
+                onNameSaved: (val) => _boardName = val ?? '',
+                onDescriptionSaved: (val) => _boardDescription = val ?? '',
+                onSubmit: _submitForm,
+                members: _members,
+                onAddMember: () => _addMember(context),
+                creatorId: widget.userId,
+                onRemoveMember: (id) {
+                  setState(() {
+                    _members.removeWhere((m) => m.id == id);
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+            ],
           ),
         ),
       ),

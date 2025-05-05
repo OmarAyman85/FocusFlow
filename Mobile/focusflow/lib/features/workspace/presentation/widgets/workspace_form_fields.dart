@@ -1,6 +1,7 @@
 // features/workspace/presentation/widgets/workspace_form_fields.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/services/add_member_dialog.dart';
 import 'package:focusflow/core/widgets/text_form_field_widget.dart';
 import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
@@ -29,6 +30,14 @@ class _WorkspaceFormFieldsState extends State<WorkspaceFormFields> {
   String _workspaceDescription = '';
   final int _workspacenumberOfBoards = 0;
 
+  List<Member> _members = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _members.add(Member(id: widget.userId, name: widget.userName));
+  }
+
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState!.save();
@@ -37,11 +46,11 @@ class _WorkspaceFormFieldsState extends State<WorkspaceFormFields> {
         id: const Uuid().v4(),
         name: _workspaceName,
         description: _workspaceDescription,
-        numberOfMembers: 1,
+        numberOfMembers: _members.length,
         numberOfBoards: _workspacenumberOfBoards,
         createdById: widget.userId,
         createdByName: widget.userName,
-        members: [Member(id: widget.userId, name: widget.userName)],
+        members: _members,
       );
 
       context.read<WorkspaceCubit>().createWorkspace(
@@ -59,6 +68,7 @@ class _WorkspaceFormFieldsState extends State<WorkspaceFormFields> {
       child: Form(
         key: _formKey,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AppTextFormField(
               label: 'Workspace Name',
@@ -91,7 +101,61 @@ class _WorkspaceFormFieldsState extends State<WorkspaceFormFields> {
               onSaved: (value) => _workspaceDescription = value ?? '',
             ),
             const SizedBox(height: 20),
-            WorkspaceSubmitButton(onPressed: _submitForm),
+
+            Row(
+              children: [
+                const Text(
+                  'Members:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.person_add),
+                  onPressed:
+                      () => AddMemberDialog.open(
+                        context: context,
+                        title: 'Add Workspace Member',
+                        getUsers:
+                            () => context.read<WorkspaceCubit>().getUsers(),
+                        onUserSelected: (selectedUser) {
+                          final alreadyExists = _members.any(
+                            (m) => m.id == selectedUser.id,
+                          );
+                          if (!alreadyExists) {
+                            setState(() {
+                              _members.add(selectedUser);
+                            });
+                          }
+                          return Future.value();
+                        },
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              children:
+                  _members
+                      .map(
+                        (member) => Chip(
+                          label: Text(member.name),
+                          onDeleted:
+                              member.id == widget.userId
+                                  ? null
+                                  : () {
+                                    setState(() {
+                                      _members.removeWhere(
+                                        (m) => m.id == member.id,
+                                      );
+                                    });
+                                  },
+                        ),
+                      )
+                      .toList(),
+            ),
+            const SizedBox(height: 20),
+            Center(child: WorkspaceSubmitButton(onPressed: _submitForm)),
           ],
         ),
       ),
