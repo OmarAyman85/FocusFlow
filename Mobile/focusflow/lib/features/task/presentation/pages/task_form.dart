@@ -31,9 +31,7 @@ class _TaskFormState extends State<TaskForm> {
   DateTime? _dueDate;
 
   Future<void> _submitForm(String userId, String userName) async {
-    // First, validate the form fields
     if (_formKey.currentState?.validate() ?? false) {
-      // Then validate custom fields not inside the form: assigned members and due date
       if (_assignedTo.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please assign at least one member')),
