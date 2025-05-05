@@ -54,4 +54,18 @@ class TaskRepositoryImpl implements TaskRepository {
       taskId: taskId,
     );
   }
+
+  @override
+  Future<void> updateTask({
+    required String workspaceId,
+    required String boardId,
+    required TaskEntity task,
+  }) async {
+    final model = TaskModel.fromEntity(task);
+    await sl<TaskRemoteDataSource>().updateTask(
+      workspaceId: workspaceId,
+      boardId: boardId,
+      task: model,
+    );
+  }
 }

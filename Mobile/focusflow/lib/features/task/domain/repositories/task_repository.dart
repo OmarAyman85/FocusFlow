@@ -22,4 +22,10 @@ abstract class TaskRepository {
     required String boardId,
     required String taskId,
   });
+
+  Future<void> updateTask({
+    required String workspaceId,
+    required String boardId,
+    required TaskEntity task,
+  });
 }

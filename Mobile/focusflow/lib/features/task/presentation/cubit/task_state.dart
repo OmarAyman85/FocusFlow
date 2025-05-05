@@ -39,6 +39,15 @@ class TaskDeleted extends TaskState {
   List<Object?> get props => [taskId];
 }
 
+class TaskUpdated extends TaskState {
+  final TaskEntity task;
+
+  const TaskUpdated(this.task);
+
+  @override
+  List<Object?> get props => [task];
+}
+
 class TaskMemberAdded extends TaskState {
   final String taskId;
   final String memberId;

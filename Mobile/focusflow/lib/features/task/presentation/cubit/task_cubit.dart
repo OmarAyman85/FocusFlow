@@ -7,6 +7,7 @@ import 'package:focusflow/features/task/domain/usecases/create_task_use_case.dar
 import 'package:focusflow/features/task/domain/usecases/delete_task_use_case.dart';
 import 'package:focusflow/features/task/domain/usecases/get_tasks_use_case.dart';
 import 'package:focusflow/core/injection/injection_container.dart';
+import 'package:focusflow/features/task/domain/usecases/update_task_use_case.dart';
 import 'task_state.dart';
 
 class TaskCubit extends Cubit<TaskState> {
@@ -87,6 +88,25 @@ class TaskCubit extends Cubit<TaskState> {
       emit(TaskDeleted(taskId));
     } catch (e) {
       emit(TaskError('Failed to delete task: ${e.toString()}'));
+    }
+  }
+
+  Future<void> updateTask({
+    required String workspaceId,
+    required String boardId,
+    required TaskEntity task,
+  }) async {
+    emit(TaskLoading());
+    try {
+      await sl<UpdateTaskUseCase>().call(
+        workspaceId: workspaceId,
+        boardId: boardId,
+        task: task,
+      );
+      await loadTasks(workspaceId: workspaceId, boardId: boardId);
+      emit(TaskUpdated(task));
+    } catch (e) {
+      emit(TaskError('Failed to update task: ${e.toString()}'));
     }
   }
 }

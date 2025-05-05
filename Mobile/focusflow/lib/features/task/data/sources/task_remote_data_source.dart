@@ -23,6 +23,12 @@ abstract class TaskRemoteDataSource {
     required String boardId,
     required String taskId,
   });
+
+  Future<void> updateTask({
+    required String workspaceId,
+    required String boardId,
+    required TaskModel task,
+  });
 }
 
 class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
@@ -128,5 +134,28 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
     } catch (e) {
       throw Exception('Failed to delete task: $e');
     }
+  }
+
+  @override
+  Future<void> updateTask({
+    required String workspaceId,
+    required String boardId,
+    required TaskModel task,
+  }) async {
+    final taskRef = firestore
+        .collection('workspaces')
+        .doc(workspaceId)
+        .collection('boards')
+        .doc(boardId)
+        .collection('tasks')
+        .doc(task.id);
+
+    final taskSnapshot = await taskRef.get();
+
+    if (!taskSnapshot.exists) {
+      throw Exception('Task not found');
+    }
+
+    await taskRef.update(task.toMap());
   }
 }
