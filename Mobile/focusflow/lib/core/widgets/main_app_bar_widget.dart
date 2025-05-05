@@ -53,7 +53,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
                         if (value == 'logout') {
                           context.read<AuthBloc>().add(SignOutRequested());
                         } else if (value == 'user_name') {
-                          GoRouter.of(context).push('/home');
+                          GoRouter.of(context).push('/profile');
                         }
                       },
                       itemBuilder:

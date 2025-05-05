@@ -22,7 +22,7 @@ class WorkspaceList extends StatelessWidget {
         children: [
           const SizedBox(height: 30),
           UserHeader(username: username),
-          const SizedBox(height: 12),
+          const SizedBox(height: 40),
           const Text('Your Workspaces', style: TextStyle(fontSize: 25)),
           const SizedBox(height: 20),
           ...workspaces.map((workspace) => WorkspaceCard(workspace: workspace)),

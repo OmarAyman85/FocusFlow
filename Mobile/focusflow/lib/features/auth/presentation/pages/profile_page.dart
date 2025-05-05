@@ -70,7 +70,7 @@ class ProfilePage extends StatelessWidget {
                   const SizedBox(height: 32),
                   ElevatedButton.icon(
                     onPressed: () {
-                      // TODO: Navigate to edit profile
+                      // TODO: Navigate to edit profile form
                     },
                     icon: const Icon(Icons.edit),
                     label: const Text("Edit Profile"),
@@ -79,7 +79,7 @@ class ProfilePage extends StatelessWidget {
                         horizontal: 24,
                         vertical: 12,
                       ),
-                      backgroundColor: AppPallete.gradient1,
+                      backgroundColor: AppPallete.gradient2,
                       foregroundColor: Colors.white,
                     ),
                   ),

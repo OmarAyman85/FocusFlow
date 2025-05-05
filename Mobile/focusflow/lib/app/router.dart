@@ -21,7 +21,7 @@ final router = GoRouter(
     GoRoute(path: '/', builder: (context, state) => SignInPage()),
     GoRoute(path: '/signin', builder: (context, state) => SignInPage()),
     GoRoute(path: '/signup', builder: (context, state) => SignUpPage()),
-    GoRoute(path: '/home', builder: (context, state) => ProfilePage()),
+    GoRoute(path: '/profile', builder: (context, state) => ProfilePage()),
 
     ShellRoute(
       builder: (context, state, child) {
