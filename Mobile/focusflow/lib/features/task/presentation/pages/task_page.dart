@@ -9,6 +9,7 @@ import 'package:focusflow/features/task/presentation/pages/gantt_chart_page.dart
 import 'package:focusflow/features/task/presentation/services/task_user_helper.dart';
 import 'package:focusflow/features/task/presentation/widgets/task_card.dart';
 import 'package:go_router/go_router.dart';
+import 'package:focusflow/features/task/domain/entities/task_entity.dart';
 
 class TaskPage extends StatefulWidget {
   final String workspaceId;
@@ -36,6 +37,105 @@ class _TaskPageState extends State<TaskPage> {
     });
   }
 
+  void _onTaskDropped(
+    TaskEntity task,
+    String newStatus,
+    Map<String, String> userMap,
+  ) {
+    final updatedTask = task.copyWith(status: newStatus);
+
+    context.read<TaskCubit>().updateTask(
+      workspaceId: widget.workspaceId,
+      boardId: widget.boardId,
+      task: updatedTask,
+    );
+  }
+
+  List<TaskEntity> _filterTasks(List<TaskEntity> tasks, String status) {
+    return tasks.where((t) => t.status == status).toList();
+  }
+
+  Widget _buildColumn(
+    String title,
+    String status,
+    List<TaskEntity> tasks,
+    Map<String, String> userMap,
+  ) {
+    return Expanded(
+      child: DragTarget<TaskEntity>(
+        onAccept: (task) => _onTaskDropped(task, status, userMap),
+        builder:
+            (context, candidateData, rejectedData) => Container(
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey[300]!),
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const Divider(),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: tasks.length,
+                      itemBuilder: (context, index) {
+                        final task = tasks[index];
+                        final createdByName =
+                            userMap[task.createdBy] ?? task.createdBy;
+
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: LongPressDraggable<TaskEntity>(
+                            data: task,
+                            feedback: Material(
+                              color: Colors.transparent,
+                              child: TaskCard(
+                                task: task,
+                                userMap: userMap,
+                                createdByName: createdByName,
+                                workspaceId: widget.workspaceId,
+                                boardId: widget.boardId,
+                              ),
+                            ),
+                            childWhenDragging: Opacity(
+                              opacity: 0.4,
+                              child: TaskCard(
+                                task: task,
+                                userMap: userMap,
+                                createdByName: createdByName,
+                                workspaceId: widget.workspaceId,
+                                boardId: widget.boardId,
+                              ),
+                            ),
+                            child: TaskCard(
+                              task: task,
+                              userMap: userMap,
+                              createdByName: createdByName,
+                              workspaceId: widget.workspaceId,
+                              boardId: widget.boardId,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +150,6 @@ class _TaskPageState extends State<TaskPage> {
                   final state = context.read<TaskCubit>().state;
                   if (state is TaskLoaded) {
                     final tasks = state.tasks;
-
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -63,10 +162,10 @@ class _TaskPageState extends State<TaskPage> {
                 splashColor: Colors.grey,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.timeline),
-                    const SizedBox(width: 8),
-                    const Text(
+                  children: const [
+                    Icon(Icons.timeline),
+                    SizedBox(width: 8),
+                    Text(
                       'View in chart',
                       style: TextStyle(
                         fontSize: 16,
@@ -78,7 +177,6 @@ class _TaskPageState extends State<TaskPage> {
               ),
             ),
           ),
-
           const SizedBox(height: 8),
           Expanded(
             child: FutureBuilder<Map<String, String>>(
@@ -113,29 +211,28 @@ class _TaskPageState extends State<TaskPage> {
                         return const Center(child: Text('No tasks found.'));
                       }
 
-                      return GridView.builder(
-                        padding: const EdgeInsets.all(16),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 16,
-                              mainAxisSpacing: 16,
-                              childAspectRatio: 0.7,
-                            ),
-                        itemCount: tasks.length,
-                        itemBuilder: (context, index) {
-                          final task = tasks[index];
-                          final createdByName =
-                              userMap[task.createdBy] ?? task.createdBy;
-
-                          return TaskCard(
-                            task: task,
-                            userMap: userMap,
-                            createdByName: createdByName,
-                            workspaceId: widget.workspaceId,
-                            boardId: widget.boardId,
-                          );
-                        },
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildColumn(
+                            "To-Do",
+                            "todo",
+                            _filterTasks(tasks, "todo"),
+                            userMap,
+                          ),
+                          _buildColumn(
+                            "In Progress",
+                            "in_progress",
+                            _filterTasks(tasks, "in_progress"),
+                            userMap,
+                          ),
+                          _buildColumn(
+                            "Done",
+                            "done",
+                            _filterTasks(tasks, "done"),
+                            userMap,
+                          ),
+                        ],
                       );
                     }
 
@@ -147,7 +244,6 @@ class _TaskPageState extends State<TaskPage> {
           ),
         ],
       ),
-
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppPallete.backgroundColor,
         foregroundColor: AppPallete.gradient1,

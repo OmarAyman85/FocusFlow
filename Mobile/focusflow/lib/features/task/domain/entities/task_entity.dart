@@ -24,4 +24,30 @@ class TaskEntity {
     required this.createdBy,
     required this.attachments,
   });
+
+  TaskEntity copyWith({
+    String? id,
+    String? title,
+    String? description,
+    List<String>? assignedTo,
+    String? status,
+    String? priority,
+    DateTime? dueDate,
+    DateTime? createdAt,
+    String? createdBy,
+    List<AttachmentEntity>? attachments,
+  }) {
+    return TaskEntity(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      assignedTo: assignedTo ?? this.assignedTo,
+      status: status ?? this.status,
+      priority: priority ?? this.priority,
+      dueDate: dueDate ?? this.dueDate,
+      createdAt: createdAt ?? this.createdAt,
+      createdBy: createdBy ?? this.createdBy,
+      attachments: attachments ?? this.attachments,
+    );
+  }
 }
