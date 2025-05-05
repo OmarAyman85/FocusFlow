@@ -29,6 +29,7 @@ class _TaskPageState extends State<TaskPage> {
     super.initState();
     userIdToNameMap = TaskUserHelper.getUserIdToNameMap(context);
 
+    // Load tasks when the page is initialized
     Future.microtask(() {
       context.read<TaskCubit>().loadTasks(
         workspaceId: widget.workspaceId,
@@ -44,6 +45,7 @@ class _TaskPageState extends State<TaskPage> {
   ) {
     final updatedTask = task.copyWith(status: newStatus);
 
+    // Update task and then reload tasks
     context.read<TaskCubit>().updateTask(
       workspaceId: widget.workspaceId,
       boardId: widget.boardId,
@@ -83,6 +85,7 @@ class _TaskPageState extends State<TaskPage> {
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      color: AppPallete.gradient2,
                     ),
                   ),
                 ),

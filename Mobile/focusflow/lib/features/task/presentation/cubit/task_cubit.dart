@@ -41,7 +41,10 @@ class TaskCubit extends Cubit<TaskState> {
         boardId: boardId,
         task: task,
       );
-      await loadTasks(workspaceId: workspaceId, boardId: boardId);
+      await loadTasks(
+        workspaceId: workspaceId,
+        boardId: boardId,
+      ); // Re-fetch tasks
     } catch (e) {
       emit(TaskError('Failed to create task: ${e.toString()}'));
     }
@@ -66,7 +69,16 @@ class TaskCubit extends Cubit<TaskState> {
       await sl<AddTaskMemberUseCase>().call(taskId: taskId, memberId: memberId);
 
       emit(TaskMemberAdded(taskId: taskId, memberId: memberId));
-      await loadTasks(workspaceId: "workspaceId", boardId: "boardId");
+      // Instead of calling loadTasks again, we update the state to reflect the change.
+      if (state is TaskLoaded) {
+        final updatedTasks =
+            (state as TaskLoaded).tasks.map((task) {
+              return task.id == taskId
+                  ? task.copyWith(assignedTo: [...task.assignedTo, memberId])
+                  : task;
+            }).toList();
+        emit(TaskLoaded(updatedTasks));
+      }
     } catch (e) {
       emit(TaskError('Failed to add member to task: ${e.toString()}'));
     }
@@ -84,7 +96,14 @@ class TaskCubit extends Cubit<TaskState> {
         boardId: boardId,
         taskId: taskId,
       );
-      await loadTasks(workspaceId: workspaceId, boardId: boardId);
+      // Instead of reloading tasks, update the state to remove the task.
+      if (state is TaskLoaded) {
+        final updatedTasks =
+            (state as TaskLoaded).tasks
+                .where((task) => task.id != taskId)
+                .toList();
+        emit(TaskLoaded(updatedTasks));
+      }
       emit(TaskDeleted(taskId));
     } catch (e) {
       emit(TaskError('Failed to delete task: ${e.toString()}'));
@@ -103,8 +122,8 @@ class TaskCubit extends Cubit<TaskState> {
         boardId: boardId,
         task: task,
       );
+      // Instead of emitting TaskUpdated, reload the tasks to keep the state consistent
       await loadTasks(workspaceId: workspaceId, boardId: boardId);
-      emit(TaskUpdated(task));
     } catch (e) {
       emit(TaskError('Failed to update task: ${e.toString()}'));
     }
