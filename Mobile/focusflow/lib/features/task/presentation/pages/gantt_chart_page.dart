@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:focusflow/core/widgets/main_app_bar_widget.dart';
 import 'package:focusflow/features/task/domain/entities/task_entity.dart';
 import 'package:gantt_chart/gantt_chart.dart';
 
@@ -29,7 +30,7 @@ class GanttChartPage extends StatelessWidget {
             : DateTime.now();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Gantt Chart')),
+      appBar: MainAppBar(title: 'Tasks'),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GanttChartView(
