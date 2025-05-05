@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/features/auth/presentation/pages/profile_page.dart';
 import 'package:focusflow/features/board/presentation/cubit/board_cubit.dart';
 import 'package:focusflow/features/board/presentation/pages/board_form.dart';
 import 'package:focusflow/features/board/presentation/pages/board_page.dart';
@@ -20,6 +21,7 @@ final router = GoRouter(
     GoRoute(path: '/', builder: (context, state) => SignInPage()),
     GoRoute(path: '/signin', builder: (context, state) => SignInPage()),
     GoRoute(path: '/signup', builder: (context, state) => SignUpPage()),
+    GoRoute(path: '/home', builder: (context, state) => ProfilePage()),
 
     ShellRoute(
       builder: (context, state, child) {

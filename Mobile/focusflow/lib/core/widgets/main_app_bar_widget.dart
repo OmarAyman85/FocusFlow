@@ -4,6 +4,7 @@ import 'package:focusflow/core/widgets/loading_spinner_widget.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_state.dart';
 import 'package:focusflow/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 enum ProfileButtonType { profileAvatar, logoutIcon }
 
@@ -51,6 +52,8 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
                       onSelected: (value) {
                         if (value == 'logout') {
                           context.read<AuthBloc>().add(SignOutRequested());
+                        } else if (value == 'user_name') {
+                          GoRouter.of(context).push('/home');
                         }
                       },
                       itemBuilder:
