@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:focusflow/core/entities/member.dart';
 import 'package:focusflow/core/services/user_service.dart';
 import 'package:focusflow/features/task/domain/entities/task_entity.dart';
-import 'package:focusflow/features/task/domain/usecases/add_member_to_task_use_case.dart';
 import 'package:focusflow/features/task/domain/usecases/create_task_use_case.dart';
 import 'package:focusflow/features/task/domain/usecases/delete_task_use_case.dart';
 import 'package:focusflow/features/task/domain/usecases/get_tasks_use_case.dart';
@@ -57,29 +56,6 @@ class TaskCubit extends Cubit<TaskState> {
     } catch (e) {
       emit(TaskError("Failed to load users: $e"));
       return Future.error("Failed to load users: $e");
-    }
-  }
-
-  Future<void> addTaskMember({
-    required String taskId,
-    required String memberId,
-  }) async {
-    emit(TaskLoading());
-    try {
-      await sl<AddTaskMemberUseCase>().call(taskId: taskId, memberId: memberId);
-
-      emit(TaskMemberAdded(taskId: taskId, memberId: memberId));
-      if (state is TaskLoaded) {
-        final updatedTasks =
-            (state as TaskLoaded).tasks.map((task) {
-              return task.id == taskId
-                  ? task.copyWith(assignedTo: [...task.assignedTo, memberId])
-                  : task;
-            }).toList();
-        emit(TaskLoaded(updatedTasks));
-      }
-    } catch (e) {
-      emit(TaskError('Failed to add member to task: ${e.toString()}'));
     }
   }
 

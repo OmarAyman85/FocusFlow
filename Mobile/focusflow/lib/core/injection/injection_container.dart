@@ -23,7 +23,6 @@ import 'package:focusflow/features/board/presentation/cubit/board_cubit.dart';
 import 'package:focusflow/features/task/data/repositories/task_repository.dart';
 import 'package:focusflow/features/task/data/sources/task_remote_data_source.dart';
 import 'package:focusflow/features/task/domain/repositories/task_repository.dart';
-import 'package:focusflow/features/task/domain/usecases/add_member_to_task_use_case.dart';
 import 'package:focusflow/features/task/domain/usecases/create_task_use_case.dart';
 import 'package:focusflow/features/task/domain/usecases/delete_task_use_case.dart';
 import 'package:focusflow/features/task/domain/usecases/get_tasks_use_case.dart';
@@ -158,7 +157,6 @@ Future<void> init() async {
   // Use Cases
   sl.registerLazySingleton<CreateTaskUseCase>(() => CreateTaskUseCase());
   sl.registerLazySingleton<GetTasksUseCase>(() => GetTasksUseCase());
-  sl.registerLazySingleton<AddTaskMemberUseCase>(() => AddTaskMemberUseCase());
   sl.registerLazySingleton<DeleteTaskUseCase>(() => DeleteTaskUseCase());
   sl.registerLazySingleton<UpdateTaskUseCase>(() => UpdateTaskUseCase());
 

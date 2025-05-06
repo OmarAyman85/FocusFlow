@@ -12,11 +12,6 @@ abstract class TaskRepository {
     required String boardId,
   });
 
-  Future<void> addMemberToTask({
-    required String taskId,
-    required String memberId,
-  });
-
   Future<void> deleteTask({
     required String workspaceId,
     required String boardId,

@@ -13,11 +13,6 @@ abstract class TaskRemoteDataSource {
     required String boardId,
   });
 
-  Future<void> addMemberToTask({
-    required String taskId,
-    required String memberId,
-  });
-
   Future<void> deleteTask({
     required String workspaceId,
     required String boardId,
@@ -55,7 +50,6 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
 
     await taskRef.set(newTask.toMap());
 
-    // Simulate sending email to each assigned user
     for (final username in newTask.assignedTo) {
       final userQuery =
           await firestore
@@ -125,29 +119,6 @@ Thank you for your commitment to team success.
     });
 
     return tasks;
-  }
-
-  @override
-  Future<void> addMemberToTask({
-    required String taskId,
-    required String memberId,
-  }) async {
-    final taskRef = firestore.collection('tasks').doc(taskId);
-
-    final taskSnapshot = await taskRef.get();
-
-    if (taskSnapshot.exists) {
-      final taskData = taskSnapshot.data()!;
-      final assignedTo = List<String>.from(taskData['assignedTo'] ?? []);
-
-      if (!assignedTo.contains(memberId)) {
-        assignedTo.add(memberId);
-      }
-
-      await taskRef.update({'assignedTo': assignedTo});
-    } else {
-      throw Exception('Task not found');
-    }
   }
 
   @override
