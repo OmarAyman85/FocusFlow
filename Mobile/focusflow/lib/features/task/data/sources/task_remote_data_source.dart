@@ -54,6 +54,42 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
     final newTask = task.copyWith(id: taskRef.id, createdAt: DateTime.now());
 
     await taskRef.set(newTask.toMap());
+
+    // Simulate sending email to each assigned user
+    for (final username in newTask.assignedTo) {
+      final userQuery =
+          await firestore
+              .collection('users')
+              .where('name', isEqualTo: username)
+              .limit(1)
+              .get();
+
+      if (userQuery.docs.isEmpty) {
+        continue;
+      }
+
+      final userDoc = userQuery.docs.first;
+      final userEmail = userDoc['email'];
+      final taskTitle = newTask.title;
+
+      print('''
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📧 Simulated Email Notification
+To      : $userEmail
+Subject : You have been assigned to a new task: "$taskTitle"
+
+Dear $username,
+
+You have been assigned to the task titled "$taskTitle".
+
+Please log in to your FocusFlow account to view the task and begin work.
+
+Thank you for your commitment to team success.
+
+— FocusFlow Notifications (no-reply@focusflow.com)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+''');
+    }
   }
 
   @override
