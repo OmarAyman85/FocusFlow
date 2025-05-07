@@ -36,7 +36,7 @@ class TaskDetailSection extends StatelessWidget {
               task.description,
               style: Theme.of(
                 context,
-              ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade700),
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade200),
             ),
             const SizedBox(height: 20),
             Wrap(
@@ -64,7 +64,7 @@ class TaskDetailSection extends StatelessWidget {
             _infoRow(Icons.person_outline, 'Created by: $createdByName'),
             const SizedBox(height: 20),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
                   onPressed: onDelete,

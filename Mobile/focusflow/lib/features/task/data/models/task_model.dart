@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:focusflow/core/entities/member.dart';
 import '../../domain/entities/task_entity.dart';
 import '../../domain/entities/attachment_entity.dart';
 import 'attachment_model.dart';
@@ -13,7 +14,8 @@ class TaskModel extends TaskEntity {
     required super.priority,
     super.dueDate,
     required super.createdAt,
-    required super.createdBy,
+    required super.createdById,
+    required super.createdByName,
     required super.attachments,
   });
 
@@ -22,7 +24,9 @@ class TaskModel extends TaskEntity {
       id: taskId,
       title: map['title'] ?? '',
       description: map['description'] ?? '',
-      assignedTo: List<String>.from(map['assignedTo'] ?? []),
+      assignedTo: List<Member>.from(
+        (map['assignedTo'] ?? []).map((m) => Member.fromMap(m)),
+      ),
       status: map['status'] ?? 'todo',
       priority: map['priority'] ?? 'medium',
       dueDate:
@@ -30,7 +34,8 @@ class TaskModel extends TaskEntity {
               ? (map['dueDate'] as Timestamp).toDate()
               : null,
       createdAt: (map['createdAt'] as Timestamp).toDate(),
-      createdBy: map['createdBy'] ?? '',
+      createdById: map['createdBy']?['id']?.toString() ?? '',
+      createdByName: map['createdBy']?['name']?.toString() ?? '',
       attachments:
           (map['attachments'] as List<dynamic>? ?? [])
               .map((a) => AttachmentModel.fromMap(Map<String, dynamic>.from(a)))
@@ -42,12 +47,13 @@ class TaskModel extends TaskEntity {
     return {
       'title': title,
       'description': description,
-      'assignedTo': assignedTo,
+      'assignedTo': assignedTo.map((m) => m.toMap()).toList(),
+      'assignedToIds': assignedTo.map((m) => m.id).toList(),
       'status': status,
       'priority': priority,
       'dueDate': dueDate != null ? Timestamp.fromDate(dueDate!) : null,
       'createdAt': Timestamp.fromDate(createdAt),
-      'createdBy': createdBy,
+      'createdBy': {'id': createdById, 'name': createdByName},
       'attachments':
           attachments
               .map((a) => AttachmentModel.fromEntity(a).toMap())
@@ -64,22 +70,25 @@ class TaskModel extends TaskEntity {
     priority: entity.priority,
     dueDate: entity.dueDate,
     createdAt: entity.createdAt,
-    createdBy: entity.createdBy,
+    createdById: entity.createdById,
+    createdByName: entity.createdByName,
     attachments: entity.attachments,
   );
 
   TaskEntity toEntity() => this;
 
+  @override
   TaskModel copyWith({
     String? id,
     String? title,
     String? description,
-    List<String>? assignedTo,
+    List<Member>? assignedTo,
     String? status,
     String? priority,
     DateTime? dueDate,
     DateTime? createdAt,
-    String? createdBy,
+    String? createdById,
+    String? createdByName,
     List<AttachmentEntity>? attachments,
   }) {
     return TaskModel(
@@ -91,7 +100,8 @@ class TaskModel extends TaskEntity {
       priority: priority ?? this.priority,
       dueDate: dueDate ?? this.dueDate,
       createdAt: createdAt ?? this.createdAt,
-      createdBy: createdBy ?? this.createdBy,
+      createdById: createdById ?? this.createdById,
+      createdByName: createdByName ?? this.createdByName,
       attachments: attachments ?? this.attachments,
     );
   }

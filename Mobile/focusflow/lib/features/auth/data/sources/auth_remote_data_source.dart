@@ -33,6 +33,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           email: userModel.email,
           name: userModel.name,
           password: '',
+          photoUrl: '',
         );
         try {
           await firestore.collection('users').doc(user.uid).set(model.toMap());

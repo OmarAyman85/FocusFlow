@@ -30,7 +30,7 @@ class _BoardFormState extends State<BoardForm> {
   final _formKey = GlobalKey<FormState>();
   String _boardName = '';
   String _boardDescription = '';
-  List<Member> _members = [];
+  final List<Member> _members = [];
 
   @override
   void initState() {

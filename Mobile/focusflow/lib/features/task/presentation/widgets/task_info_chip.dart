@@ -13,7 +13,7 @@ class TaskInfoChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Chip(
-      label: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
+      label: Text(label, style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.black)),
       backgroundColor: color,
     );
   }

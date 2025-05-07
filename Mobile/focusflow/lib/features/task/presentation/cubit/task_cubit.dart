@@ -43,7 +43,7 @@ class TaskCubit extends Cubit<TaskState> {
       await loadTasks(
         workspaceId: workspaceId,
         boardId: boardId,
-      ); // Re-fetch tasks
+      );
     } catch (e) {
       emit(TaskError('Failed to create task: ${e.toString()}'));
     }

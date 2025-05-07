@@ -1,15 +1,18 @@
+import 'package:focusflow/core/entities/member.dart';
+
 import 'attachment_entity.dart';
 
 class TaskEntity {
   final String id;
   final String title;
   final String description;
-  final List<String> assignedTo;
+  final List<Member> assignedTo;
   final String status;
   final String priority;
   final DateTime? dueDate;
   final DateTime createdAt;
-  final String createdBy;
+  final String createdById;
+  final String createdByName;
   final List<AttachmentEntity> attachments;
 
   const TaskEntity({
@@ -21,7 +24,8 @@ class TaskEntity {
     required this.priority,
     this.dueDate,
     required this.createdAt,
-    required this.createdBy,
+    required this.createdById,
+    required this.createdByName,
     required this.attachments,
   });
 
@@ -29,12 +33,13 @@ class TaskEntity {
     String? id,
     String? title,
     String? description,
-    List<String>? assignedTo,
+    List<Member>? assignedTo,
     String? status,
     String? priority,
     DateTime? dueDate,
     DateTime? createdAt,
-    String? createdBy,
+    String? createdById,
+    String? createdByName,
     List<AttachmentEntity>? attachments,
   }) {
     return TaskEntity(
@@ -46,7 +51,8 @@ class TaskEntity {
       priority: priority ?? this.priority,
       dueDate: dueDate ?? this.dueDate,
       createdAt: createdAt ?? this.createdAt,
-      createdBy: createdBy ?? this.createdBy,
+      createdById: createdById ?? this.createdById,
+      createdByName: createdByName ?? this.createdByName,
       attachments: attachments ?? this.attachments,
     );
   }

@@ -22,12 +22,11 @@ class BoardModel extends Board {
       description: map['description'],
       numberOfMembers: map['numberOfMembers'] ?? 0,
       numberOfTasks: map['numberOfTasks'] ?? 0,
-      createdById: map['createdById'],
-      createdByName: map['createdByName'],
-      members:
-          (map['members'] as List<dynamic>? ?? [])
-              .map((e) => Member.fromMap(e))
-              .toList(),
+      createdById: map['createdBy']['id'],
+      createdByName: map['createdBy']['name'],
+      members: List<Member>.from(
+        (map['members'] ?? []).map((m) => Member.fromMap(m)),
+      ),
     );
   }
 
@@ -38,9 +37,8 @@ class BoardModel extends Board {
       'description': description,
       'numberOfMembers': numberOfMembers,
       'numberOfTasks': numberOfTasks,
-      'createdById': createdById,
-      'createdByName': createdByName,
-      'members': members.map((e) => e.toMap()).toList(),
+      'createdBy': {'id': createdById, 'name': createdByName},
+      'members': members.map((m) => m.toMap()).toList(),
     };
   }
 }

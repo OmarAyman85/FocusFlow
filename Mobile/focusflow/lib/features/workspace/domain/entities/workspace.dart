@@ -37,8 +37,8 @@ class Workspace {
       id: id,
       name: map['name'],
       description: map['description'],
-      numberOfMembers: map['numberOfMembers'],
-      numberOfBoards: map['numberOfBoards'],
+      numberOfMembers: map['numberOfMembers'] ?? 0,
+      numberOfBoards: map['numberOfBoards'] ?? 0,
       createdById: map['createdBy']['id'],
       createdByName: map['createdBy']['name'],
       members: List<Member>.from(

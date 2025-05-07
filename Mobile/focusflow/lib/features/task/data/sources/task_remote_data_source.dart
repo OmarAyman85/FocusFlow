@@ -49,18 +49,15 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
     final newTask = task.copyWith(id: taskRef.id, createdAt: DateTime.now());
 
     await taskRef.set(newTask.toMap());
-
-    for (final username in newTask.assignedTo) {
+    for (final member in newTask.assignedTo) {
       final userQuery =
           await firestore
               .collection('users')
-              .where('name', isEqualTo: username)
+              .where('name', isEqualTo: member.name)
               .limit(1)
               .get();
 
-      if (userQuery.docs.isEmpty) {
-        continue;
-      }
+      if (userQuery.docs.isEmpty) continue;
 
       final userDoc = userQuery.docs.first;
       final userEmail = userDoc['email'];
@@ -72,7 +69,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
 To      : $userEmail
 Subject : You have been assigned to a new task: "$taskTitle"
 
-Dear $username,
+Dear ${member.name},
 
 You have been assigned to the task titled "$taskTitle".
 

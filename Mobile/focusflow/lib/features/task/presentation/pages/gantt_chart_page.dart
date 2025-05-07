@@ -15,7 +15,7 @@ class GanttChartPage extends StatelessWidget {
           return GanttAbsoluteEvent(
             startDate: task.createdAt,
             endDate:
-                task.dueDate ?? task.createdAt.add(const Duration(days: 1)),
+                task.dueDate ?? task.createdAt.add(const Duration(days: 90)),
             displayName: task.title,
           );
         }).toList();
@@ -33,7 +33,7 @@ class GanttChartPage extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: GanttChartView(
           startDate: chartStartDate,
-          maxDuration: const Duration(days: 60), // or null for infinite scroll
+          maxDuration: const Duration(days: 90),
           dayWidth: 30,
           eventHeight: 30,
           stickyAreaWidth: 200,

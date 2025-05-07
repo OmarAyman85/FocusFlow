@@ -93,7 +93,10 @@ class TaskCard extends StatelessWidget {
                 Chip(
                   label: Text(task.priority),
                   backgroundColor: _getPriorityColor(task.priority),
-                  labelStyle: const TextStyle(fontSize: 12),
+                  labelStyle: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.black,
+                  ),
                 ),
               ],
             ),
@@ -101,16 +104,29 @@ class TaskCard extends StatelessWidget {
             const SizedBox(height: 12),
 
             // Due Date
-            Row(
-              children: [
-                const Icon(Icons.calendar_today, size: 14, color: Colors.grey),
-                const SizedBox(width: 4),
-                Text(
-                  'Due: ${task.dueDate?.toLocal().toString().split(' ')[0]}',
-                  style: const TextStyle(fontSize: 12),
-                ),
-              ],
-            ),
+            if (task.dueDate != null)
+              Row(
+                children: [
+                  const Icon(
+                    Icons.calendar_today,
+                    size: 14,
+                    color: Colors.grey,
+                  ),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      'Due: ${task.dueDate!.toLocal().toString().split(' ')[0]}',
+                      style: const TextStyle(fontSize: 12),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              )
+            else
+              const Text(
+                'No due date',
+                style: TextStyle(fontSize: 12, color: Colors.black),
+              ),
 
             const SizedBox(height: 12),
 

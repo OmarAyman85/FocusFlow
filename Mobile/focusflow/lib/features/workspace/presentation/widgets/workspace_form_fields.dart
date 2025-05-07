@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focusflow/core/injection/injection_container.dart';
 import 'package:focusflow/core/services/add_member_dialog.dart';
+import 'package:focusflow/core/services/user_service.dart';
 import 'package:focusflow/core/widgets/text_form_field_widget.dart';
 import 'package:focusflow/features/workspace/domain/entities/workspace.dart';
 import 'package:focusflow/features/workspace/presentation/cubit/workspace_cubit.dart';
@@ -114,8 +116,7 @@ class _WorkspaceFormFieldsState extends State<WorkspaceFormFields> {
                       () => AddMemberDialog.open(
                         context: context,
                         title: 'Add Workspace Member',
-                        getUsers:
-                            () => context.read<WorkspaceCubit>().getUsers(),
+                        getUsers: () => sl<UserService>().getUsers(),
                         onUserSelected: (selectedUser) {
                           final alreadyExists = _members.any(
                             (m) => m.id == selectedUser.id,

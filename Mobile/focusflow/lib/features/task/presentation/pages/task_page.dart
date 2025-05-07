@@ -29,7 +29,6 @@ class _TaskPageState extends State<TaskPage> {
     super.initState();
     userIdToNameMap = TaskUserHelper.getUserIdToNameMap(context);
 
-    // Load tasks when the page is initialized
     Future.microtask(() {
       context.read<TaskCubit>().loadTasks(
         workspaceId: widget.workspaceId,
@@ -45,7 +44,6 @@ class _TaskPageState extends State<TaskPage> {
   ) {
     final updatedTask = task.copyWith(status: newStatus);
 
-    // Update task and then reload tasks
     context.read<TaskCubit>().updateTask(
       workspaceId: widget.workspaceId,
       boardId: widget.boardId,
@@ -65,8 +63,9 @@ class _TaskPageState extends State<TaskPage> {
   ) {
     return Expanded(
       child: DragTarget<TaskEntity>(
-        onWillAccept: (_) => true,
-        onAccept: (task) => _onTaskDropped(task, status, userMap),
+        onWillAcceptWithDetails: (_) => true,
+        onAcceptWithDetails:
+            (details) => _onTaskDropped(details.data, status, userMap),
         builder: (context, candidateData, rejectedData) {
           return Container(
             margin: const EdgeInsets.all(8),
@@ -96,8 +95,7 @@ class _TaskPageState extends State<TaskPage> {
                     itemCount: tasks.length,
                     itemBuilder: (context, index) {
                       final task = tasks[index];
-                      final createdByName =
-                          userMap[task.createdBy] ?? task.createdBy;
+                      final createdByName = task.createdByName;
 
                       return Padding(
                         padding: const EdgeInsets.all(8.0),

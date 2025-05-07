@@ -94,6 +94,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           email: _emailController.text.trim(),
                           password: _passwordController.text.trim(),
                           uid: '',
+                          photoUrl: '',
                         );
                         context.read<AuthBloc>().add(SignUpRequested(user));
                       }
