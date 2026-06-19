@@ -17,14 +17,7 @@ by this README.
 
 ### 1. Database
 
-Either run MySQL locally, or start the bundled Docker container:
-
-```
-docker compose up -d
-```
-
-Then create the database and a dedicated app user (skip if using the Docker
-container above, which already provisions them):
+Run MySQL locally, then create the database and a dedicated app user:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS focusflow CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -73,16 +66,21 @@ npm install
 The dev server proxies `/api` to `http://localhost:5000` (see
 `frontend/proxy.conf.json`), so no separate API URL config is needed.
 
-### 4. Run both together
+### 4. Run it
 
-From the repo root:
+In one terminal:
 
 ```
-npm install
-npm run dev
+cd backend && npm start
 ```
 
-This starts the backend on `:5000` and the Angular dev server on `:4200`.
+In another:
+
+```
+cd frontend && npm start
+```
+
+Backend runs on `:5000`, Angular dev server on `:4200`.
 
 ## Data model
 
