@@ -1,0 +1,118 @@
+<app-navbar />
+
+<div class="max-w-5xl mx-auto px-6 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-slate-900">Boards</h1>
+    <button
+      (click)="openCreate()"
+      class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg px-4 py-2 transition"
+    >
+      + New board
+    </button>
+  </div>
+
+  <div class="flex gap-1 mb-6 border-b border-slate-200">
+    @for (t of tabs; track t) {
+      <button
+        (click)="selectTab(t)"
+        class="px-4 py-2 text-sm font-medium border-b-2 -mb-px transition"
+        [class.border-indigo-600]="tab() === t"
+        [class.text-indigo-600]="tab() === t"
+        [class.border-transparent]="tab() !== t"
+        [class.text-slate-500]="tab() !== t"
+      >
+        {{ tabLabel(t) }}
+      </button>
+    }
+  </div>
+
+  @if (loading()) {
+    <p class="text-slate-400 text-sm">Loading…</p>
+  } @else if (boards().length === 0) {
+    <p class="text-slate-400 text-sm">No boards here yet.</p>
+  } @else {
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      @for (board of boards(); track board.id) {
+        <a
+          [routerLink]="['/boards', board.id]"
+          class="block bg-white border border-slate-200 rounded-xl p-5 hover:shadow-md hover:border-indigo-300 transition"
+        >
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="font-semibold text-slate-900">{{ board.name }}</h2>
+            <span
+              class="text-xs font-medium px-2 py-0.5 rounded-full"
+              [class.bg-emerald-100]="board.visibility === 'public'"
+              [class.text-emerald-700]="board.visibility === 'public'"
+              [class.bg-slate-100]="board.visibility === 'private'"
+              [class.text-slate-600]="board.visibility === 'private'"
+            >
+              {{ board.visibility }}
+            </span>
+          </div>
+          @if (board.description) {
+            <p class="text-sm text-slate-500 line-clamp-2">{{ board.description }}</p>
+          }
+          @if (board.myRole) {
+            <p class="text-xs text-slate-400 mt-3">Role: {{ board.myRole }}</p>
+          }
+        </a>
+      }
+    </div>
+  }
+</div>
+
+@if (showCreate()) {
+  <div class="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
+      <h2 class="text-lg font-bold text-slate-900 mb-4">Create a board</h2>
+      <form [formGroup]="createForm" (ngSubmit)="submitCreate()" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Name</label>
+          <input
+            type="text"
+            formControlName="name"
+            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Description</label>
+          <textarea
+            formControlName="description"
+            rows="2"
+            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          ></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Visibility</label>
+          <select
+            formControlName="visibility"
+            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="private">Private — invite only</option>
+            <option value="public">Public — viewable via link</option>
+          </select>
+        </div>
+
+        @if (errorMessage()) {
+          <p class="text-sm text-red-600">{{ errorMessage() }}</p>
+        }
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button
+            type="button"
+            (click)="closeCreate()"
+            class="text-sm font-medium text-slate-500 hover:text-slate-800 px-4 py-2 transition"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg px-4 py-2 transition"
+          >
+            Create
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

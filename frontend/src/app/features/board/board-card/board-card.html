@@ -1,0 +1,22 @@
+<div
+  (click)="open.emit()"
+  class="bg-white border border-slate-200 rounded-lg p-3 shadow-sm hover:shadow-md hover:border-indigo-300 cursor-pointer transition"
+>
+  <p class="text-sm font-medium text-slate-900">{{ card.title }}</p>
+  <div class="flex items-center justify-between mt-2">
+    <span class="text-xs font-medium px-2 py-0.5 rounded-full" [ngClass]="priorityColor[card.priority]">
+      {{ card.priority }}
+    </span>
+    @if (card.assignee) {
+      <span
+        class="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-semibold flex items-center justify-center"
+        [title]="card.assignee.name"
+      >
+        {{ initials(card.assignee.name) }}
+      </span>
+    }
+  </div>
+  @if (card.dueDate) {
+    <p class="text-xs text-slate-400 mt-2">Due {{ card.dueDate | date: 'mediumDate' }}</p>
+  }
+</div>

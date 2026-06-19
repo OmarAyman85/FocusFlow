@@ -1,0 +1,115 @@
+<app-navbar />
+
+@if (loading()) {
+  <p class="text-slate-400 text-sm p-8">Loading…</p>
+} @else if (errorMessage()) {
+  <p class="text-red-600 text-sm p-8">{{ errorMessage() }}</p>
+} @else if (board()) {
+  <div class="px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 bg-white">
+    <div>
+      <div class="flex items-center gap-2">
+        <h1 class="text-xl font-bold text-slate-900">{{ board()!.name }}</h1>
+        <span
+          class="text-xs font-medium px-2 py-0.5 rounded-full"
+          [class.bg-emerald-100]="board()!.visibility === 'public'"
+          [class.text-emerald-700]="board()!.visibility === 'public'"
+          [class.bg-slate-100]="board()!.visibility === 'private'"
+          [class.text-slate-600]="board()!.visibility === 'private'"
+        >
+          {{ board()!.visibility }}
+        </span>
+      </div>
+      @if (board()!.description) {
+        <p class="text-sm text-slate-500">{{ board()!.description }}</p>
+      }
+    </div>
+    <div class="flex gap-2">
+      <button (click)="showMembers.set(true)" class="text-sm font-medium text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-lg border border-slate-200">
+        Members ({{ board()!.memberships.length }})
+      </button>
+      <button (click)="showSettings.set(true)" class="text-sm font-medium text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-lg border border-slate-200">
+        Settings
+      </button>
+    </div>
+  </div>
+
+  <div class="p-6 overflow-x-auto">
+    <div cdkDropListGroup class="flex gap-4 items-start">
+      @for (list of board()!.lists; track list.id) {
+        <app-board-list
+          [list]="list"
+          [canWrite]="canWrite()"
+          (dropped)="onCardDropped($event)"
+          (rename)="renameList(list, $event)"
+          (deleteList)="deleteList(list)"
+          (addCard)="addCard(list, $event)"
+          (cardClicked)="onCardClicked($event)"
+        />
+      }
+
+      @if (canWrite()) {
+        <div class="w-72 flex-shrink-0">
+          @if (addingList()) {
+            <form [formGroup]="listForm" (ngSubmit)="submitAddList()" class="bg-slate-100 rounded-xl p-3 space-y-2">
+              <input
+                formControlName="name"
+                placeholder="List name"
+                autofocus
+                class="w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
+              />
+              <div class="flex gap-2">
+                <button type="submit" class="text-xs font-medium bg-indigo-600 text-white rounded px-2 py-1">Add</button>
+                <button type="button" (click)="addingList.set(false)" class="text-xs text-slate-500">Cancel</button>
+              </div>
+            </form>
+          } @else {
+            <button
+              (click)="addingList.set(true)"
+              class="w-full text-sm font-medium text-slate-500 hover:text-slate-800 bg-slate-50 hover:bg-slate-100 rounded-xl p-3 text-left transition"
+            >
+              + Add list
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  @if (activeCard()) {
+    <app-card-detail
+      [card]="activeCard()!"
+      [members]="board()!.memberships"
+      [canWrite]="canWrite()"
+      (close)="activeCard.set(null)"
+      (save)="saveCard($event)"
+      (assign)="assignCard($event)"
+      (delete)="deleteCard()"
+    />
+  }
+
+  @if (showMembers()) {
+    <app-board-members
+      [members]="board()!.memberships"
+      [canManage]="canManage()"
+      [isOwner]="isOwner()"
+      [currentUserId]="auth.currentUser()?.id ?? null"
+      (close)="showMembers.set(false)"
+      (invite)="inviteMember($event)"
+      (roleChange)="changeMemberRole($event)"
+      (removeMember)="removeMember($event)"
+    />
+  }
+
+  @if (showSettings()) {
+    <app-board-settings
+      [board]="board()!"
+      [isOwner]="isOwner()"
+      [canManage]="canManage()"
+      (close)="showSettings.set(false)"
+      (save)="saveSettings($event)"
+      (visibilityChange)="changeVisibility($event)"
+      (deleteBoard)="deleteBoard()"
+      (leaveBoard)="leaveBoard()"
+    />
+  }
+}
